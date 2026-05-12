@@ -1,0 +1,122 @@
+[
+ {
+  "Owner": "Alicia Thomber",
+  "Manager": "Amelie Garner",
+  "SystemUserSeq": 1,
+  "systemuserid": "a4575859-ef1e-eb11-a814-000d3a9c7ff2"
+ },
+ {
+  "Owner": "Alan Steiner",
+  "Manager": "Amelie Garner",
+  "SystemUserSeq": 2,
+  "systemuserid": "5ae6bbcc-eb1e-eb11-a814-000d3a9c7ff2"
+ },
+ {
+  "Owner": "Anne Weiler",
+  "Manager": "Amelie Garner",
+  "SystemUserSeq": 3,
+  "systemuserid": "e4e99a85-e31e-eb11-a814-000d3a9c7ff2"
+ },
+ {
+  "Owner": "David So",
+  "Manager": "Amelie Garner",
+  "SystemUserSeq": 4,
+  "systemuserid": "f2026cde-f31e-eb11-a814-000d3a9c7ff2"
+ },
+ {
+  "Owner": "Greg Winston",
+  "Manager": "Amelie Garner",
+  "SystemUserSeq": 5,
+  "systemuserid": "4307c90a-f51e-eb11-a814-000d3a9c7ff2"
+ },
+ {
+  "Owner": "Sanjay Shah",
+  "Manager": "Amelie Garner",
+  "SystemUserSeq": 6,
+  "systemuserid": "36b0eba1-e51e-eb11-a814-000d3a9c7ff2"
+ },
+ {
+  "Owner": "Spencer Low",
+  "Manager": "Amelie Garner",
+  "SystemUserSeq": 7,
+  "systemuserid": "1d4174a3-e31e-eb11-a814-000d3a9c7ff2"
+ },
+ {
+  "Owner": "Dan Jump",
+  "Manager": "Ethan Brooks",
+  "SystemUserSeq": 8,
+  "systemuserid": "322492b1-e41e-eb11-a814-000d3a9c7ff2"
+ },
+ {
+  "Owner": "Eric Gruber",
+  "Manager": "Ethan Brooks",
+  "SystemUserSeq": 9,
+  "systemuserid": "22c58905-de1e-eb11-a814-000d3a9c7ff2"
+ },
+ {
+  "Owner": "Jeff Hay",
+  "Manager": "Ethan Brooks",
+  "SystemUserSeq": 10,
+  "systemuserid": "113999f9-dd1e-eb11-a814-000d3a9c7ff2"
+ },
+ {
+  "Owner": "Julian Isla",
+  "Manager": "Ethan Brooks",
+  "SystemUserSeq": 11,
+  "systemuserid": "22dde512-f81e-eb11-a814-000d3a9c7ff2"
+ },
+ {
+  "Owner": "Molly Clark",
+  "Manager": "Ethan Brooks",
+  "SystemUserSeq": 12,
+  "systemuserid": "1c6090f3-8f1c-eb11-a813-000d3a9c7ffa"
+ },
+ {
+  "Owner": "Renee Lo",
+  "Manager": "Ethan Brooks",
+  "SystemUserSeq": 13,
+  "systemuserid": "9c3f73c9-e41e-eb11-a814-000d3a9c7ff2"
+ },
+ {
+  "Owner": "Angel Brown",
+  "Manager": "Peyton Davis",
+  "SystemUserSeq": 14,
+  "systemuserid": "8601e902-ed1e-eb11-a814-000d3a9c7ff2"
+ },
+ {
+  "Owner": "Archie Boyle",
+  "Manager": "Peyton Davis",
+  "SystemUserSeq": 15,
+  "systemuserid": "3f35dcad-e51e-eb11-a814-000d3a9c7ff2"
+ },
+ {
+  "Owner": "Hollie Rees",
+  "Manager": "Peyton Davis",
+  "SystemUserSeq": 16,
+  "systemuserid": "6687c12b-f11e-eb11-a814-000d3a9c7ff2"
+ },
+ {
+  "Owner": "Jennifer Wilkins",
+  "Manager": "Peyton Davis",
+  "SystemUserSeq": 17,
+  "systemuserid": "41b682bd-e41e-eb11-a814-000d3a9c7ff2"
+ },
+ {
+  "Owner": "Jordan Williams",
+  "Manager": "Peyton Davis",
+  "SystemUserSeq": 18,
+  "systemuserid": "42ded114-ed1e-eb11-a814-000d3a9c7ff2"
+ },
+ {
+  "Owner": "Mia Steele",
+  "Manager": "Peyton Davis",
+  "SystemUserSeq": 19,
+  "systemuserid": "fcc9d114-ed1e-eb11-a814-000d3a9c7ff2"
+ },
+ {
+  "Owner": "Riley Johnson",
+  "Manager": "Peyton Davis",
+  "SystemUserSeq": 20,
+  "systemuserid": "ec7e43ee-f11e-eb11-a814-000d3a9c7ff2"
+ }
+]

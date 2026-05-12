@@ -1,0 +1,47 @@
+[
+ {
+  "Product": "E-reader Standard 6\" 8 GB",
+  "ProductSeq": 1,
+  "Product Category": "Devices"
+ },
+ {
+  "Product": "E-reader Diamond 7\" 8 GB",
+  "ProductSeq": 2,
+  "Product Category": "Devices"
+ },
+ {
+  "Product": "E-reader Diamond 7\" 16 GB",
+  "ProductSeq": 3,
+  "Product Category": "Devices"
+ },
+ {
+  "Product": "E-reader Platinum 8\" 32 GB",
+  "ProductSeq": 4,
+  "Product Category": "Devices"
+ },
+ {
+  "Product": "E-reader Platinum 8\" 64 GB",
+  "ProductSeq": 5,
+  "Product Category": "Devices"
+ },
+ {
+  "Product": "1 Year Warranty",
+  "ProductSeq": 6,
+  "Product Category": "Warranties"
+ },
+ {
+  "Product": "E-reader pen",
+  "ProductSeq": 7,
+  "Product Category": "Accessories"
+ },
+ {
+  "Product": "Black cover 6\"",
+  "ProductSeq": 8,
+  "Product Category": "Accessories"
+ },
+ {
+  "Product": "Black cover 7\"",
+  "ProductSeq": 9,
+  "Product Category": "Accessories"
+ }
+]

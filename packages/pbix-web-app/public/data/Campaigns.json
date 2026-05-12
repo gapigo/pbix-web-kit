@@ -1,0 +1,62 @@
+[
+ {
+  "CampaignSeq": 7000,
+  "Campaign Type": "Sales",
+  "Campaign": "Customer Reference Lead"
+ },
+ {
+  "CampaignSeq": 7001,
+  "Campaign Type": "Email",
+  "Campaign": "Market Trends Newsletter"
+ },
+ {
+  "CampaignSeq": 7002,
+  "Campaign Type": "Email",
+  "Campaign": "Monthly Newsletter"
+ },
+ {
+  "CampaignSeq": 7003,
+  "Campaign Type": "Email",
+  "Campaign": "New Product Releases"
+ },
+ {
+  "CampaignSeq": 7004,
+  "Campaign Type": "Online",
+  "Campaign": "Bing Ad Placement"
+ },
+ {
+  "CampaignSeq": 7005,
+  "Campaign Type": "Online",
+  "Campaign": "Instagram"
+ },
+ {
+  "CampaignSeq": 7006,
+  "Campaign Type": "Online",
+  "Campaign": "Twitter"
+ },
+ {
+  "CampaignSeq": 7007,
+  "Campaign Type": "Phone",
+  "Campaign": "Customer Care Campaign"
+ },
+ {
+  "CampaignSeq": 7008,
+  "Campaign Type": "Phone",
+  "Campaign": "Customer Follow-up"
+ },
+ {
+  "CampaignSeq": 7009,
+  "Campaign Type": "Tradeshow",
+  "Campaign": "Commercial Tradeshow"
+ },
+ {
+  "CampaignSeq": 7010,
+  "Campaign Type": "Tradeshow",
+  "Campaign": "Consumer Tradeshow"
+ },
+ {
+  "CampaignSeq": 7011,
+  "Campaign Type": "Promotion",
+  "Campaign": "QuarterlySales Contest"
+ }
+]
