@@ -1,5 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card"
 import type { Visual } from "./types"
+import { evaluateField, buildMeasureMap } from "@/lib/measureEvaluator"
+import irData from "@/data/ir.json"
 
 interface KpiCardProps {
   visual: Visual
@@ -20,6 +22,12 @@ export function KpiCard({ visual, data }: KpiCardProps) {
   if (indicatorKey && computedValues?.[indicatorKey] !== undefined) {
     value = computedValues[indicatorKey]
   }
+  // Measure evaluator fallback: try to evaluate the field as a DAX measure
+  if (value === null && indicatorField) {
+    const measureMap = buildMeasureMap((irData as any).measures || []);
+    value = evaluateField(indicatorField, data, {}, measureMap);
+  }
+
 
   // Fallback: try to compute from raw data (simple sum)
   if (value === null && indicatorField) {

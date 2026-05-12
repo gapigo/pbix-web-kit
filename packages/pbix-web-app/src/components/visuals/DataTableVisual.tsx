@@ -1,5 +1,7 @@
 import { useState, useMemo } from "react"
 import type { Visual } from "./types"
+import { evaluateField, buildMeasureMap } from "@/lib/measureEvaluator"
+import irData from "@/data/ir.json"
 
 interface DataTableVisualProps {
   visual: Visual
@@ -22,6 +24,9 @@ export function DataTableVisual({ visual, data }: DataTableVisualProps) {
   // Build columns from fields
   const displayCols = [...rowFields.map(f => f.column), ...valueFields.map(f => f.column)]
 
+  // Build measure map for evaluation
+  const measureMap = useMemo(() => buildMeasureMap((irData as any).measures || []), [])
+
   // Aggregate values group by row fields
   const aggregated = useMemo(() => {
     const groups: Record<string, Record<string, number>> = {}
@@ -31,8 +36,30 @@ export function DataTableVisual({ visual, data }: DataTableVisualProps) {
         groups[key] = {}
       }
       for (const vf of valueFields) {
-        const val = Number(row[vf.column] ?? 0)
-        groups[key][vf.column] = (groups[key][vf.column] ?? 0) + val
+        const measureKey = `${vf.table}.${vf.column}`
+        const isMeasure = measureMap.has(measureKey)
+        if (isMeasure) {
+          // Skip if already computed for this group
+          if (groups[key] && groups[key][vf.column] !== undefined) continue
+          // Build row context filter from row fields
+          const rowFilters: Record<string, string[]> = {}
+          for (const rf of rowFields) {
+            const val = String(row[rf.column] ?? "")
+            if (val) rowFilters[rf.column] = [val]
+          }
+          const evalVal = evaluateField(vf, data, rowFilters, measureMap)
+          if (evalVal !== null) {
+            groups[key][vf.column] = evalVal
+          } else {
+            // Fallback: sum raw column
+            const val = Number(row[vf.column] ?? 0)
+            groups[key][vf.column] = (groups[key][vf.column] ?? 0) + val
+          }
+        } else {
+          // Raw column: simple sum
+          const val = Number(row[vf.column] ?? 0)
+          groups[key][vf.column] = (groups[key][vf.column] ?? 0) + val
+        }
       }
     }
     return Object.entries(groups).map(([key, vals]) => {
@@ -42,7 +69,7 @@ export function DataTableVisual({ visual, data }: DataTableVisualProps) {
       Object.entries(vals).forEach(([col, val]) => { result[col] = formatNum(val) })
       return result
     })
-  }, [tableData, rowFields, valueFields])
+  }, [tableData, rowFields, valueFields, data, measureMap])
 
   const [sortCol, setSortCol] = useState<string | null>(null)
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc")
