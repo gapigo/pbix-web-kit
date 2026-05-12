@@ -50,3 +50,42 @@
 - kpi, barChart, columnChart, clusteredColumnChart, lineChart, tableEx, pivotTable, slicer, textbox, image, shape → cobertura total na página "Sales Overview"
 
 
+## Phase 3 — Visual Components (completed)
+
+### O que foi feito:
+- Created 8 React visual components (KpiCard, BarChart, LineChart, PieChart, DataTable, Slicer, Unsupported, VisualRegistry)
+- Created ReportCanvas with absolute positioning (1280x720 canvas, scaled via CSS transform)
+- Created FilterContext (React Context for cross-filter)
+- Created dataResolver with fuzzy table/column matching for chart fallback
+- App.tsx with page tabs, lazy data loading, sanitized file names
+- Pulled in shadcn Card, Button, Select components (manual — Tailwind v4 compat)
+- pnpm build passes clean
+
+### Results:
+- Page navigation works (11 pages)
+- KPIs render computed values (26.4M Revenue Won, 77.3M Rev Goal, 77.3M Revenue In Pipeline)
+- Data tables render with sortable columns and aggregation
+- Slicers render checkbox UI
+- Charts show data for raw columns; computed DAX measures need per-category pre-computation
+- Screenshot saved: samples/regional_sales/web_render.png
+
+## Phase 4 — Validator (completed)
+
+### O que foi feito:
+- Created pbix-validator package with Playwright screenshot + compare modules
+- CLI: `pbix-validator check --ir ir.json --url http://localhost:5173`
+- Validator takes screenshot and validates against IR expectations
+- Tesseract not available → OCR-validation skipped
+
+## Phase 5 — Polish + Docs (completed)
+
+### O que foi feito:
+- README.md root + package READMEs for all 3 packages
+- docs/IR_SCHEMA.md — full PbixIR schema reference
+- docs/HOW_TO_ADD_A_VISUAL.md — guide for extending visual support
+- scripts/00_bootstrap.sh, 01_extract.sh, 02_run_web.sh, 03_validate.sh
+- .github/workflows/ci.yml stub
+- HANDOFF.md with full status report
+- WORKLOG.md updated throughout
+
+

@@ -2,6 +2,7 @@
 
 import json
 import logging
+import re
 import zipfile
 from pathlib import Path
 
@@ -16,6 +17,80 @@ logger = logging.getLogger(__name__)
 
 class PbixParseError(Exception):
     """Raised when a .pbix file cannot be parsed."""
+
+
+def _compute_measure(expr: str, data_frames: dict[str, pd.DataFrame]) -> float | int | None:
+    """Try to compute a DAX measure expression from available data.
+    
+    Handles simple patterns: SUMX, COUNTAX, COUNT, AVERAGEX, CALCULATE with FILTER.
+    Returns None if expression can't be evaluated.
+    """
+    # Pattern: CALCULATE(SUMX(Table, Table[Column]), FILTER(Table, Table[Status] = "Value"))
+    calc_match = re.search(
+        r"CALCULATE\(\s*(SUMX|COUNTAX|COUNT|SUM|AVERAGEX)\(\s*(\w+)\s*,\s*\2\[(\w+)\]",
+        expr
+    )
+    if calc_match:
+        agg_fn = calc_match.group(1)
+        table_name = calc_match.group(2)
+        column = calc_match.group(3)
+        
+        if table_name not in data_frames:
+            return None
+        df = data_frames[table_name]
+        
+        # Check for FILTER condition
+        filter_match = re.search(r"FILTER\(\s*\w+\s*,\s*\w+\[(\w+)\]\s*=\s*\"(\w+)\"", expr)
+        if filter_match:
+            filter_col = filter_match.group(1)
+            filter_val = filter_match.group(2)
+            if filter_col in df.columns:
+                df = df[df[filter_col] == filter_val]
+        
+        if agg_fn in ("SUMX", "SUM"):
+            if column in df.columns:
+                return float(df[column].sum()) if pd.notna(df[column].sum()) else 0.0
+        elif agg_fn in ("COUNTAX", "COUNT"):
+            return float(len(df))
+        elif agg_fn == "AVERAGEX":
+            if column in df.columns:
+                return float(df[column].mean()) if pd.notna(df[column].mean()) else 0.0
+    
+    # Simple SUMX(table, table[column]) without CALCULATE wrapper
+    sumx_match = re.search(r"SUMX\(\s*(\w+)\s*,\s*\1\[(\w+)\]", expr)
+    if sumx_match:
+        table_name = sumx_match.group(1)
+        column = sumx_match.group(2)
+        if table_name in data_frames and column in data_frames[table_name].columns:
+            val = data_frames[table_name][column].sum()
+            return float(val) if pd.notna(val) else 0.0
+    
+    # VAR Revenue = CALCULATE(SUMX(...), FILTER(...)) pattern
+    var_match = re.search(
+        r"VAR\s+\w+\s*=\s*CALCULATE\s*\(\s*SUMX\s*\(\s*(\w+)\s*,\s*\1\[(\w+)\]",
+        expr, re.IGNORECASE
+    )
+    if var_match:
+        table_name = var_match.group(1)
+        column = var_match.group(2)
+        if table_name in data_frames and column in data_frames[table_name].columns:
+            # Check for FILTER
+            filter_match = re.search(r"FILTER\(\s*\w+\s*,\s*\w+\[(\w+)\]\s*=\s*\"(\w+)\"", expr)
+            df = data_frames[table_name]
+            if filter_match:
+                filter_col = filter_match.group(1)
+                filter_val = filter_match.group(2)
+                if filter_col in df.columns:
+                    df = df[df[filter_col] == filter_val]
+            val = df[column].sum()
+            return float(val) if pd.notna(val) else 0.0
+    
+    # Simple SELECTEDVALUE(table[col], default)
+    sel_match = re.search(r"SELECTEDVALUE\(\s*'?(\w+)\[(\w+)\]", expr)
+    if sel_match:
+        return 0.0  # No filter context, return default
+    
+    return None
 
 
 def extract_pbix(path: str | Path) -> tuple[PbixIR, dict[str, pd.DataFrame]]:
@@ -38,7 +113,6 @@ def extract_pbix(path: str | Path) -> tuple[PbixIR, dict[str, pd.DataFrame]]:
         raise PbixParseError(f"Not a .pbix file: {path}")
     
     try:
-        # Verify it's a valid zip
         with zipfile.ZipFile(path) as z:
             if "Report/Layout" not in z.namelist():
                 raise PbixParseError("Not a valid .pbix: missing Report/Layout")
@@ -85,7 +159,6 @@ def extract_pbix(path: str | Path) -> tuple[PbixIR, dict[str, pd.DataFrame]]:
                         "expression": str(md.get("Expression", "")),
                     })
         elif hasattr(model.dax_measures, "to_dict"):
-            # DataFrame
             for _, row in model.dax_measures.iterrows():
                 measures.append({
                     "table": str(row.get("TableName", "")),
@@ -109,7 +182,6 @@ def extract_pbix(path: str | Path) -> tuple[PbixIR, dict[str, pd.DataFrame]]:
                 layout = json.loads(f.read().decode("utf-16-le"))
         
         sections = layout.get("sections", [])
-        # Canvas size — try to get from layout metadata
         canvas_width = 1280.0
         canvas_height = 720.0
         layout_info = layout.get("layout", {})
@@ -144,6 +216,23 @@ def extract_pbix(path: str | Path) -> tuple[PbixIR, dict[str, pd.DataFrame]]:
             ))
     except Exception as e:
         raise PbixParseError(f"Failed to parse Report/Layout: {e}")
+    
+    # --- Compute measure values for visuals ---
+    measure_map: dict[str, str] = {}
+    for m in measures:
+        measure_map[f"{m['table']}.{m['name']}"] = m['expression']
+    
+    for page in pages:
+        for vis in page.visuals:
+            computed: dict[str, object] = {}
+            for f in vis.fields:
+                key = f"{f.table}.{f.column}"
+                if key in measure_map:
+                    val = _compute_measure(measure_map[key], data_frames)
+                    if val is not None:
+                        computed[key] = val
+            if computed:
+                vis.config["computed_values"] = computed
     
     ir = PbixIR(
         source_file=str(path),

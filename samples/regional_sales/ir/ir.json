@@ -1182,7 +1182,11 @@
               "role": "TrendLine"
             }
           ],
-          "config": {}
+          "config": {
+            "computed_values": {
+              "Opportunities.Revenue Won": 26435925.0
+            }
+          }
         },
         {
           "id": "1556019846",
@@ -1225,7 +1229,11 @@
               "role": "TrendLine"
             }
           ],
-          "config": {}
+          "config": {
+            "computed_values": {
+              "Owners.Rev Goal": 77252216.0
+            }
+          }
         },
         {
           "id": "1556019848",
@@ -1268,7 +1276,11 @@
               "role": "TrendLine"
             }
           ],
-          "config": {}
+          "config": {
+            "computed_values": {
+              "Opportunities.Revenue In Pipeline": 77252216.0
+            }
+          }
         },
         {
           "id": "1556019850",
@@ -1477,7 +1489,12 @@
                   ]
                 }
               }
-            ]
+            ],
+            "computed_values": {
+              "Opportunities.Revenue Won": 26435925.0,
+              "Opportunities.Revenue In Pipeline": 77252216.0,
+              "Owners.Rev Goal": 77252216.0
+            }
           }
         },
         {
@@ -1524,7 +1541,12 @@
               "role": "Values"
             }
           ],
-          "config": {}
+          "config": {
+            "computed_values": {
+              "Opportunities.Revenue Won": 26435925.0,
+              "Opportunities.Revenue In Pipeline": 77252216.0
+            }
+          }
         },
         {
           "id": "1556019854",
@@ -1600,7 +1622,12 @@
               "role": "Values"
             }
           ],
-          "config": {}
+          "config": {
+            "computed_values": {
+              "Opportunities.Revenue Won": 26435925.0,
+              "Opportunities.Revenue In Pipeline": 77252216.0
+            }
+          }
         },
         {
           "id": "1556019857",
@@ -1717,7 +1744,11 @@
                   "metadata": "Opportunities.Revenue In Pipeline"
                 }
               }
-            ]
+            ],
+            "computed_values": {
+              "Opportunities.Revenue Won": 26435925.0,
+              "Opportunities.Revenue In Pipeline": 77252216.0
+            }
           }
         },
         {
@@ -1804,7 +1835,11 @@
                   "metadata": "Opportunities.Revenue In Pipeline"
                 }
               }
-            ]
+            ],
+            "computed_values": {
+              "Opportunities.Revenue Won": 26435925.0,
+              "Opportunities.Revenue In Pipeline": 77252216.0
+            }
           }
         },
         {
@@ -2026,7 +2061,10 @@
                   ]
                 }
               }
-            ]
+            ],
+            "computed_values": {
+              "Opportunities.Revenue Open": 77252216.0
+            }
           }
         },
         {
@@ -3248,7 +3286,11 @@
               "role": "Indicator"
             }
           ],
-          "config": {}
+          "config": {
+            "computed_values": {
+              "Opportunities.Revenue Open": 77252216.0
+            }
+          }
         },
         {
           "id": "1556019944",
@@ -3337,7 +3379,11 @@
               "role": "Values"
             }
           ],
-          "config": {}
+          "config": {
+            "computed_values": {
+              "Opportunities.Revenue Open": 77252216.0
+            }
+          }
         },
         {
           "id": "1556019947",
@@ -3383,7 +3429,12 @@
               "role": "Values"
             }
           ],
-          "config": {}
+          "config": {
+            "computed_values": {
+              "Opportunities.Revenue Won": 26435925.0,
+              "Opportunities.Revenue In Pipeline": 77252216.0
+            }
+          }
         },
         {
           "id": "1556019948",
@@ -3645,7 +3696,10 @@
                   ]
                 }
               }
-            ]
+            ],
+            "computed_values": {
+              "Opportunities.Revenue In Pipeline": 77252216.0
+            }
           }
         },
         {
@@ -3852,7 +3906,11 @@
               "role": "Indicator"
             }
           ],
-          "config": {}
+          "config": {
+            "computed_values": {
+              "Opportunities.Revenue Won": 26435925.0
+            }
+          }
         },
         {
           "id": "1556019957",
@@ -4999,7 +5057,12 @@
               "role": "Values"
             }
           ],
-          "config": {}
+          "config": {
+            "computed_values": {
+              "Opportunities.Revenue Won": 26435925.0,
+              "Opportunities.Revenue In Pipeline": 77252216.0
+            }
+          }
         },
         {
           "id": "1556020034",
@@ -5090,7 +5153,12 @@
               "role": "Values"
             }
           ],
-          "config": {}
+          "config": {
+            "computed_values": {
+              "Opportunities.Revenue Won": 26435925.0,
+              "Opportunities.Revenue In Pipeline": 77252216.0
+            }
+          }
         },
         {
           "id": "1556020038",
@@ -5136,7 +5204,12 @@
               "role": "Values"
             }
           ],
-          "config": {}
+          "config": {
+            "computed_values": {
+              "Opportunities.Revenue Won": 26435925.0,
+              "Opportunities.Revenue In Pipeline": 77252216.0
+            }
+          }
         },
         {
           "id": "1556020039",
@@ -5310,7 +5383,10 @@
                   ]
                 }
               }
-            ]
+            ],
+            "computed_values": {
+              "Opportunities.Revenue Won": 26435925.0
+            }
           }
         },
         {
@@ -5482,7 +5558,10 @@
                   ]
                 }
               }
-            ]
+            ],
+            "computed_values": {
+              "Opportunities.Revenue Won": 26435925.0
+            }
           }
         }
       ]
@@ -5933,7 +6012,11 @@
                   ]
                 }
               }
-            ]
+            ],
+            "computed_values": {
+              "Opportunities.Revenue Open": 77252216.0,
+              "Opportunities.Revenue In Pipeline": 77252216.0
+            }
           }
         },
         {
@@ -6153,7 +6236,11 @@
               "role": "Indicator"
             }
           ],
-          "config": {}
+          "config": {
+            "computed_values": {
+              "Opportunities.Revenue Open": 77252216.0
+            }
+          }
         },
         {
           "id": "1556020056",
@@ -6196,7 +6283,11 @@
               "role": "Indicator"
             }
           ],
-          "config": {}
+          "config": {
+            "computed_values": {
+              "Opportunities.Revenue In Pipeline": 77252216.0
+            }
+          }
         },
         {
           "id": "1556020059",
@@ -7432,7 +7523,10 @@
                   ]
                 }
               }
-            ]
+            ],
+            "computed_values": {
+              "Opportunities.Revenue Open": 77252216.0
+            }
           }
         },
         {
@@ -8723,7 +8817,10 @@
                   ]
                 }
               }
-            ]
+            ],
+            "computed_values": {
+              "Opportunities.Revenue Won": 26435925.0
+            }
           }
         },
         {
@@ -9354,7 +9451,10 @@
                   ]
                 }
               }
-            ]
+            ],
+            "computed_values": {
+              "Opportunities.Revenue Won": 26435925.0
+            }
           }
         },
         {
@@ -9467,7 +9567,11 @@
               "role": "TrendLine"
             }
           ],
-          "config": {}
+          "config": {
+            "computed_values": {
+              "Opportunities.Revenue Won": 26435925.0
+            }
+          }
         },
         {
           "id": "1556020212",
@@ -10010,7 +10114,10 @@
                   ]
                 }
               }
-            ]
+            ],
+            "computed_values": {
+              "Opportunities.Revenue Won": 26435925.0
+            }
           }
         }
       ]
@@ -10154,7 +10261,10 @@
                   }
                 }
               }
-            ]
+            ],
+            "computed_values": {
+              "Opportunities.Revenue Won": 26435925.0
+            }
           }
         },
         {
