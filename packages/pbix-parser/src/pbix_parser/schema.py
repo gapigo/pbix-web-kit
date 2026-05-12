@@ -23,7 +23,7 @@ class VisualPosition(BaseModel):
 
 VisualType = Literal[
     "kpi", "bar", "line", "pie", "table", "slicer",
-    "text", "image", "shape", "unsupported",
+    "text", "image", "shape", "chrome", "unsupported",
 ]
 
 

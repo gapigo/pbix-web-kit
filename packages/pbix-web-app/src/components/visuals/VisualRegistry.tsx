@@ -30,6 +30,8 @@ export function VisualRenderer({ visual, data, onFilter, activeFilters }: Visual
       return <SlicerVisual visual={visual} data={data} onFilter={onFilter} activeFilters={activeFilters} />
     case "text":
       return null // text boxes are decorations, skip for MVP
+    case "chrome":
+      return null // chrome (action buttons, shapes, etc.) — hidden by default
     case "image":
     case "shape":
       return null // skip for MVP

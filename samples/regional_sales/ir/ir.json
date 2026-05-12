@@ -9,7 +9,7 @@
       "visuals": [
         {
           "id": "1556019767",
-          "type": "text",
+          "type": "chrome",
           "raw_type": "textbox",
           "title": null,
           "position": {
@@ -93,7 +93,7 @@
         },
         {
           "id": "1556019772",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -108,7 +108,7 @@
         },
         {
           "id": "1556019773",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -123,7 +123,7 @@
         },
         {
           "id": "1556019774",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -138,7 +138,7 @@
         },
         {
           "id": "1556019775",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -153,7 +153,7 @@
         },
         {
           "id": "1556019776",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -168,7 +168,7 @@
         },
         {
           "id": "1556019777",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -183,7 +183,7 @@
         },
         {
           "id": "1556019778",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -198,7 +198,7 @@
         },
         {
           "id": "1556019779",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -213,7 +213,7 @@
         },
         {
           "id": "1556019780",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -228,7 +228,7 @@
         },
         {
           "id": "1556019781",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -243,7 +243,7 @@
         },
         {
           "id": "1556019782",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -258,7 +258,7 @@
         },
         {
           "id": "1556019783",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -273,7 +273,7 @@
         },
         {
           "id": "1556019784",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -288,7 +288,7 @@
         },
         {
           "id": "1556019785",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -303,7 +303,7 @@
         },
         {
           "id": "1556019786",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -318,7 +318,7 @@
         },
         {
           "id": "1556019787",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -333,7 +333,7 @@
         },
         {
           "id": "1556019788",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -348,7 +348,7 @@
         },
         {
           "id": "1556019789",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -363,7 +363,7 @@
         },
         {
           "id": "1556019790",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -378,7 +378,7 @@
         },
         {
           "id": "1556019791",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -393,7 +393,7 @@
         },
         {
           "id": "1556019792",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -408,7 +408,7 @@
         },
         {
           "id": "1556019793",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -423,7 +423,7 @@
         },
         {
           "id": "1556019794",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -438,7 +438,7 @@
         },
         {
           "id": "1556019795",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -453,7 +453,7 @@
         },
         {
           "id": "1556019796",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -468,7 +468,7 @@
         },
         {
           "id": "1556019797",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -483,7 +483,7 @@
         },
         {
           "id": "1556019798",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -498,7 +498,7 @@
         },
         {
           "id": "1556019799",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -513,7 +513,7 @@
         },
         {
           "id": "1556019800",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -528,7 +528,7 @@
         },
         {
           "id": "1556019801",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -543,7 +543,7 @@
         },
         {
           "id": "1556019802",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -558,7 +558,7 @@
         },
         {
           "id": "1556019803",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -573,7 +573,7 @@
         },
         {
           "id": "1556019804",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -588,7 +588,7 @@
         },
         {
           "id": "1556019805",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -603,7 +603,7 @@
         },
         {
           "id": "1556019806",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -618,7 +618,7 @@
         },
         {
           "id": "1556019807",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -633,7 +633,7 @@
         },
         {
           "id": "1556019808",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -648,7 +648,7 @@
         },
         {
           "id": "1556019809",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -663,7 +663,7 @@
         },
         {
           "id": "1556019810",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -678,7 +678,7 @@
         },
         {
           "id": "1556019812",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -693,7 +693,7 @@
         },
         {
           "id": "1556019813",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -708,7 +708,7 @@
         },
         {
           "id": "1556019814",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -723,7 +723,7 @@
         },
         {
           "id": "1556019815",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -738,7 +738,7 @@
         },
         {
           "id": "1556019816",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -753,7 +753,7 @@
         },
         {
           "id": "1556019817",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -768,7 +768,7 @@
         },
         {
           "id": "1556019818",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -783,7 +783,7 @@
         },
         {
           "id": "1556019819",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -798,7 +798,7 @@
         },
         {
           "id": "1556019820",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -813,7 +813,7 @@
         },
         {
           "id": "1556019821",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -828,7 +828,7 @@
         },
         {
           "id": "1556019822",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -843,7 +843,7 @@
         },
         {
           "id": "1556019823",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -858,7 +858,7 @@
         },
         {
           "id": "1556019824",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -873,7 +873,7 @@
         },
         {
           "id": "1556019825",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -888,7 +888,7 @@
         },
         {
           "id": "1556019826",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -903,7 +903,7 @@
         },
         {
           "id": "1556019827",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -918,7 +918,7 @@
         },
         {
           "id": "1556019828",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -933,7 +933,7 @@
         },
         {
           "id": "1556019829",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -948,7 +948,7 @@
         },
         {
           "id": "1556019830",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -963,7 +963,7 @@
         },
         {
           "id": "1556019831",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -978,7 +978,7 @@
         },
         {
           "id": "1556019832",
-          "type": "text",
+          "type": "chrome",
           "raw_type": "textbox",
           "title": null,
           "position": {
@@ -993,7 +993,7 @@
         },
         {
           "id": "1556019833",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -1008,7 +1008,7 @@
         },
         {
           "id": "1556019834",
-          "type": "text",
+          "type": "chrome",
           "raw_type": "textbox",
           "title": null,
           "position": {
@@ -1023,7 +1023,7 @@
         },
         {
           "id": "1556019835",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -1038,7 +1038,7 @@
         },
         {
           "id": "1556019836",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -1053,7 +1053,7 @@
         },
         {
           "id": "1556019837",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -1068,7 +1068,7 @@
         },
         {
           "id": "1556019839",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -1083,7 +1083,7 @@
         },
         {
           "id": "1556019840",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -1098,7 +1098,7 @@
         },
         {
           "id": "1556019841",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -1113,7 +1113,7 @@
         },
         {
           "id": "1556019842",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -1128,7 +1128,7 @@
         },
         {
           "id": "1556019843",
-          "type": "image",
+          "type": "chrome",
           "raw_type": "image",
           "title": null,
           "position": {
@@ -1143,7 +1143,7 @@
         },
         {
           "id": "1556019844",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -1190,7 +1190,7 @@
         },
         {
           "id": "1556019846",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -1237,7 +1237,7 @@
         },
         {
           "id": "1556019848",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -1284,7 +1284,7 @@
         },
         {
           "id": "1556019850",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -1550,7 +1550,7 @@
         },
         {
           "id": "1556019854",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -1565,7 +1565,7 @@
         },
         {
           "id": "1556019855",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2069,7 +2069,7 @@
         },
         {
           "id": "1556019860",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -2084,7 +2084,7 @@
         },
         {
           "id": "1556019861",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -2099,7 +2099,7 @@
         },
         {
           "id": "1556019862",
-          "type": "text",
+          "type": "chrome",
           "raw_type": "textbox",
           "title": null,
           "position": {
@@ -2114,7 +2114,7 @@
         },
         {
           "id": "1556019863",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2129,7 +2129,7 @@
         },
         {
           "id": "1556019864",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2144,7 +2144,7 @@
         },
         {
           "id": "1556019865",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2167,7 +2167,7 @@
       "visuals": [
         {
           "id": "1556019868",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2182,7 +2182,7 @@
         },
         {
           "id": "1556019869",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2197,7 +2197,7 @@
         },
         {
           "id": "1556019870",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2212,7 +2212,7 @@
         },
         {
           "id": "1556019871",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2227,7 +2227,7 @@
         },
         {
           "id": "1556019872",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2242,7 +2242,7 @@
         },
         {
           "id": "1556019873",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2257,7 +2257,7 @@
         },
         {
           "id": "1556019874",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2272,7 +2272,7 @@
         },
         {
           "id": "1556019875",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2287,7 +2287,7 @@
         },
         {
           "id": "1556019876",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2302,7 +2302,7 @@
         },
         {
           "id": "1556019877",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2317,7 +2317,7 @@
         },
         {
           "id": "1556019878",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2332,7 +2332,7 @@
         },
         {
           "id": "1556019879",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2347,7 +2347,7 @@
         },
         {
           "id": "1556019880",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2362,7 +2362,7 @@
         },
         {
           "id": "1556019881",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2377,7 +2377,7 @@
         },
         {
           "id": "1556019882",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2392,7 +2392,7 @@
         },
         {
           "id": "1556019883",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2407,7 +2407,7 @@
         },
         {
           "id": "1556019884",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2422,7 +2422,7 @@
         },
         {
           "id": "1556019885",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2437,7 +2437,7 @@
         },
         {
           "id": "1556019886",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2452,7 +2452,7 @@
         },
         {
           "id": "1556019887",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2467,7 +2467,7 @@
         },
         {
           "id": "1556019888",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2482,7 +2482,7 @@
         },
         {
           "id": "1556019889",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2497,7 +2497,7 @@
         },
         {
           "id": "1556019890",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2512,7 +2512,7 @@
         },
         {
           "id": "1556019891",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2527,7 +2527,7 @@
         },
         {
           "id": "1556019892",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2542,7 +2542,7 @@
         },
         {
           "id": "1556019893",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2557,7 +2557,7 @@
         },
         {
           "id": "1556019894",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2572,7 +2572,7 @@
         },
         {
           "id": "1556019895",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2587,7 +2587,7 @@
         },
         {
           "id": "1556019896",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2602,7 +2602,7 @@
         },
         {
           "id": "1556019897",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2617,7 +2617,7 @@
         },
         {
           "id": "1556019898",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2632,7 +2632,7 @@
         },
         {
           "id": "1556019899",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2647,7 +2647,7 @@
         },
         {
           "id": "1556019900",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2662,7 +2662,7 @@
         },
         {
           "id": "1556019901",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2677,7 +2677,7 @@
         },
         {
           "id": "1556019902",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2692,7 +2692,7 @@
         },
         {
           "id": "1556019903",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2707,7 +2707,7 @@
         },
         {
           "id": "1556019904",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2722,7 +2722,7 @@
         },
         {
           "id": "1556019905",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2737,7 +2737,7 @@
         },
         {
           "id": "1556019906",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2752,7 +2752,7 @@
         },
         {
           "id": "1556019908",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2767,7 +2767,7 @@
         },
         {
           "id": "1556019909",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2782,7 +2782,7 @@
         },
         {
           "id": "1556019910",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2797,7 +2797,7 @@
         },
         {
           "id": "1556019911",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2812,7 +2812,7 @@
         },
         {
           "id": "1556019912",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2827,7 +2827,7 @@
         },
         {
           "id": "1556019913",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2842,7 +2842,7 @@
         },
         {
           "id": "1556019914",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2857,7 +2857,7 @@
         },
         {
           "id": "1556019915",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2872,7 +2872,7 @@
         },
         {
           "id": "1556019916",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2887,7 +2887,7 @@
         },
         {
           "id": "1556019917",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2902,7 +2902,7 @@
         },
         {
           "id": "1556019918",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2917,7 +2917,7 @@
         },
         {
           "id": "1556019919",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2932,7 +2932,7 @@
         },
         {
           "id": "1556019920",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2947,7 +2947,7 @@
         },
         {
           "id": "1556019921",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2962,7 +2962,7 @@
         },
         {
           "id": "1556019922",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2977,7 +2977,7 @@
         },
         {
           "id": "1556019923",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -2992,7 +2992,7 @@
         },
         {
           "id": "1556019924",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -3007,7 +3007,7 @@
         },
         {
           "id": "1556019925",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -3022,7 +3022,7 @@
         },
         {
           "id": "1556019926",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -3037,7 +3037,7 @@
         },
         {
           "id": "1556019927",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -3052,7 +3052,7 @@
         },
         {
           "id": "1556019928",
-          "type": "text",
+          "type": "chrome",
           "raw_type": "textbox",
           "title": null,
           "position": {
@@ -3067,7 +3067,7 @@
         },
         {
           "id": "1556019929",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -3082,7 +3082,7 @@
         },
         {
           "id": "1556019930",
-          "type": "text",
+          "type": "chrome",
           "raw_type": "textbox",
           "title": null,
           "position": {
@@ -3097,7 +3097,7 @@
         },
         {
           "id": "1556019931",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -3112,7 +3112,7 @@
         },
         {
           "id": "1556019932",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -3127,7 +3127,7 @@
         },
         {
           "id": "1556019933",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -3142,7 +3142,7 @@
         },
         {
           "id": "1556019935",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -3157,7 +3157,7 @@
         },
         {
           "id": "1556019936",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -3172,7 +3172,7 @@
         },
         {
           "id": "1556019937",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -3187,7 +3187,7 @@
         },
         {
           "id": "1556019938",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -3202,7 +3202,7 @@
         },
         {
           "id": "1556019939",
-          "type": "image",
+          "type": "chrome",
           "raw_type": "image",
           "title": null,
           "position": {
@@ -3217,7 +3217,7 @@
         },
         {
           "id": "1556019940",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -3232,7 +3232,7 @@
         },
         {
           "id": "1556019941",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -3247,7 +3247,7 @@
         },
         {
           "id": "1556019942",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -3294,7 +3294,7 @@
         },
         {
           "id": "1556019944",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -3438,7 +3438,7 @@
         },
         {
           "id": "1556019948",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -3837,7 +3837,7 @@
         },
         {
           "id": "1556019953",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -3852,7 +3852,7 @@
         },
         {
           "id": "1556019954",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -3867,7 +3867,7 @@
         },
         {
           "id": "1556019955",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -3942,7 +3942,7 @@
         },
         {
           "id": "1556019958",
-          "type": "text",
+          "type": "chrome",
           "raw_type": "textbox",
           "title": null,
           "position": {
@@ -3965,7 +3965,7 @@
       "visuals": [
         {
           "id": "1556019961",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -3980,7 +3980,7 @@
         },
         {
           "id": "1556019962",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -3995,7 +3995,7 @@
         },
         {
           "id": "1556019963",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4010,7 +4010,7 @@
         },
         {
           "id": "1556019964",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4025,7 +4025,7 @@
         },
         {
           "id": "1556019965",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4040,7 +4040,7 @@
         },
         {
           "id": "1556019966",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4055,7 +4055,7 @@
         },
         {
           "id": "1556019967",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4070,7 +4070,7 @@
         },
         {
           "id": "1556019968",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4085,7 +4085,7 @@
         },
         {
           "id": "1556019969",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4100,7 +4100,7 @@
         },
         {
           "id": "1556019970",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4115,7 +4115,7 @@
         },
         {
           "id": "1556019971",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4130,7 +4130,7 @@
         },
         {
           "id": "1556019972",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4145,7 +4145,7 @@
         },
         {
           "id": "1556019973",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4160,7 +4160,7 @@
         },
         {
           "id": "1556019974",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4175,7 +4175,7 @@
         },
         {
           "id": "1556019975",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4190,7 +4190,7 @@
         },
         {
           "id": "1556019976",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4205,7 +4205,7 @@
         },
         {
           "id": "1556019977",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4220,7 +4220,7 @@
         },
         {
           "id": "1556019978",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4235,7 +4235,7 @@
         },
         {
           "id": "1556019979",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4250,7 +4250,7 @@
         },
         {
           "id": "1556019980",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4265,7 +4265,7 @@
         },
         {
           "id": "1556019981",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4280,7 +4280,7 @@
         },
         {
           "id": "1556019982",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4295,7 +4295,7 @@
         },
         {
           "id": "1556019983",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4310,7 +4310,7 @@
         },
         {
           "id": "1556019984",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4325,7 +4325,7 @@
         },
         {
           "id": "1556019985",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4340,7 +4340,7 @@
         },
         {
           "id": "1556019986",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4355,7 +4355,7 @@
         },
         {
           "id": "1556019987",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4370,7 +4370,7 @@
         },
         {
           "id": "1556019988",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4385,7 +4385,7 @@
         },
         {
           "id": "1556019989",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4400,7 +4400,7 @@
         },
         {
           "id": "1556019990",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4415,7 +4415,7 @@
         },
         {
           "id": "1556019991",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4430,7 +4430,7 @@
         },
         {
           "id": "1556019992",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4445,7 +4445,7 @@
         },
         {
           "id": "1556019993",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4460,7 +4460,7 @@
         },
         {
           "id": "1556019994",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4475,7 +4475,7 @@
         },
         {
           "id": "1556019995",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4490,7 +4490,7 @@
         },
         {
           "id": "1556019996",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4505,7 +4505,7 @@
         },
         {
           "id": "1556019997",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4520,7 +4520,7 @@
         },
         {
           "id": "1556019998",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4535,7 +4535,7 @@
         },
         {
           "id": "1556019999",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4550,7 +4550,7 @@
         },
         {
           "id": "1556020001",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4565,7 +4565,7 @@
         },
         {
           "id": "1556020002",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4580,7 +4580,7 @@
         },
         {
           "id": "1556020003",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4595,7 +4595,7 @@
         },
         {
           "id": "1556020004",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4610,7 +4610,7 @@
         },
         {
           "id": "1556020005",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4625,7 +4625,7 @@
         },
         {
           "id": "1556020006",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4640,7 +4640,7 @@
         },
         {
           "id": "1556020007",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4655,7 +4655,7 @@
         },
         {
           "id": "1556020008",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4670,7 +4670,7 @@
         },
         {
           "id": "1556020009",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4685,7 +4685,7 @@
         },
         {
           "id": "1556020010",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4700,7 +4700,7 @@
         },
         {
           "id": "1556020011",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4715,7 +4715,7 @@
         },
         {
           "id": "1556020012",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4730,7 +4730,7 @@
         },
         {
           "id": "1556020013",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4745,7 +4745,7 @@
         },
         {
           "id": "1556020014",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4760,7 +4760,7 @@
         },
         {
           "id": "1556020015",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4775,7 +4775,7 @@
         },
         {
           "id": "1556020016",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4790,7 +4790,7 @@
         },
         {
           "id": "1556020017",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4805,7 +4805,7 @@
         },
         {
           "id": "1556020018",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4820,7 +4820,7 @@
         },
         {
           "id": "1556020019",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4835,7 +4835,7 @@
         },
         {
           "id": "1556020020",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4850,7 +4850,7 @@
         },
         {
           "id": "1556020021",
-          "type": "text",
+          "type": "chrome",
           "raw_type": "textbox",
           "title": null,
           "position": {
@@ -4865,7 +4865,7 @@
         },
         {
           "id": "1556020022",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4880,7 +4880,7 @@
         },
         {
           "id": "1556020023",
-          "type": "text",
+          "type": "chrome",
           "raw_type": "textbox",
           "title": null,
           "position": {
@@ -4895,7 +4895,7 @@
         },
         {
           "id": "1556020024",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4910,7 +4910,7 @@
         },
         {
           "id": "1556020025",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4925,7 +4925,7 @@
         },
         {
           "id": "1556020026",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -4940,7 +4940,7 @@
         },
         {
           "id": "1556020028",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -4955,7 +4955,7 @@
         },
         {
           "id": "1556020029",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -4970,7 +4970,7 @@
         },
         {
           "id": "1556020030",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -4985,7 +4985,7 @@
         },
         {
           "id": "1556020031",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -5000,7 +5000,7 @@
         },
         {
           "id": "1556020032",
-          "type": "image",
+          "type": "chrome",
           "raw_type": "image",
           "title": null,
           "position": {
@@ -5066,7 +5066,7 @@
         },
         {
           "id": "1556020034",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -5081,7 +5081,7 @@
         },
         {
           "id": "1556020035",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -5096,7 +5096,7 @@
         },
         {
           "id": "1556020036",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -5391,7 +5391,7 @@
         },
         {
           "id": "1556020040",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6021,7 +6021,7 @@
         },
         {
           "id": "1556020044",
-          "type": "text",
+          "type": "chrome",
           "raw_type": "textbox",
           "title": null,
           "position": {
@@ -6036,7 +6036,7 @@
         },
         {
           "id": "1556020045",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6051,7 +6051,7 @@
         },
         {
           "id": "1556020046",
-          "type": "text",
+          "type": "chrome",
           "raw_type": "textbox",
           "title": null,
           "position": {
@@ -6066,7 +6066,7 @@
         },
         {
           "id": "1556020047",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6081,7 +6081,7 @@
         },
         {
           "id": "1556020048",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6096,7 +6096,7 @@
         },
         {
           "id": "1556020049",
-          "type": "image",
+          "type": "chrome",
           "raw_type": "image",
           "title": null,
           "position": {
@@ -6111,7 +6111,7 @@
         },
         {
           "id": "1556020050",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -6154,7 +6154,7 @@
         },
         {
           "id": "1556020052",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -6197,7 +6197,7 @@
         },
         {
           "id": "1556020054",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -6244,7 +6244,7 @@
         },
         {
           "id": "1556020056",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -6291,7 +6291,7 @@
         },
         {
           "id": "1556020059",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -6306,7 +6306,7 @@
         },
         {
           "id": "1556020060",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -6321,7 +6321,7 @@
         },
         {
           "id": "1556020061",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -6336,7 +6336,7 @@
         },
         {
           "id": "1556020062",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -6351,7 +6351,7 @@
         },
         {
           "id": "1556020063",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6366,7 +6366,7 @@
         },
         {
           "id": "1556020066",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6381,7 +6381,7 @@
         },
         {
           "id": "1556020067",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6396,7 +6396,7 @@
         },
         {
           "id": "1556020068",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6411,7 +6411,7 @@
         },
         {
           "id": "1556020069",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6426,7 +6426,7 @@
         },
         {
           "id": "1556020070",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6441,7 +6441,7 @@
         },
         {
           "id": "1556020071",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6456,7 +6456,7 @@
         },
         {
           "id": "1556020072",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6471,7 +6471,7 @@
         },
         {
           "id": "1556020073",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6486,7 +6486,7 @@
         },
         {
           "id": "1556020074",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6501,7 +6501,7 @@
         },
         {
           "id": "1556020075",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6516,7 +6516,7 @@
         },
         {
           "id": "1556020076",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6531,7 +6531,7 @@
         },
         {
           "id": "1556020077",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6546,7 +6546,7 @@
         },
         {
           "id": "1556020078",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6561,7 +6561,7 @@
         },
         {
           "id": "1556020079",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6576,7 +6576,7 @@
         },
         {
           "id": "1556020080",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6591,7 +6591,7 @@
         },
         {
           "id": "1556020081",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6606,7 +6606,7 @@
         },
         {
           "id": "1556020082",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6621,7 +6621,7 @@
         },
         {
           "id": "1556020083",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6636,7 +6636,7 @@
         },
         {
           "id": "1556020084",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6651,7 +6651,7 @@
         },
         {
           "id": "1556020085",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6666,7 +6666,7 @@
         },
         {
           "id": "1556020086",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6681,7 +6681,7 @@
         },
         {
           "id": "1556020087",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6696,7 +6696,7 @@
         },
         {
           "id": "1556020088",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6711,7 +6711,7 @@
         },
         {
           "id": "1556020089",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6726,7 +6726,7 @@
         },
         {
           "id": "1556020090",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6741,7 +6741,7 @@
         },
         {
           "id": "1556020091",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6756,7 +6756,7 @@
         },
         {
           "id": "1556020092",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6771,7 +6771,7 @@
         },
         {
           "id": "1556020093",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6786,7 +6786,7 @@
         },
         {
           "id": "1556020094",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6801,7 +6801,7 @@
         },
         {
           "id": "1556020095",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6816,7 +6816,7 @@
         },
         {
           "id": "1556020096",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6831,7 +6831,7 @@
         },
         {
           "id": "1556020097",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6846,7 +6846,7 @@
         },
         {
           "id": "1556020098",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6861,7 +6861,7 @@
         },
         {
           "id": "1556020099",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6876,7 +6876,7 @@
         },
         {
           "id": "1556020100",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6891,7 +6891,7 @@
         },
         {
           "id": "1556020101",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6906,7 +6906,7 @@
         },
         {
           "id": "1556020102",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6921,7 +6921,7 @@
         },
         {
           "id": "1556020103",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6936,7 +6936,7 @@
         },
         {
           "id": "1556020104",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6951,7 +6951,7 @@
         },
         {
           "id": "1556020106",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6966,7 +6966,7 @@
         },
         {
           "id": "1556020107",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6981,7 +6981,7 @@
         },
         {
           "id": "1556020108",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -6996,7 +6996,7 @@
         },
         {
           "id": "1556020109",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7011,7 +7011,7 @@
         },
         {
           "id": "1556020110",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7026,7 +7026,7 @@
         },
         {
           "id": "1556020111",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7041,7 +7041,7 @@
         },
         {
           "id": "1556020112",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7056,7 +7056,7 @@
         },
         {
           "id": "1556020113",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7071,7 +7071,7 @@
         },
         {
           "id": "1556020114",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7086,7 +7086,7 @@
         },
         {
           "id": "1556020115",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7101,7 +7101,7 @@
         },
         {
           "id": "1556020116",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7116,7 +7116,7 @@
         },
         {
           "id": "1556020117",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7131,7 +7131,7 @@
         },
         {
           "id": "1556020118",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7146,7 +7146,7 @@
         },
         {
           "id": "1556020119",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7161,7 +7161,7 @@
         },
         {
           "id": "1556020120",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7176,7 +7176,7 @@
         },
         {
           "id": "1556020121",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7191,7 +7191,7 @@
         },
         {
           "id": "1556020122",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7206,7 +7206,7 @@
         },
         {
           "id": "1556020123",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7221,7 +7221,7 @@
         },
         {
           "id": "1556020124",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7236,7 +7236,7 @@
         },
         {
           "id": "1556020125",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7251,7 +7251,7 @@
         },
         {
           "id": "1556020126",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7266,7 +7266,7 @@
         },
         {
           "id": "1556020127",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7531,7 +7531,7 @@
         },
         {
           "id": "1556020129",
-          "type": "text",
+          "type": "chrome",
           "raw_type": "textbox",
           "title": null,
           "position": {
@@ -7554,7 +7554,7 @@
       "visuals": [
         {
           "id": "1556020132",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7569,7 +7569,7 @@
         },
         {
           "id": "1556020133",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7584,7 +7584,7 @@
         },
         {
           "id": "1556020134",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7599,7 +7599,7 @@
         },
         {
           "id": "1556020135",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7614,7 +7614,7 @@
         },
         {
           "id": "1556020136",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7629,7 +7629,7 @@
         },
         {
           "id": "1556020137",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7644,7 +7644,7 @@
         },
         {
           "id": "1556020138",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7659,7 +7659,7 @@
         },
         {
           "id": "1556020139",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7674,7 +7674,7 @@
         },
         {
           "id": "1556020140",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7689,7 +7689,7 @@
         },
         {
           "id": "1556020141",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7704,7 +7704,7 @@
         },
         {
           "id": "1556020142",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7719,7 +7719,7 @@
         },
         {
           "id": "1556020143",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7734,7 +7734,7 @@
         },
         {
           "id": "1556020144",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7749,7 +7749,7 @@
         },
         {
           "id": "1556020145",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7764,7 +7764,7 @@
         },
         {
           "id": "1556020146",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7779,7 +7779,7 @@
         },
         {
           "id": "1556020147",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7794,7 +7794,7 @@
         },
         {
           "id": "1556020148",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7809,7 +7809,7 @@
         },
         {
           "id": "1556020149",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7824,7 +7824,7 @@
         },
         {
           "id": "1556020150",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7839,7 +7839,7 @@
         },
         {
           "id": "1556020151",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7854,7 +7854,7 @@
         },
         {
           "id": "1556020152",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7869,7 +7869,7 @@
         },
         {
           "id": "1556020153",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7884,7 +7884,7 @@
         },
         {
           "id": "1556020154",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7899,7 +7899,7 @@
         },
         {
           "id": "1556020155",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7914,7 +7914,7 @@
         },
         {
           "id": "1556020156",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7929,7 +7929,7 @@
         },
         {
           "id": "1556020157",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7944,7 +7944,7 @@
         },
         {
           "id": "1556020158",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7959,7 +7959,7 @@
         },
         {
           "id": "1556020159",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7974,7 +7974,7 @@
         },
         {
           "id": "1556020160",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -7989,7 +7989,7 @@
         },
         {
           "id": "1556020161",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -8004,7 +8004,7 @@
         },
         {
           "id": "1556020162",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -8019,7 +8019,7 @@
         },
         {
           "id": "1556020163",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -8034,7 +8034,7 @@
         },
         {
           "id": "1556020164",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -8049,7 +8049,7 @@
         },
         {
           "id": "1556020165",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -8064,7 +8064,7 @@
         },
         {
           "id": "1556020166",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -8079,7 +8079,7 @@
         },
         {
           "id": "1556020167",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -8094,7 +8094,7 @@
         },
         {
           "id": "1556020168",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -8109,7 +8109,7 @@
         },
         {
           "id": "1556020169",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -8124,7 +8124,7 @@
         },
         {
           "id": "1556020170",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -8139,7 +8139,7 @@
         },
         {
           "id": "1556020172",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -8154,7 +8154,7 @@
         },
         {
           "id": "1556020173",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -8169,7 +8169,7 @@
         },
         {
           "id": "1556020174",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -8184,7 +8184,7 @@
         },
         {
           "id": "1556020175",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -8199,7 +8199,7 @@
         },
         {
           "id": "1556020176",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -8214,7 +8214,7 @@
         },
         {
           "id": "1556020177",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -8229,7 +8229,7 @@
         },
         {
           "id": "1556020178",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -8244,7 +8244,7 @@
         },
         {
           "id": "1556020179",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -8259,7 +8259,7 @@
         },
         {
           "id": "1556020180",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -8274,7 +8274,7 @@
         },
         {
           "id": "1556020181",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -8289,7 +8289,7 @@
         },
         {
           "id": "1556020182",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -8304,7 +8304,7 @@
         },
         {
           "id": "1556020183",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -8319,7 +8319,7 @@
         },
         {
           "id": "1556020184",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -8334,7 +8334,7 @@
         },
         {
           "id": "1556020185",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -8349,7 +8349,7 @@
         },
         {
           "id": "1556020186",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -8364,7 +8364,7 @@
         },
         {
           "id": "1556020187",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -8379,7 +8379,7 @@
         },
         {
           "id": "1556020188",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -8394,7 +8394,7 @@
         },
         {
           "id": "1556020189",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -8409,7 +8409,7 @@
         },
         {
           "id": "1556020190",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -8424,7 +8424,7 @@
         },
         {
           "id": "1556020191",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -8439,7 +8439,7 @@
         },
         {
           "id": "1556020192",
-          "type": "text",
+          "type": "chrome",
           "raw_type": "textbox",
           "title": null,
           "position": {
@@ -8454,7 +8454,7 @@
         },
         {
           "id": "1556020193",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -8469,7 +8469,7 @@
         },
         {
           "id": "1556020194",
-          "type": "text",
+          "type": "chrome",
           "raw_type": "textbox",
           "title": null,
           "position": {
@@ -8484,7 +8484,7 @@
         },
         {
           "id": "1556020195",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -8499,7 +8499,7 @@
         },
         {
           "id": "1556020196",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -8514,7 +8514,7 @@
         },
         {
           "id": "1556020197",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -8529,7 +8529,7 @@
         },
         {
           "id": "1556020199",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -8544,7 +8544,7 @@
         },
         {
           "id": "1556020200",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -8559,7 +8559,7 @@
         },
         {
           "id": "1556020201",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -8574,7 +8574,7 @@
         },
         {
           "id": "1556020202",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -8589,7 +8589,7 @@
         },
         {
           "id": "1556020203",
-          "type": "image",
+          "type": "chrome",
           "raw_type": "image",
           "title": null,
           "position": {
@@ -9575,7 +9575,7 @@
         },
         {
           "id": "1556020212",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -9590,7 +9590,7 @@
         },
         {
           "id": "1556020213",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -9605,7 +9605,7 @@
         },
         {
           "id": "1556020214",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -9620,7 +9620,7 @@
         },
         {
           "id": "1556020215",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -9635,7 +9635,7 @@
         },
         {
           "id": "1556020216",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -9650,7 +9650,7 @@
         },
         {
           "id": "1556020217",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -9665,7 +9665,7 @@
         },
         {
           "id": "1556020218",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -9680,7 +9680,7 @@
         },
         {
           "id": "1556020219",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -9695,7 +9695,7 @@
         },
         {
           "id": "1556020220",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -9710,7 +9710,7 @@
         },
         {
           "id": "1556020221",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10130,7 +10130,7 @@
       "visuals": [
         {
           "id": "1556020223",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10145,7 +10145,7 @@
         },
         {
           "id": "1556020224",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10160,7 +10160,7 @@
         },
         {
           "id": "1556020225",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10333,7 +10333,7 @@
         },
         {
           "id": "1556020228",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10348,7 +10348,7 @@
         },
         {
           "id": "1556020229",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10363,7 +10363,7 @@
         },
         {
           "id": "1556020230",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10378,7 +10378,7 @@
         },
         {
           "id": "1556020231",
-          "type": "text",
+          "type": "chrome",
           "raw_type": "textbox",
           "title": null,
           "position": {
@@ -10393,7 +10393,7 @@
         },
         {
           "id": "1556020232",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10408,7 +10408,7 @@
         },
         {
           "id": "1556020233",
-          "type": "text",
+          "type": "chrome",
           "raw_type": "textbox",
           "title": null,
           "position": {
@@ -10423,7 +10423,7 @@
         },
         {
           "id": "1556020234",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10438,7 +10438,7 @@
         },
         {
           "id": "1556020235",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10453,7 +10453,7 @@
         },
         {
           "id": "1556020236",
-          "type": "image",
+          "type": "chrome",
           "raw_type": "image",
           "title": null,
           "position": {
@@ -10468,7 +10468,7 @@
         },
         {
           "id": "1556020239",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10483,7 +10483,7 @@
         },
         {
           "id": "1556020240",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10498,7 +10498,7 @@
         },
         {
           "id": "1556020241",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10513,7 +10513,7 @@
         },
         {
           "id": "1556020242",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10528,7 +10528,7 @@
         },
         {
           "id": "1556020243",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10543,7 +10543,7 @@
         },
         {
           "id": "1556020244",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10558,7 +10558,7 @@
         },
         {
           "id": "1556020245",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10573,7 +10573,7 @@
         },
         {
           "id": "1556020246",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10588,7 +10588,7 @@
         },
         {
           "id": "1556020247",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10603,7 +10603,7 @@
         },
         {
           "id": "1556020248",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10618,7 +10618,7 @@
         },
         {
           "id": "1556020249",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10633,7 +10633,7 @@
         },
         {
           "id": "1556020250",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10648,7 +10648,7 @@
         },
         {
           "id": "1556020251",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10663,7 +10663,7 @@
         },
         {
           "id": "1556020252",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10678,7 +10678,7 @@
         },
         {
           "id": "1556020253",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10693,7 +10693,7 @@
         },
         {
           "id": "1556020254",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10708,7 +10708,7 @@
         },
         {
           "id": "1556020255",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10723,7 +10723,7 @@
         },
         {
           "id": "1556020256",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10738,7 +10738,7 @@
         },
         {
           "id": "1556020257",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10753,7 +10753,7 @@
         },
         {
           "id": "1556020258",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10768,7 +10768,7 @@
         },
         {
           "id": "1556020259",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10783,7 +10783,7 @@
         },
         {
           "id": "1556020260",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10798,7 +10798,7 @@
         },
         {
           "id": "1556020261",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10813,7 +10813,7 @@
         },
         {
           "id": "1556020262",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10828,7 +10828,7 @@
         },
         {
           "id": "1556020263",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10843,7 +10843,7 @@
         },
         {
           "id": "1556020264",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10858,7 +10858,7 @@
         },
         {
           "id": "1556020265",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10873,7 +10873,7 @@
         },
         {
           "id": "1556020266",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10888,7 +10888,7 @@
         },
         {
           "id": "1556020267",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10903,7 +10903,7 @@
         },
         {
           "id": "1556020268",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10918,7 +10918,7 @@
         },
         {
           "id": "1556020269",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10933,7 +10933,7 @@
         },
         {
           "id": "1556020270",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10948,7 +10948,7 @@
         },
         {
           "id": "1556020271",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10963,7 +10963,7 @@
         },
         {
           "id": "1556020272",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10978,7 +10978,7 @@
         },
         {
           "id": "1556020273",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -10993,7 +10993,7 @@
         },
         {
           "id": "1556020274",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11008,7 +11008,7 @@
         },
         {
           "id": "1556020275",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11023,7 +11023,7 @@
         },
         {
           "id": "1556020276",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11038,7 +11038,7 @@
         },
         {
           "id": "1556020277",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11053,7 +11053,7 @@
         },
         {
           "id": "1556020279",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11068,7 +11068,7 @@
         },
         {
           "id": "1556020280",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11083,7 +11083,7 @@
         },
         {
           "id": "1556020281",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11098,7 +11098,7 @@
         },
         {
           "id": "1556020282",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11113,7 +11113,7 @@
         },
         {
           "id": "1556020283",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11128,7 +11128,7 @@
         },
         {
           "id": "1556020284",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11143,7 +11143,7 @@
         },
         {
           "id": "1556020285",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11158,7 +11158,7 @@
         },
         {
           "id": "1556020286",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11173,7 +11173,7 @@
         },
         {
           "id": "1556020287",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11188,7 +11188,7 @@
         },
         {
           "id": "1556020288",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11203,7 +11203,7 @@
         },
         {
           "id": "1556020289",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11218,7 +11218,7 @@
         },
         {
           "id": "1556020290",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11233,7 +11233,7 @@
         },
         {
           "id": "1556020291",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11248,7 +11248,7 @@
         },
         {
           "id": "1556020292",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11263,7 +11263,7 @@
         },
         {
           "id": "1556020293",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11278,7 +11278,7 @@
         },
         {
           "id": "1556020294",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11293,7 +11293,7 @@
         },
         {
           "id": "1556020295",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11308,7 +11308,7 @@
         },
         {
           "id": "1556020296",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11323,7 +11323,7 @@
         },
         {
           "id": "1556020297",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11338,7 +11338,7 @@
         },
         {
           "id": "1556020298",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11353,7 +11353,7 @@
         },
         {
           "id": "1556020300",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -11368,7 +11368,7 @@
         },
         {
           "id": "1556020301",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -11383,7 +11383,7 @@
         },
         {
           "id": "1556020302",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -11398,7 +11398,7 @@
         },
         {
           "id": "1556020303",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -11413,7 +11413,7 @@
         },
         {
           "id": "1556020304",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11525,7 +11525,7 @@
       "visuals": [
         {
           "id": "1556020306",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11540,7 +11540,7 @@
         },
         {
           "id": "1556020307",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11555,7 +11555,7 @@
         },
         {
           "id": "1556020308",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11570,7 +11570,7 @@
         },
         {
           "id": "1556020309",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11585,7 +11585,7 @@
         },
         {
           "id": "1556020310",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11600,7 +11600,7 @@
         },
         {
           "id": "1556020311",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11615,7 +11615,7 @@
         },
         {
           "id": "1556020312",
-          "type": "text",
+          "type": "chrome",
           "raw_type": "textbox",
           "title": null,
           "position": {
@@ -11630,7 +11630,7 @@
         },
         {
           "id": "1556020313",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11645,7 +11645,7 @@
         },
         {
           "id": "1556020314",
-          "type": "text",
+          "type": "chrome",
           "raw_type": "textbox",
           "title": null,
           "position": {
@@ -11660,7 +11660,7 @@
         },
         {
           "id": "1556020315",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11675,7 +11675,7 @@
         },
         {
           "id": "1556020316",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11690,7 +11690,7 @@
         },
         {
           "id": "1556020317",
-          "type": "image",
+          "type": "chrome",
           "raw_type": "image",
           "title": null,
           "position": {
@@ -11705,7 +11705,7 @@
         },
         {
           "id": "1556020320",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11720,7 +11720,7 @@
         },
         {
           "id": "1556020321",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11735,7 +11735,7 @@
         },
         {
           "id": "1556020322",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11750,7 +11750,7 @@
         },
         {
           "id": "1556020323",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11765,7 +11765,7 @@
         },
         {
           "id": "1556020324",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11780,7 +11780,7 @@
         },
         {
           "id": "1556020325",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11795,7 +11795,7 @@
         },
         {
           "id": "1556020326",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11810,7 +11810,7 @@
         },
         {
           "id": "1556020327",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11825,7 +11825,7 @@
         },
         {
           "id": "1556020328",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11840,7 +11840,7 @@
         },
         {
           "id": "1556020329",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11855,7 +11855,7 @@
         },
         {
           "id": "1556020330",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11870,7 +11870,7 @@
         },
         {
           "id": "1556020331",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11885,7 +11885,7 @@
         },
         {
           "id": "1556020332",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11900,7 +11900,7 @@
         },
         {
           "id": "1556020333",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11915,7 +11915,7 @@
         },
         {
           "id": "1556020334",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11930,7 +11930,7 @@
         },
         {
           "id": "1556020335",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11945,7 +11945,7 @@
         },
         {
           "id": "1556020336",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11960,7 +11960,7 @@
         },
         {
           "id": "1556020337",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11975,7 +11975,7 @@
         },
         {
           "id": "1556020338",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -11990,7 +11990,7 @@
         },
         {
           "id": "1556020339",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12005,7 +12005,7 @@
         },
         {
           "id": "1556020340",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12020,7 +12020,7 @@
         },
         {
           "id": "1556020341",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12035,7 +12035,7 @@
         },
         {
           "id": "1556020342",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12050,7 +12050,7 @@
         },
         {
           "id": "1556020343",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12065,7 +12065,7 @@
         },
         {
           "id": "1556020344",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12080,7 +12080,7 @@
         },
         {
           "id": "1556020345",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12095,7 +12095,7 @@
         },
         {
           "id": "1556020346",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12110,7 +12110,7 @@
         },
         {
           "id": "1556020347",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12125,7 +12125,7 @@
         },
         {
           "id": "1556020348",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12140,7 +12140,7 @@
         },
         {
           "id": "1556020349",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12155,7 +12155,7 @@
         },
         {
           "id": "1556020350",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12170,7 +12170,7 @@
         },
         {
           "id": "1556020351",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12185,7 +12185,7 @@
         },
         {
           "id": "1556020352",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12200,7 +12200,7 @@
         },
         {
           "id": "1556020353",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12215,7 +12215,7 @@
         },
         {
           "id": "1556020354",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12230,7 +12230,7 @@
         },
         {
           "id": "1556020355",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12245,7 +12245,7 @@
         },
         {
           "id": "1556020356",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12260,7 +12260,7 @@
         },
         {
           "id": "1556020357",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12275,7 +12275,7 @@
         },
         {
           "id": "1556020358",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12290,7 +12290,7 @@
         },
         {
           "id": "1556020360",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12305,7 +12305,7 @@
         },
         {
           "id": "1556020361",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12320,7 +12320,7 @@
         },
         {
           "id": "1556020362",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12335,7 +12335,7 @@
         },
         {
           "id": "1556020363",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12350,7 +12350,7 @@
         },
         {
           "id": "1556020364",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12365,7 +12365,7 @@
         },
         {
           "id": "1556020365",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12380,7 +12380,7 @@
         },
         {
           "id": "1556020366",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12395,7 +12395,7 @@
         },
         {
           "id": "1556020367",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12410,7 +12410,7 @@
         },
         {
           "id": "1556020368",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12425,7 +12425,7 @@
         },
         {
           "id": "1556020369",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12440,7 +12440,7 @@
         },
         {
           "id": "1556020370",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12455,7 +12455,7 @@
         },
         {
           "id": "1556020371",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12470,7 +12470,7 @@
         },
         {
           "id": "1556020372",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12485,7 +12485,7 @@
         },
         {
           "id": "1556020373",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12500,7 +12500,7 @@
         },
         {
           "id": "1556020374",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12515,7 +12515,7 @@
         },
         {
           "id": "1556020375",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12530,7 +12530,7 @@
         },
         {
           "id": "1556020376",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12545,7 +12545,7 @@
         },
         {
           "id": "1556020377",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12560,7 +12560,7 @@
         },
         {
           "id": "1556020378",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12575,7 +12575,7 @@
         },
         {
           "id": "1556020379",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -12590,7 +12590,7 @@
         },
         {
           "id": "1556020381",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -12605,7 +12605,7 @@
         },
         {
           "id": "1556020382",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -12620,7 +12620,7 @@
         },
         {
           "id": "1556020383",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -12635,7 +12635,7 @@
         },
         {
           "id": "1556020384",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -12650,7 +12650,7 @@
         },
         {
           "id": "1556020385",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13016,7 +13016,7 @@
         },
         {
           "id": "1556020390",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13031,7 +13031,7 @@
         },
         {
           "id": "1556020391",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13046,7 +13046,7 @@
         },
         {
           "id": "1556020392",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13228,7 +13228,7 @@
         },
         {
           "id": "1556020395",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13243,7 +13243,7 @@
         },
         {
           "id": "1556020396",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13258,7 +13258,7 @@
         },
         {
           "id": "1556020397",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13273,7 +13273,7 @@
         },
         {
           "id": "1556020398",
-          "type": "text",
+          "type": "chrome",
           "raw_type": "textbox",
           "title": null,
           "position": {
@@ -13288,7 +13288,7 @@
         },
         {
           "id": "1556020399",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13303,7 +13303,7 @@
         },
         {
           "id": "1556020400",
-          "type": "text",
+          "type": "chrome",
           "raw_type": "textbox",
           "title": null,
           "position": {
@@ -13318,7 +13318,7 @@
         },
         {
           "id": "1556020401",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13333,7 +13333,7 @@
         },
         {
           "id": "1556020402",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13348,7 +13348,7 @@
         },
         {
           "id": "1556020403",
-          "type": "image",
+          "type": "chrome",
           "raw_type": "image",
           "title": null,
           "position": {
@@ -13363,7 +13363,7 @@
         },
         {
           "id": "1556020404",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13378,7 +13378,7 @@
         },
         {
           "id": "1556020406",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -13393,7 +13393,7 @@
         },
         {
           "id": "1556020407",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -13408,7 +13408,7 @@
         },
         {
           "id": "1556020408",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -13423,7 +13423,7 @@
         },
         {
           "id": "1556020409",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -13438,7 +13438,7 @@
         },
         {
           "id": "1556020412",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13453,7 +13453,7 @@
         },
         {
           "id": "1556020413",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13468,7 +13468,7 @@
         },
         {
           "id": "1556020414",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13483,7 +13483,7 @@
         },
         {
           "id": "1556020415",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13498,7 +13498,7 @@
         },
         {
           "id": "1556020416",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13513,7 +13513,7 @@
         },
         {
           "id": "1556020417",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13528,7 +13528,7 @@
         },
         {
           "id": "1556020418",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13543,7 +13543,7 @@
         },
         {
           "id": "1556020419",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13558,7 +13558,7 @@
         },
         {
           "id": "1556020420",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13573,7 +13573,7 @@
         },
         {
           "id": "1556020421",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13588,7 +13588,7 @@
         },
         {
           "id": "1556020422",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13603,7 +13603,7 @@
         },
         {
           "id": "1556020423",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13618,7 +13618,7 @@
         },
         {
           "id": "1556020424",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13633,7 +13633,7 @@
         },
         {
           "id": "1556020425",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13648,7 +13648,7 @@
         },
         {
           "id": "1556020426",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13663,7 +13663,7 @@
         },
         {
           "id": "1556020427",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13678,7 +13678,7 @@
         },
         {
           "id": "1556020428",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13693,7 +13693,7 @@
         },
         {
           "id": "1556020429",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13708,7 +13708,7 @@
         },
         {
           "id": "1556020430",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13723,7 +13723,7 @@
         },
         {
           "id": "1556020431",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13738,7 +13738,7 @@
         },
         {
           "id": "1556020432",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13753,7 +13753,7 @@
         },
         {
           "id": "1556020433",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13768,7 +13768,7 @@
         },
         {
           "id": "1556020434",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13783,7 +13783,7 @@
         },
         {
           "id": "1556020435",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13798,7 +13798,7 @@
         },
         {
           "id": "1556020436",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13813,7 +13813,7 @@
         },
         {
           "id": "1556020437",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13828,7 +13828,7 @@
         },
         {
           "id": "1556020438",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13843,7 +13843,7 @@
         },
         {
           "id": "1556020439",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13858,7 +13858,7 @@
         },
         {
           "id": "1556020440",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13873,7 +13873,7 @@
         },
         {
           "id": "1556020441",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13888,7 +13888,7 @@
         },
         {
           "id": "1556020442",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13903,7 +13903,7 @@
         },
         {
           "id": "1556020443",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13918,7 +13918,7 @@
         },
         {
           "id": "1556020444",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13933,7 +13933,7 @@
         },
         {
           "id": "1556020445",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13948,7 +13948,7 @@
         },
         {
           "id": "1556020446",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13963,7 +13963,7 @@
         },
         {
           "id": "1556020447",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13978,7 +13978,7 @@
         },
         {
           "id": "1556020448",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -13993,7 +13993,7 @@
         },
         {
           "id": "1556020449",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14008,7 +14008,7 @@
         },
         {
           "id": "1556020450",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14023,7 +14023,7 @@
         },
         {
           "id": "1556020452",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14038,7 +14038,7 @@
         },
         {
           "id": "1556020453",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14053,7 +14053,7 @@
         },
         {
           "id": "1556020454",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14068,7 +14068,7 @@
         },
         {
           "id": "1556020455",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14083,7 +14083,7 @@
         },
         {
           "id": "1556020456",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14098,7 +14098,7 @@
         },
         {
           "id": "1556020457",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14113,7 +14113,7 @@
         },
         {
           "id": "1556020458",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14128,7 +14128,7 @@
         },
         {
           "id": "1556020459",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14143,7 +14143,7 @@
         },
         {
           "id": "1556020460",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14158,7 +14158,7 @@
         },
         {
           "id": "1556020461",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14173,7 +14173,7 @@
         },
         {
           "id": "1556020462",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14188,7 +14188,7 @@
         },
         {
           "id": "1556020463",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14203,7 +14203,7 @@
         },
         {
           "id": "1556020464",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14218,7 +14218,7 @@
         },
         {
           "id": "1556020465",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14233,7 +14233,7 @@
         },
         {
           "id": "1556020466",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14248,7 +14248,7 @@
         },
         {
           "id": "1556020467",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14263,7 +14263,7 @@
         },
         {
           "id": "1556020468",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14278,7 +14278,7 @@
         },
         {
           "id": "1556020469",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14293,7 +14293,7 @@
         },
         {
           "id": "1556020470",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14308,7 +14308,7 @@
         },
         {
           "id": "1556020471",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14565,7 +14565,7 @@
         },
         {
           "id": "1556020477",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14580,7 +14580,7 @@
         },
         {
           "id": "1556020478",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14595,7 +14595,7 @@
         },
         {
           "id": "1556020479",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14610,7 +14610,7 @@
         },
         {
           "id": "1556020480",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14625,7 +14625,7 @@
         },
         {
           "id": "1556020481",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14640,7 +14640,7 @@
         },
         {
           "id": "1556020482",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14655,7 +14655,7 @@
         },
         {
           "id": "1556020483",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14670,7 +14670,7 @@
         },
         {
           "id": "1556020484",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14685,7 +14685,7 @@
         },
         {
           "id": "1556020485",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14700,7 +14700,7 @@
         },
         {
           "id": "1556020486",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14715,7 +14715,7 @@
         },
         {
           "id": "1556020487",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14730,7 +14730,7 @@
         },
         {
           "id": "1556020488",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14745,7 +14745,7 @@
         },
         {
           "id": "1556020489",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14760,7 +14760,7 @@
         },
         {
           "id": "1556020490",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14775,7 +14775,7 @@
         },
         {
           "id": "1556020491",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14790,7 +14790,7 @@
         },
         {
           "id": "1556020492",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14805,7 +14805,7 @@
         },
         {
           "id": "1556020493",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14820,7 +14820,7 @@
         },
         {
           "id": "1556020494",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14835,7 +14835,7 @@
         },
         {
           "id": "1556020495",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14850,7 +14850,7 @@
         },
         {
           "id": "1556020496",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14865,7 +14865,7 @@
         },
         {
           "id": "1556020497",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14880,7 +14880,7 @@
         },
         {
           "id": "1556020498",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14895,7 +14895,7 @@
         },
         {
           "id": "1556020499",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14910,7 +14910,7 @@
         },
         {
           "id": "1556020500",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14925,7 +14925,7 @@
         },
         {
           "id": "1556020501",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14940,7 +14940,7 @@
         },
         {
           "id": "1556020502",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14955,7 +14955,7 @@
         },
         {
           "id": "1556020503",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14970,7 +14970,7 @@
         },
         {
           "id": "1556020504",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -14985,7 +14985,7 @@
         },
         {
           "id": "1556020505",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15000,7 +15000,7 @@
         },
         {
           "id": "1556020506",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15015,7 +15015,7 @@
         },
         {
           "id": "1556020507",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15030,7 +15030,7 @@
         },
         {
           "id": "1556020508",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15045,7 +15045,7 @@
         },
         {
           "id": "1556020509",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15060,7 +15060,7 @@
         },
         {
           "id": "1556020510",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15075,7 +15075,7 @@
         },
         {
           "id": "1556020511",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15090,7 +15090,7 @@
         },
         {
           "id": "1556020512",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15105,7 +15105,7 @@
         },
         {
           "id": "1556020513",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15120,7 +15120,7 @@
         },
         {
           "id": "1556020514",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15135,7 +15135,7 @@
         },
         {
           "id": "1556020515",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15150,7 +15150,7 @@
         },
         {
           "id": "1556020517",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15165,7 +15165,7 @@
         },
         {
           "id": "1556020518",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15180,7 +15180,7 @@
         },
         {
           "id": "1556020519",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15195,7 +15195,7 @@
         },
         {
           "id": "1556020520",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15210,7 +15210,7 @@
         },
         {
           "id": "1556020521",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15225,7 +15225,7 @@
         },
         {
           "id": "1556020522",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15240,7 +15240,7 @@
         },
         {
           "id": "1556020523",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15255,7 +15255,7 @@
         },
         {
           "id": "1556020524",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15270,7 +15270,7 @@
         },
         {
           "id": "1556020525",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15285,7 +15285,7 @@
         },
         {
           "id": "1556020526",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15300,7 +15300,7 @@
         },
         {
           "id": "1556020527",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15315,7 +15315,7 @@
         },
         {
           "id": "1556020528",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15330,7 +15330,7 @@
         },
         {
           "id": "1556020529",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15345,7 +15345,7 @@
         },
         {
           "id": "1556020530",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15360,7 +15360,7 @@
         },
         {
           "id": "1556020531",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15375,7 +15375,7 @@
         },
         {
           "id": "1556020532",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15390,7 +15390,7 @@
         },
         {
           "id": "1556020533",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15405,7 +15405,7 @@
         },
         {
           "id": "1556020534",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15420,7 +15420,7 @@
         },
         {
           "id": "1556020535",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15435,7 +15435,7 @@
         },
         {
           "id": "1556020536",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15450,7 +15450,7 @@
         },
         {
           "id": "1556020538",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -15465,7 +15465,7 @@
         },
         {
           "id": "1556020539",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -15480,7 +15480,7 @@
         },
         {
           "id": "1556020540",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -15495,7 +15495,7 @@
         },
         {
           "id": "1556020541",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -15510,7 +15510,7 @@
         },
         {
           "id": "1556020542",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15525,7 +15525,7 @@
         },
         {
           "id": "1556020543",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15540,7 +15540,7 @@
         },
         {
           "id": "1556020544",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15555,7 +15555,7 @@
         },
         {
           "id": "1556020545",
-          "type": "text",
+          "type": "chrome",
           "raw_type": "textbox",
           "title": null,
           "position": {
@@ -15570,7 +15570,7 @@
         },
         {
           "id": "1556020546",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15585,7 +15585,7 @@
         },
         {
           "id": "1556020547",
-          "type": "text",
+          "type": "chrome",
           "raw_type": "textbox",
           "title": null,
           "position": {
@@ -15600,7 +15600,7 @@
         },
         {
           "id": "1556020548",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15615,7 +15615,7 @@
         },
         {
           "id": "1556020549",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15630,7 +15630,7 @@
         },
         {
           "id": "1556020550",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15645,7 +15645,7 @@
         },
         {
           "id": "1556020551",
-          "type": "image",
+          "type": "chrome",
           "raw_type": "image",
           "title": null,
           "position": {
@@ -15732,7 +15732,7 @@
         },
         {
           "id": "1556020553",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15747,7 +15747,7 @@
         },
         {
           "id": "1556020554",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15762,7 +15762,7 @@
         },
         {
           "id": "1556020555",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15777,7 +15777,7 @@
         },
         {
           "id": "1556020556",
-          "type": "text",
+          "type": "chrome",
           "raw_type": "textbox",
           "title": null,
           "position": {
@@ -15792,7 +15792,7 @@
         },
         {
           "id": "1556020557",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15807,7 +15807,7 @@
         },
         {
           "id": "1556020558",
-          "type": "text",
+          "type": "chrome",
           "raw_type": "textbox",
           "title": null,
           "position": {
@@ -15822,7 +15822,7 @@
         },
         {
           "id": "1556020559",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15837,7 +15837,7 @@
         },
         {
           "id": "1556020560",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15852,7 +15852,7 @@
         },
         {
           "id": "1556020561",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15867,7 +15867,7 @@
         },
         {
           "id": "1556020562",
-          "type": "image",
+          "type": "chrome",
           "raw_type": "image",
           "title": null,
           "position": {
@@ -15882,7 +15882,7 @@
         },
         {
           "id": "1556020564",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -15897,7 +15897,7 @@
         },
         {
           "id": "1556020565",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -15912,7 +15912,7 @@
         },
         {
           "id": "1556020566",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -15927,7 +15927,7 @@
         },
         {
           "id": "1556020567",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -15942,7 +15942,7 @@
         },
         {
           "id": "1556020570",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15957,7 +15957,7 @@
         },
         {
           "id": "1556020571",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15972,7 +15972,7 @@
         },
         {
           "id": "1556020572",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -15987,7 +15987,7 @@
         },
         {
           "id": "1556020573",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16002,7 +16002,7 @@
         },
         {
           "id": "1556020574",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16017,7 +16017,7 @@
         },
         {
           "id": "1556020575",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16032,7 +16032,7 @@
         },
         {
           "id": "1556020576",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16047,7 +16047,7 @@
         },
         {
           "id": "1556020577",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16062,7 +16062,7 @@
         },
         {
           "id": "1556020578",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16077,7 +16077,7 @@
         },
         {
           "id": "1556020579",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16092,7 +16092,7 @@
         },
         {
           "id": "1556020580",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16107,7 +16107,7 @@
         },
         {
           "id": "1556020581",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16122,7 +16122,7 @@
         },
         {
           "id": "1556020582",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16137,7 +16137,7 @@
         },
         {
           "id": "1556020583",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16152,7 +16152,7 @@
         },
         {
           "id": "1556020584",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16167,7 +16167,7 @@
         },
         {
           "id": "1556020585",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16182,7 +16182,7 @@
         },
         {
           "id": "1556020586",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16197,7 +16197,7 @@
         },
         {
           "id": "1556020587",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16212,7 +16212,7 @@
         },
         {
           "id": "1556020588",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16227,7 +16227,7 @@
         },
         {
           "id": "1556020589",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16242,7 +16242,7 @@
         },
         {
           "id": "1556020590",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16257,7 +16257,7 @@
         },
         {
           "id": "1556020591",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16272,7 +16272,7 @@
         },
         {
           "id": "1556020592",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16287,7 +16287,7 @@
         },
         {
           "id": "1556020593",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16302,7 +16302,7 @@
         },
         {
           "id": "1556020594",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16317,7 +16317,7 @@
         },
         {
           "id": "1556020595",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16332,7 +16332,7 @@
         },
         {
           "id": "1556020596",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16347,7 +16347,7 @@
         },
         {
           "id": "1556020597",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16362,7 +16362,7 @@
         },
         {
           "id": "1556020598",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16377,7 +16377,7 @@
         },
         {
           "id": "1556020599",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16392,7 +16392,7 @@
         },
         {
           "id": "1556020600",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16407,7 +16407,7 @@
         },
         {
           "id": "1556020601",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16422,7 +16422,7 @@
         },
         {
           "id": "1556020602",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16437,7 +16437,7 @@
         },
         {
           "id": "1556020603",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16452,7 +16452,7 @@
         },
         {
           "id": "1556020604",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16467,7 +16467,7 @@
         },
         {
           "id": "1556020605",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16482,7 +16482,7 @@
         },
         {
           "id": "1556020606",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16497,7 +16497,7 @@
         },
         {
           "id": "1556020607",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16512,7 +16512,7 @@
         },
         {
           "id": "1556020608",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16527,7 +16527,7 @@
         },
         {
           "id": "1556020610",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16542,7 +16542,7 @@
         },
         {
           "id": "1556020611",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16557,7 +16557,7 @@
         },
         {
           "id": "1556020612",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16572,7 +16572,7 @@
         },
         {
           "id": "1556020613",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16587,7 +16587,7 @@
         },
         {
           "id": "1556020614",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16602,7 +16602,7 @@
         },
         {
           "id": "1556020615",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16617,7 +16617,7 @@
         },
         {
           "id": "1556020616",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16632,7 +16632,7 @@
         },
         {
           "id": "1556020617",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16647,7 +16647,7 @@
         },
         {
           "id": "1556020618",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16662,7 +16662,7 @@
         },
         {
           "id": "1556020619",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16677,7 +16677,7 @@
         },
         {
           "id": "1556020620",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16692,7 +16692,7 @@
         },
         {
           "id": "1556020621",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16707,7 +16707,7 @@
         },
         {
           "id": "1556020622",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16722,7 +16722,7 @@
         },
         {
           "id": "1556020623",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16737,7 +16737,7 @@
         },
         {
           "id": "1556020624",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16752,7 +16752,7 @@
         },
         {
           "id": "1556020625",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16767,7 +16767,7 @@
         },
         {
           "id": "1556020626",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16782,7 +16782,7 @@
         },
         {
           "id": "1556020627",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16797,7 +16797,7 @@
         },
         {
           "id": "1556020628",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16812,7 +16812,7 @@
         },
         {
           "id": "1556020629",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16835,7 +16835,7 @@
       "visuals": [
         {
           "id": "1556020632",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16850,7 +16850,7 @@
         },
         {
           "id": "1556020633",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16865,7 +16865,7 @@
         },
         {
           "id": "1556020634",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16880,7 +16880,7 @@
         },
         {
           "id": "1556020635",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16895,7 +16895,7 @@
         },
         {
           "id": "1556020636",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16910,7 +16910,7 @@
         },
         {
           "id": "1556020637",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16925,7 +16925,7 @@
         },
         {
           "id": "1556020638",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16940,7 +16940,7 @@
         },
         {
           "id": "1556020639",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16955,7 +16955,7 @@
         },
         {
           "id": "1556020640",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16970,7 +16970,7 @@
         },
         {
           "id": "1556020641",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -16985,7 +16985,7 @@
         },
         {
           "id": "1556020642",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17000,7 +17000,7 @@
         },
         {
           "id": "1556020643",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17015,7 +17015,7 @@
         },
         {
           "id": "1556020644",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17030,7 +17030,7 @@
         },
         {
           "id": "1556020645",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17045,7 +17045,7 @@
         },
         {
           "id": "1556020646",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17060,7 +17060,7 @@
         },
         {
           "id": "1556020647",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17075,7 +17075,7 @@
         },
         {
           "id": "1556020648",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17090,7 +17090,7 @@
         },
         {
           "id": "1556020649",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17105,7 +17105,7 @@
         },
         {
           "id": "1556020650",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17120,7 +17120,7 @@
         },
         {
           "id": "1556020651",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17135,7 +17135,7 @@
         },
         {
           "id": "1556020652",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17150,7 +17150,7 @@
         },
         {
           "id": "1556020653",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17165,7 +17165,7 @@
         },
         {
           "id": "1556020654",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17180,7 +17180,7 @@
         },
         {
           "id": "1556020655",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17195,7 +17195,7 @@
         },
         {
           "id": "1556020656",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17210,7 +17210,7 @@
         },
         {
           "id": "1556020657",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17225,7 +17225,7 @@
         },
         {
           "id": "1556020658",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17240,7 +17240,7 @@
         },
         {
           "id": "1556020659",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17255,7 +17255,7 @@
         },
         {
           "id": "1556020660",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17270,7 +17270,7 @@
         },
         {
           "id": "1556020661",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17285,7 +17285,7 @@
         },
         {
           "id": "1556020662",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17300,7 +17300,7 @@
         },
         {
           "id": "1556020663",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17315,7 +17315,7 @@
         },
         {
           "id": "1556020664",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17330,7 +17330,7 @@
         },
         {
           "id": "1556020665",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17345,7 +17345,7 @@
         },
         {
           "id": "1556020666",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17360,7 +17360,7 @@
         },
         {
           "id": "1556020667",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17375,7 +17375,7 @@
         },
         {
           "id": "1556020668",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17390,7 +17390,7 @@
         },
         {
           "id": "1556020669",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17405,7 +17405,7 @@
         },
         {
           "id": "1556020670",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17420,7 +17420,7 @@
         },
         {
           "id": "1556020672",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17435,7 +17435,7 @@
         },
         {
           "id": "1556020673",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17450,7 +17450,7 @@
         },
         {
           "id": "1556020674",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17465,7 +17465,7 @@
         },
         {
           "id": "1556020675",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17480,7 +17480,7 @@
         },
         {
           "id": "1556020676",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17495,7 +17495,7 @@
         },
         {
           "id": "1556020677",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17510,7 +17510,7 @@
         },
         {
           "id": "1556020678",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17525,7 +17525,7 @@
         },
         {
           "id": "1556020679",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17540,7 +17540,7 @@
         },
         {
           "id": "1556020680",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17555,7 +17555,7 @@
         },
         {
           "id": "1556020681",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17570,7 +17570,7 @@
         },
         {
           "id": "1556020682",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17585,7 +17585,7 @@
         },
         {
           "id": "1556020683",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17600,7 +17600,7 @@
         },
         {
           "id": "1556020684",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17615,7 +17615,7 @@
         },
         {
           "id": "1556020685",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17630,7 +17630,7 @@
         },
         {
           "id": "1556020686",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17645,7 +17645,7 @@
         },
         {
           "id": "1556020687",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17660,7 +17660,7 @@
         },
         {
           "id": "1556020688",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17675,7 +17675,7 @@
         },
         {
           "id": "1556020689",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17690,7 +17690,7 @@
         },
         {
           "id": "1556020690",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17705,7 +17705,7 @@
         },
         {
           "id": "1556020691",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17720,7 +17720,7 @@
         },
         {
           "id": "1556020692",
-          "type": "text",
+          "type": "chrome",
           "raw_type": "textbox",
           "title": null,
           "position": {
@@ -17735,7 +17735,7 @@
         },
         {
           "id": "1556020693",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17750,7 +17750,7 @@
         },
         {
           "id": "1556020694",
-          "type": "text",
+          "type": "chrome",
           "raw_type": "textbox",
           "title": null,
           "position": {
@@ -17765,7 +17765,7 @@
         },
         {
           "id": "1556020695",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17780,7 +17780,7 @@
         },
         {
           "id": "1556020696",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17795,7 +17795,7 @@
         },
         {
           "id": "1556020697",
-          "type": "unsupported",
+          "type": "chrome",
           "raw_type": "actionButton",
           "title": null,
           "position": {
@@ -17810,7 +17810,7 @@
         },
         {
           "id": "1556020699",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -17825,7 +17825,7 @@
         },
         {
           "id": "1556020700",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -17840,7 +17840,7 @@
         },
         {
           "id": "1556020701",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -17855,7 +17855,7 @@
         },
         {
           "id": "1556020702",
-          "type": "shape",
+          "type": "chrome",
           "raw_type": "shape",
           "title": null,
           "position": {
@@ -17870,7 +17870,7 @@
         },
         {
           "id": "1556020703",
-          "type": "image",
+          "type": "chrome",
           "raw_type": "image",
           "title": null,
           "position": {

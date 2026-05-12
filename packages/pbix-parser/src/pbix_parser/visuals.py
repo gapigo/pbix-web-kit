@@ -31,6 +31,9 @@ RAW_TO_CANONICAL: dict[str, VisualType] = {
     "image": "image",
     "shape": "shape",
 }
+# Chrome types (navigation, decorative, non-data visuals)
+CHROME_TYPES = {'actionButton', 'shape', 'basicShape', 'image', 'textbox', 'pageNavigator'}
+
 
 # Aggregation functions that may appear in queryRefs
 AGGREGATION_RE = re.compile(r"^(Sum|Count|Average|Min|Max|DistinctCount)\((.+)\)$")
@@ -150,7 +153,11 @@ def parse_visual_container(visual_container: dict[str, object]) -> Visual | None
         return None
     
     raw_type = single_visual.get("visualType", "unknown")
-    canonical_type = RAW_TO_CANONICAL.get(raw_type, "unsupported")
+    # Chrome types (navigation, decorative) → type='chrome'
+    if raw_type in CHROME_TYPES:
+        canonical_type = "chrome"
+    else:
+        canonical_type = RAW_TO_CANONICAL.get(raw_type, "unsupported")
     
     vid = str(visual_container.get("id", ""))
     title = extract_title(single_visual)

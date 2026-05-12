@@ -38,7 +38,7 @@ export function ReportCanvas({ page, allData }: ReportCanvasProps) {
   )
 
   const contentVisuals = useMemo(() =>
-    page.visuals.filter(v => v.type !== "slicer").sort((a, b) => a.position.z - b.position.z),
+    page.visuals.filter(v => v.type !== "slicer" && v.type !== "chrome").sort((a, b) => a.position.z - b.position.z),
     [page.visuals]
   )
 
