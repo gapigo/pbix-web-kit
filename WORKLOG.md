@@ -31,3 +31,22 @@
 - shadcn init fails on Tailwind v4 path resolution → manual component creation works
 
 
+## Phase 1 — Spike Exploration (completed)
+
+### Resumo do Sample "Regional Sales Sample.pbix":
+- **11 páginas**, sendo "Sales Overview" a mais rica (99 visuais)
+- **9 tabelas**: Accounts (300), Campaigns (12), Contacts (1), Industries (45), Opportunities (20K), Opportunity Forecast Adjustment (11), Owners (20), Products (9), Territories (51)
+- **20K linhas** em Opportunities (tabela fato principal)
+- **15 medidas DAX**, **5 colunas DAX**, 8 relações ativas M:1
+- **22 tipos únicos de visual** — cobertura principal: kpi, barChart, columnChart, clusteredColumnChart, lineChart, tableEx, pivotTable, slicer, textbox, image, shape
+- Custom visual FlowVisual detectado + mapa shapeMap
+- Layout JSON (~6.3 MB) dumped to `samples/regional_sales/raw_layout.json`
+- Tema: `Report/StaticResources/SharedResources/BaseThemes/CY21SU04.json`
+- Dados todos internos (CSV no DataModel), sem fontes externas
+- Sem RLS, sem parâmetros M complexos
+- Canvas: 1280x720
+
+### Tipos de visual a priorizar (⭐ core):
+- kpi, barChart, columnChart, clusteredColumnChart, lineChart, tableEx, pivotTable, slicer, textbox, image, shape → cobertura total na página "Sales Overview"
+
+
