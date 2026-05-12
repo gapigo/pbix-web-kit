@@ -64,7 +64,7 @@ export function LineChartVisual({ visual, data }: LineChartVisualProps) {
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={chartData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
-          <XAxis dataKey="name" tick={{ fontSize: 10 }} />
+          <XAxis dataKey="name" tick={{ fontSize: 10 }} tickFormatter={truncate(20)} />
           <YAxis tick={{ fontSize: 10 }} />
           <Tooltip />
           {valueCols!.length > 1 && <Legend wrapperStyle={{ fontSize: "10px" }} />}
@@ -84,4 +84,9 @@ export function LineChartVisual({ visual, data }: LineChartVisualProps) {
     </div>
   )
 }
+
+const truncate = (n: number) => (s: any) => {
+  const str = String(s);
+  return str.length > n ? str.slice(0, n) + '…' : str;
+};
 

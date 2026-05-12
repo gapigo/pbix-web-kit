@@ -61,6 +61,7 @@ export function BarChartVisual({ visual, data }: BarChartVisualProps) {
     ...vals,
   }))
 
+
   const isVertical = visual.raw_type === "barChart"
   return (
     <div className="w-full h-full p-2">
@@ -70,11 +71,11 @@ export function BarChartVisual({ visual, data }: BarChartVisualProps) {
           {isVertical ? (
             <>
               <XAxis type="number" tick={{ fontSize: 10 }} />
-              <YAxis type="category" dataKey="name" tick={{ fontSize: 10 }} width={80} />
+              <YAxis type="category" dataKey="name" tick={{ fontSize: 10 }} width={80} tickFormatter={truncate(20)} />
             </>
           ) : (
             <>
-              <XAxis dataKey="name" tick={{ fontSize: 10 }} />
+              <XAxis dataKey="name" tick={{ fontSize: 10 }} tickFormatter={truncate(20)} />
               <YAxis tick={{ fontSize: 10 }} />
             </>
           )}
@@ -93,5 +94,10 @@ export function BarChartVisual({ visual, data }: BarChartVisualProps) {
     </div>
   )
 }
+
+const truncate = (n: number) => (s: any) => {
+  const str = String(s);
+  return str.length > n ? str.slice(0, n) + '…' : str;
+};
 
 
