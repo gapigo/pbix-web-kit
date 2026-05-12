@@ -1327,7 +1327,7 @@
         },
         {
           "id": "1556019852",
-          "type": "unsupported",
+          "type": "map",
           "raw_type": "shapeMap",
           "title": null,
           "position": {
@@ -1631,7 +1631,7 @@
         },
         {
           "id": "1556019857",
-          "type": "unsupported",
+          "type": "combo",
           "raw_type": "lineStackedColumnComboChart",
           "title": null,
           "position": {
@@ -1844,7 +1844,7 @@
         },
         {
           "id": "1556019859",
-          "type": "unsupported",
+          "type": "funnel",
           "raw_type": "funnel",
           "title": null,
           "position": {
@@ -5213,7 +5213,7 @@
         },
         {
           "id": "1556020039",
-          "type": "unsupported",
+          "type": "scatter",
           "raw_type": "scatterChart",
           "title": null,
           "position": {
@@ -7281,7 +7281,7 @@
         },
         {
           "id": "1556020128",
-          "type": "unsupported",
+          "type": "bar",
           "raw_type": "ribbonChart",
           "title": null,
           "position": {
@@ -10175,7 +10175,7 @@
         },
         {
           "id": "1556020226",
-          "type": "unsupported",
+          "type": "combo",
           "raw_type": "lineStackedColumnComboChart",
           "title": null,
           "position": {

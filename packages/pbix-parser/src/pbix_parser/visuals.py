@@ -30,6 +30,18 @@ RAW_TO_CANONICAL: dict[str, VisualType] = {
     "textbox": "text",
     "image": "image",
     "shape": "shape",
+    "ribbonChart": "bar",
+    "lineStackedColumnComboChart": "combo",
+    "lineClusteredColumnComboChart": "combo",
+    "comboChart": "combo",
+    "scatterChart": "scatter",
+    "funnel": "funnel",
+    "gauge": "gauge",
+    "treemap": "treemap",
+    "shapeMap": "map",
+    "azureMap": "map",
+    "filledMap": "map",
+
 }
 # Chrome types (navigation, decorative, non-data visuals)
 CHROME_TYPES = {'actionButton', 'shape', 'basicShape', 'image', 'textbox', 'pageNavigator'}

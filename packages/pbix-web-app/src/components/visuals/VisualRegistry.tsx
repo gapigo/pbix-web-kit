@@ -5,6 +5,12 @@ import { LineChartVisual } from "./LineChartVisual"
 import { PieChartVisual } from "./PieChartVisual"
 import { DataTableVisual } from "./DataTableVisual"
 import { SlicerVisual } from "./SlicerVisual"
+import { ComboChartVisual } from "./ComboChartVisual"
+import { ScatterChartVisual } from "./ScatterChartVisual"
+import { FunnelVisual } from "./FunnelVisual"
+import { TreemapVisual } from "./TreemapVisual"
+import { GaugeVisual } from "./GaugeVisual"
+import { MapPlaceholder } from "./MapPlaceholder"
 import { UnsupportedVisual } from "./UnsupportedVisual"
 
 interface VisualRendererProps {
@@ -35,6 +41,19 @@ export function VisualRenderer({ visual, data, onFilter, activeFilters }: Visual
     case "image":
     case "shape":
       return null // skip for MVP
+    case "combo":
+      return <ComboChartVisual visual={visual} data={data} />
+    case "scatter":
+      return <ScatterChartVisual visual={visual} data={data} />
+    case "funnel":
+      return <FunnelVisual visual={visual} data={data} />
+    case "treemap":
+      return <TreemapVisual visual={visual} data={data} />
+    case "gauge":
+      return <GaugeVisual visual={visual} data={data} />
+    case "map":
+      return <MapPlaceholder visual={visual} />
+
     default:
       return <UnsupportedVisual visual={visual} />
   }
