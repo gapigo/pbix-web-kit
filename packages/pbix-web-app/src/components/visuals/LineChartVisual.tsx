@@ -6,6 +6,7 @@ import { resolveData } from "./dataResolver"
 import { useMemo } from "react"
 import { evaluateField, buildMeasureMap } from "@/lib/measureEvaluator"
 import irData from "@/data/ir.json"
+import { useFilteredData } from "@/components/layout/FilterContext"
 
 
 const PBI_PALETTE = ["#118DFF", "#12239E", "#E66C37", "#6B007B", "#E044A7", "#744EC2", "#D9B300", "#D64550"]
@@ -21,12 +22,14 @@ export function LineChartVisual({ visual, data }: LineChartVisualProps) {
   if (empty) {
     return <div className="text-muted-foreground text-xs p-4">No data available</div>
   }
+  const filteredData = useFilteredData(tableData)
+
   // Build measure map for evaluation
   const measureMap = useMemo(() => buildMeasureMap((irData as any).measures || []), [])
   const valueFields = visual.fields.filter(f => f.role === "Y" || f.role === "Values")
   const grouped = useMemo(() => {
     const result: Record<string, Record<string, number>> = {}
-    for (const row of tableData!) {
+    for (const row of filteredData) {
       const cat = String(row[categoryCol ?? ""] ?? "N/A")
       if (!result[cat]) result[cat] = {}
       for (let vi = 0; vi < valueFields.length; vi++) {
@@ -52,7 +55,7 @@ export function LineChartVisual({ visual, data }: LineChartVisualProps) {
       }
     }
     return result
-  }, [tableData, categoryCol, valueCols, valueFields, data, measureMap])
+  }, [filteredData, categoryCol, valueCols, valueFields, data, measureMap])
 
   const chartData = Object.entries(grouped).map(([key, vals]) => ({
     name: key,

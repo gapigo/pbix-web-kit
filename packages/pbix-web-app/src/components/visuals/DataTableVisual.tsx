@@ -2,6 +2,7 @@ import { useState, useMemo } from "react"
 import type { Visual } from "./types"
 import { evaluateField, buildMeasureMap } from "@/lib/measureEvaluator"
 import irData from "@/data/ir.json"
+import { useFilteredData } from "@/components/layout/FilterContext"
 
 interface DataTableVisualProps {
   visual: Visual
@@ -16,6 +17,8 @@ export function DataTableVisual({ visual, data }: DataTableVisualProps) {
   const allTables = [...new Set(visual.fields.map(f => f.table))]
   const firstTable = allTables[0]
   const tableData = data[firstTable]
+  const filteredData = useFilteredData(tableData)
+
 
   if (!tableData || tableData.length === 0) {
     return <div className="text-muted-foreground text-xs p-4">No data available</div>
@@ -30,7 +33,7 @@ export function DataTableVisual({ visual, data }: DataTableVisualProps) {
   // Aggregate values group by row fields
   const aggregated = useMemo(() => {
     const groups: Record<string, Record<string, number>> = {}
-    for (const row of tableData) {
+    for (const row of filteredData) {
       const key = rowFields.map(f => String(row[f.column] ?? "")).join("|")
       if (!groups[key]) {
         groups[key] = {}
@@ -69,7 +72,7 @@ export function DataTableVisual({ visual, data }: DataTableVisualProps) {
       Object.entries(vals).forEach(([col, val]) => { result[col] = formatNum(val) })
       return result
     })
-  }, [tableData, rowFields, valueFields, data, measureMap])
+  }, [filteredData, rowFields, valueFields, data, measureMap])
 
   const [sortCol, setSortCol] = useState<string | null>(null)
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc")

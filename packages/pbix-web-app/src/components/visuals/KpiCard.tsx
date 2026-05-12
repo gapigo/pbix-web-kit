@@ -2,6 +2,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import type { Visual } from "./types"
 import { evaluateField, buildMeasureMap } from "@/lib/measureEvaluator"
 import irData from "@/data/ir.json"
+import { useFilters } from "@/components/layout/FilterContext"
 
 interface KpiCardProps {
   visual: Visual
@@ -10,6 +11,8 @@ interface KpiCardProps {
 
 export function KpiCard({ visual, data }: KpiCardProps) {
   const computedValues = visual.config?.computed_values as Record<string, number> | undefined
+  const { filters: globalFilters } = useFilters()
+
 
   // Get the first indicator field
   const indicatorField = visual.fields.find(f => f.role === "Indicator")
@@ -25,7 +28,7 @@ export function KpiCard({ visual, data }: KpiCardProps) {
   // Measure evaluator fallback: try to evaluate the field as a DAX measure
   if (value === null && indicatorField) {
     const measureMap = buildMeasureMap((irData as any).measures || []);
-    value = evaluateField(indicatorField, data, {}, measureMap);
+    value = evaluateField(indicatorField, data, globalFilters, measureMap);
   }
 
 
