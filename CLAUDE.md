@@ -107,3 +107,27 @@ Se um visual aparecer como `<UnsupportedVisual>`, siga seção 5 deste arquivo.
 Se o IR está vazio, rode `python scripts/spike_explore.py <arquivo.pbix>` para diagnóstico.
 
 Bom trabalho. — humano signatário
+
+## 12. Evaluator de medidas (adicionado Rodada B)
+
+Visuais com fields agregados (medidas DAX ou `aggregation` setado) usam `src/lib/measureEvaluator.ts`
+no front. Padrões suportados:
+- SUM, AVERAGE/AVG, COUNT/COUNTROWS, MIN, MAX, DISTINCTCOUNT, DIVIDE
+- Referência a outra medida via `[Name]`
+- CALCULATE + FILTER com predicado simples (e.g., Status = "Won")
+
+Não implementa CALCULATE, FILTER, SUMX, ou qualquer DAX que muda filter context.
+Se a expressão não casa nenhum padrão, retorna `null` e o visual mostra `—`.
+
+Para adicionar um padrão novo:
+1. Adicione função em `measureEvaluator.ts`
+2. Adicione teste em `__tests__/measureEvaluator.test.ts`
+3. Adicione case no switch da função `evaluateMeasure`
+
+## 13. Chrome visuals
+
+Tipos do raw layout que são chrome (não dados):
+- actionButton, shape, basicShape, image, textbox, pageNavigator
+
+São extraídos no IR como `Visual(type='chrome')` mas o `ReportCanvas` renderiza como
+`null` por default. Toggle via `showChrome` prop se quiser preservar.

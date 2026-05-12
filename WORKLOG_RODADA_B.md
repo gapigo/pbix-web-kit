@@ -49,3 +49,18 @@
 - Cross-filter: FilterContext já existe, só falta visuais consumirem
 - Novos visuais: ComboChart (ComposedChart), ScatterChart, Funnel, Treemap, Gauge, Map placeholder
 - `lodash` para grouping/uniq — já é dependência via recharts/shared deps
+
+## Status Final
+
+Bugs corrigidos: 5/5
+- BUG #1 (DAX aggregation): CORRIGIDO - measureEvaluator.ts com 7 padroes, 14 tests
+- BUG #2 (chrome): CORRIGIDO - 837 chrome visuals ocultos
+- BUG #3 (layout): CORRIGIDO - truncate, overflow-hidden
+- BUG #4 (new visuals): CORRIGIDO - 6 novos componentes
+- BUG #5 (slicer): CORRIGIDO - useFilteredData hook em 4 componentes
+
+Commits: 5 na Rodada B
+Build: pnpm build OK
+Tests: 11 pytest + 14 vitest OK
+Visual types: 13 suportados
+
