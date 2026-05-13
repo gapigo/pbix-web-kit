@@ -6,11 +6,11 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@duckdb/duckdb-wasm": "1.33.1-dev45.0",
+    "@duckdb/duckdb-wasm": "^1.33.1-dev45.0",
+    "@pbix/runtime": "workspace:*",
     "@tanstack/react-query": "^5.100.10",
     "@tanstack/react-virtual": "^3.13.24",
     "apache-arrow": "^21.1.0",
@@ -35,11 +35,11 @@
     "eslint": "^10.2.1",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
-    "globals": "^17.5.0",
+    "globals": "^17.6.0",
     "tailwindcss": "^4.3.0",
-    "typescript": "~6.0.2",
-    "typescript-eslint": "^8.58.2",
-    "vite": "^8.0.10",
-    "vitest": "^4.1.5"
+    "typescript": "~5.8.5",
+    "typescript-eslint": "^8.59.3",
+    "vite": "^8.0.12",
+    "vitest": "^4.1.6"
   }
 }
