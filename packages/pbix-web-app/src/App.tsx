@@ -1,99 +1,116 @@
-import { useState, useEffect } from "react"
-import type { PbixIR, Page } from "@/components/visuals/types"
-import { ReportCanvas } from "@/components/layout/ReportCanvas"
-import { FilterProvider } from "@/components/layout/FilterContext"
-import irData from "@/data/ir.json"
+import { BrowserRouter, Routes, Route, Link, useParams, useNavigate } from "react-router-dom"
+import {
+  DashboardShell,
+  PageTabs,
+  FilterBar,
+  useUrlSyncedFilters,
+  selectFilterCount,
+} from "@pbix/runtime"
+import { BootProvider, useEngine, useStore } from "./boot"
+import { lazy, Suspense } from "react"
 
-// Create a typed reference to the IR data
-const ir = irData as unknown as PbixIR
+// Lazy load all 11 composer pages
+const composerPages: Record<string, any> = {
+  "Sales Overview": lazy(() => import("./pages/composer/SalesOverview")),
+  "Win/Loss Ratio Overview": lazy(() => import("./pages/composer/WinLossOverview")),
+  "Industries Overview": lazy(() => import("./pages/composer/IndustriesOverview")),
+  "Pipeline Trends": lazy(() => import("./pages/composer/PipelineTrends")),
+  "Trend Analytics": lazy(() => import("./pages/composer/TrendAnalytics")),
+  "Win/Loss Ratio Insights": lazy(() => import("./pages/composer/WinLossInsights")),
+  "Days to Close Insights": lazy(() => import("./pages/composer/DaysToCloseInsights")),
+  "Sales Discounting Insights": lazy(() => import("./pages/composer/SalesDiscountingInsights")),
+  "Revenue Source Breakdown": lazy(() => import("./pages/composer/RevenueSourceBreakdown")),
+  "Q&A Query": lazy(() => import("./pages/composer/QAQuery")),
+  "Template": lazy(() => import("./pages/composer/Template")),
+}
 
-function App() {
-  const [activePage, setActivePage] = useState<Page | null>(null)
-  const [allData, setAllData] = useState<Record<string, any[]>>({})
-  const [loading, setLoading] = useState(true)
+const generatorPages: Record<string, any> = {
+  "Sales Overview": lazy(() => import("./pages/generator/SalesOverview")),
+  "Win/Loss Ratio Overview": lazy(() => import("./pages/generator/WinLossOverview")),
+  "Industries Overview": lazy(() => import("./pages/generator/IndustriesOverview")),
+  "Pipeline Trends": lazy(() => import("./pages/generator/PipelineTrends")),
+  "Trend Analytics": lazy(() => import("./pages/generator/TrendAnalytics")),
+  "Win/Loss Ratio Insights": lazy(() => import("./pages/generator/WinLossInsights")),
+  "Days to Close Insights": lazy(() => import("./pages/generator/DaysToCloseInsights")),
+  "Sales Discounting Insights": lazy(() => import("./pages/generator/SalesDiscountingInsights")),
+  "Revenue Source Breakdown": lazy(() => import("./pages/generator/RevenueSourceBreakdown")),
+  "Q&A Query": lazy(() => import("./pages/generator/QAQuery")),
+  "Template": lazy(() => import("./pages/generator/Template")),
+}
 
-  useEffect(() => {
-    async function loadData() {
-      // Load all table data files
-      const data: Record<string, any[]> = {}
-      for (const table of ir.tables) {
-        const safeName = table.name.replace(/[^a-zA-Z0-9\-_]/g, "_")
-        try {
-          const resp = await fetch(`/data/${safeName}.json`)
-          if (resp.ok) {
-            data[table.name] = await resp.json()
-          }
-        } catch {
-          console.warn(`Failed to load ${table.name}.json`)
-        }
-      }
-      setAllData(data)
-      setActivePage(ir.pages[0])
-      setLoading(false)
-    }
-    loadData()
-  }, [])
+function DashboardContent() {
+  const engine = useEngine()
+  const store = useStore()!
+  const { mode = "composer", pageName } = useParams<{ mode: string; pageName: string }>()
+  const navigate = useNavigate()
 
-  useEffect(() => {
-    document.title = "pbix-web-kit — " + ir.source_file.split(/[/\\]/).pop()
-  }, [])
+  useUrlSyncedFilters(store)
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen text-muted-foreground">
-        Loading dashboard...
-      </div>
-    )
-  }
+  const storyboard = store((s) => s.storyboard)
+  const activePage = store((s) => s.activePage)
+  const filterCount = selectFilterCount(store.getState())
 
-  if (!activePage) {
-    return (
-      <div className="flex items-center justify-center h-screen text-muted-foreground">
-        No pages found in report
-      </div>
-    )
-  }
+  if (!storyboard) return null
+
+  const pages = mode === "composer" ? composerPages : generatorPages
+  const PageComponent = pages[activePage]
 
   return (
-    <FilterProvider>
-      <div className="h-screen flex flex-col">
-        {/* Header */}
-        <header className="border-b px-4 py-2 flex items-center gap-4 shrink-0">
-          <h1 className="text-sm font-semibold">pbix-web-kit</h1>
-          <span className="text-xs text-muted-foreground">|</span>
-          <span className="text-xs text-muted-foreground truncate">
-            {ir.source_file.split(/[/\\]/).pop()}
-          </span>
-        </header>
-
-        {/* Page tabs */}
-        <div className="border-b px-4 flex gap-0 overflow-x-auto shrink-0">
-          {ir.pages.map((page) => (
-            <button
-              key={page.name}
-              onClick={() => setActivePage(page)}
-              className={`px-3 py-2 text-xs border-b-2 transition-colors whitespace-nowrap ${
-                activePage.name === page.name
-                  ? "border-primary text-primary font-medium"
-                  : "border-transparent text-muted-foreground hover:text-foreground"
+    <DashboardShell
+      title={storyboard.dashboard_name}
+      header={
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-0.5">
+            <Link
+              to={`/composer/${activePage}`}
+              className={`px-3 py-1 text-xs rounded-md font-medium transition-colors ${
+                mode === "composer" ? "bg-white shadow-sm text-gray-900" : "text-gray-500 hover:text-gray-700"
               }`}
             >
-              {page.display_name}
-            </button>
-          ))}
+              Composer
+            </Link>
+            <Link
+              to={`/generator/${activePage}`}
+              className={`px-3 py-1 text-xs rounded-md font-medium transition-colors ${
+                mode === "generator" ? "bg-white shadow-sm text-gray-900" : "text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              Generator
+            </Link>
+          </div>
+          {filterCount > 0 && (
+            <span className="text-xs text-blue-600 font-medium">
+              {filterCount} filter{filterCount !== 1 ? "s" : ""}
+            </span>
+          )}
         </div>
-
-        {/* Canvas area */}
-        <main className="flex-1 p-4 overflow-hidden">
-          <ReportCanvas
-            key={activePage.name}
-            page={activePage}
-            allData={allData}
-          />
-        </main>
-      </div>
-    </FilterProvider>
+      }
+    >
+      <PageTabs
+        storyboard={storyboard}
+        activePage={activePage}
+        onPageChange={(name) => {
+          store.getState().setActivePage(name)
+          navigate(`/${mode}/${encodeURIComponent(name)}`)
+        }}
+      />
+      <FilterBar store={store} />
+      <Suspense fallback={<div className="h-64 bg-gray-100 animate-pulse rounded-lg" />}>
+        {PageComponent ? <PageComponent engine={engine} store={store} /> : null}
+      </Suspense>
+    </DashboardShell>
   )
 }
 
-export default App
+export default function App() {
+  return (
+    <BrowserRouter>
+      <BootProvider>
+        <Routes>
+          <Route path="/:mode/:pageName" element={<DashboardContent />} />
+          <Route path="*" element={<DashboardContent />} />
+        </Routes>
+      </BootProvider>
+    </BrowserRouter>
+  )
+}
