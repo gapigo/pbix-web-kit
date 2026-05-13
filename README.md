@@ -3,55 +3,89 @@
 > Convert Power BI `.pbix` files into functional web dashboards using React.  
 > No Power BI Embedded, no iframes — native React rendering from extracted data.
 
+**Mission**: Enable LLMs to convert arbitrary `.pbix` files into faithful web dashboards with a reusable SDK + pipeline.
+
 ## Architecture
 
 ```
-.pbix ──► pbix-parser ──► PbixIR (JSON) ──► pbix-web-app (React)
-              │                                  │
-              ▼                                  ▼
-         Data JSON files                  Recharts + shadcn/ui
+.pbix ──► pbix-parser ──► IR (JSON + data) ──► pbix-storyboard ──► Storyboard + Parquet + Briefs
+                                                                              │
+                                                                              ▼
+                                                                   @pbix/runtime SDK
+                                                                     │          │
+                                                                 Composer    Generator
+                                                                 (pronto)   (criativo)
+                                                                     │          │
+                                                                     ▼          ▼
+                                                              Dashboard Web (22 páginas)
 ```
 
-## Quick Start
+## Quick Start (5 commands)
 
 ```bash
-# 1. Bootstrap
+# 1. Bootstrap environment
 bash scripts/00_bootstrap.sh
 
-# 2. Extract a sample
-bash scripts/01_extract.sh samples/regional_sales/Regional\ Sales\ Sample.pbix
+# 2. Extract a .pbix to IR
+pbix-parser extract --in "samples/regional_sales/Regional Sales Sample.pbix" --out samples/regional_sales/ir/
 
-# 3. Run the web app
-bash scripts/02_run_web.sh
+# 3. Generate Storyboard + Parquet + Briefs
+pbix-storyboard extract --ir-dir samples/regional_sales/ir --out samples/regional_sales/
+pbix-storyboard data-to-parquet --ir-dir samples/regional_sales/ir --out samples/regional_sales/parquet
+pbix-storyboard brief --storyboard-file samples/regional_sales/storyboard.json --out samples/regional_sales/briefs
+
+# 4. Run the demo app
+cd packages/pbix-web-app && pnpm dev
 ```
 
-Open http://localhost:5173 to see the dashboard.
+Open http://localhost:5173 to see the dashboard in Composer and Generator modes (toggle in header).
 
 ## Packages
 
 | Package | Description |
 |---------|-------------|
-| `pbix-parser` | Python lib to extract `.pbix` → canonical PbixIR |
-| `pbix-web-app` | Vite + React + Recharts app to render the IR |
+| `pbix-parser` | Python — extract `.pbix` → canonical IR + data JSON |
+| `pbix-storyboard` | Python — transform IR into Storyboard + Parquet + briefs |
+| `@pbix/runtime` | React SDK — data/state/visuals/layout primitives for dashboard building |
+| `pbix-web-app` | Demo Vite + React app showing both Composer and Generator modes |
 | `pbix-validator` | Playwright-based validation of rendered output |
 
-## PbixIR Schema
+## SDK (`@pbix/runtime`)
 
-See [docs/IR_SCHEMA.md](docs/IR_SCHEMA.md) for the full intermediate representation schema.
+The heart of the kit. Exports:
 
-## Adding Visuals
+- **Data**: `DuckDBProvider`, `QueryEngine`, `loadParquet`, `registerTables`
+- **State**: `createDashboardStore()`, `useUrlSyncedFilters`
+- **Hooks**: `useAggregation`, `useQuery`, `useDistinctValues`, `useTopN`, `useFilter`, `useFilters`, `useStoryboard`
+- **Visuals**: `KpiCard`, `BarChartVisual`, `LineChartVisual`, `PieChartVisual`, `DataTableVisual`, `SlicerVisual`, `ComboChartVisual`, `ScatterChartVisual`, `TreemapVisual`, `FunnelVisual`, `GaugeVisual`, `MapPlaceholder`
+- **Layout**: `DashboardShell`, `PageTabs`, `FilterBar`
+- **Theme + Utils**: `theme`, `PBI_PALETTE`, `formatCompact`, `formatCurrency`, `formatPercent`, `formatNumber`
 
-See [docs/HOW_TO_ADD_A_VISUAL.md](docs/HOW_TO_ADD_A_VISUAL.md) for extending support to new visual types.
+## For LLMs
+
+The most important file is [skill/SKILL.md](./skill/SKILL.md) — a complete guide for converting any `.pbix` into a web dashboard using this kit.
+
+Other key docs:
+- [skill/COMPOSER_GUIDE.md](./skill/COMPOSER_GUIDE.md) — how to build pages in Composer mode (restricted, consistent)
+- [skill/GENERATOR_GUIDE.md](./skill/GENERATOR_GUIDE.md) — how to build pages in Generator mode (creative, flexible)
+- [skill/EVALUATION.md](./skill/EVALUATION.md) — empirical comparison of both modes
+- [docs/IR_SCHEMA.md](./docs/IR_SCHEMA.md) — intermediate representation schema
+- [docs/HOW_TO_ADD_A_VISUAL.md](./docs/HOW_TO_ADD_A_VISUAL.md) — extending visual support
 
 ## Supported Visual Types
 
 - KPI cards (single number)
-- Bar/Column charts
+- Bar/Column charts (vertical, horizontal, stacked)
 - Line/Area charts
 - Pie/Donut charts
-- Tables (sortable)
-- Slicers (checkbox filter)
-- Text boxes, images, shapes (pass-through)
+- Combo charts (bar + line)
+- Scatter plots
+- Treemap
+- Funnel charts
+- Gauge (radial)
+- Data tables (with virtualized scroll >200 rows)
+- Slicers (multi-select)
+- Map placeholder
 
 ## License
 
