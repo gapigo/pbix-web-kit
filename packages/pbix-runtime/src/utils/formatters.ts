@@ -20,11 +20,13 @@ export function formatCurrency(n: number | null | undefined): string {
 /** Format as percentage. */
 export function formatPercent(n: number | null | undefined): string {
   if (n === null || n === undefined || Number.isNaN(n)) return "—"
+  // Handle both decimal (0.496) and pre-multiplied (49.6) values
+  const value = n > 1 ? n / 100 : n
   return new Intl.NumberFormat("en-US", {
     style: "percent",
     minimumFractionDigits: 1,
     maximumFractionDigits: 1,
-  }).format(n)
+  }).format(value)
 }
 
 /** Compact number format: 1.2K, 3.4M, 5.6B. */

@@ -38,7 +38,7 @@ export default function WinLossOverview({ engine }: Props) {
         ) : (
           <div className="h-24 bg-white rounded-lg border p-4">
             <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Close %</div>
-            <div className="text-2xl font-bold" style={{ color: "#d97706" }}>{crVal !== undefined ? `${crVal}%` : "—"}</div>
+            <div className="text-2xl font-bold" style={{ color: "#d97706" }}>{crVal !== undefined ? `${Number(crVal).toFixed(1)}%` : "—"}</div>
           </div>
         )}
       </div>
