@@ -16,13 +16,13 @@ interface Props {
 
 /* ── helpers ── */
 const C = theme.colors
-type ChartDim = "Product" | "Territory" | "Industry" | "PipelineStep" | "Product LOB"
+type ChartDim = "Product" | "Territory" | "Industry" | "Region" | "Product LOB"
 
 const DIMENSIONS: { key: ChartDim; label: string }[] = [
   { key: "Product", label: "Product" },
   { key: "Territory", label: "Territory" },
   { key: "Industry", label: "Industry" },
-  { key: "PipelineStep", label: "Pipeline Step" },
+  { key: "Region", label: "Region" },
   { key: "Product LOB", label: "Product LOB" },
 ]
 
@@ -85,15 +85,15 @@ export default function QAQuery({ engine, store }: Props) {
 
   /* ────────── KPI queries ────────── */
   const totalRevenue = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     measures: [{ column: "Value", fn: "sum", alias: "val" }],
   })
   const avgDeal = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     measures: [{ column: "Value", fn: "avg", alias: "val" }],
   })
   const dealCount = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     measures: [{ column: "Value", fn: "count", alias: "val" }],
   })
   const winRateData = useQuery({
@@ -102,7 +102,7 @@ export default function QAQuery({ engine, store }: Props) {
       SELECT
         COUNT(*) AS total,
         COUNT(CASE WHEN LOWER(Status) = 'won' THEN 1 END) AS won
-      FROM "Opportunities"
+      FROM v_opportunities
     `,
   })
 
@@ -118,7 +118,7 @@ export default function QAQuery({ engine, store }: Props) {
 
   /* ────────── Exploratory chart query ────────── */
   const chartQuery = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: [dim],
     measures: [
       { column: "Value", fn: "sum", alias: "revenue" },
@@ -133,26 +133,28 @@ export default function QAQuery({ engine, store }: Props) {
     engine,
     sql: `
       SELECT
-        "Account", "Value", "Status", "Product", "Product LOB",
-        "Territory", "Owner", "Manager", "Industry",
+        "Account Name", "Value", "Status", "Product", "Product LOB",
+        "Territory", "Region", "Owner", "Manager", "Industry",
         strftime("CloseDate", '%Y-%m-%d') AS CloseDate,
-        "PipelineStep", "Sales Stage", "Discount"
-      FROM "Opportunities"
+        "Sales Stage", "Discount", "DaysToClose"
+      FROM v_opportunities
       ORDER BY "Value" DESC
       LIMIT 100
     `,
   })
 
   const DETAIL_COLS = [
-    { key: "Account", label: "Account" },
+    { key: "Account Name", label: "Account" },
     { key: "Value", label: "Value", fmt: (v: any) => formatCurrency(Number(v)) },
     { key: "Status", label: "Status" },
     { key: "Product", label: "Product" },
     { key: "Territory", label: "Territory" },
+    { key: "Region", label: "Region" },
     { key: "Industry", label: "Industry" },
-    { key: "PipelineStep", label: "Pipeline Step" },
     { key: "Sales Stage", label: "Sales Stage" },
     { key: "Owner", label: "Owner" },
+    { key: "Discount", label: "Discount", fmt: (v: any) => formatPercent(v) },
+    { key: "DaysToClose", label: "Days to Close" },
     { key: "CloseDate", label: "Close Date" },
   ]
 

@@ -1,4 +1,4 @@
-import { useAggregation, theme, formatCurrency, formatCompact, PBI_PALETTE } from "@pbix/runtime"
+import { useAggregation, theme, formatCurrency, formatCompact, dateAxisFormatter, currencyTooltipFormatter } from "@pbix/runtime"
 import {
   BarChart,
   Bar,
@@ -10,7 +10,6 @@ import {
   Legend,
   Line,
   ComposedChart,
-  Area,
 } from "recharts"
 import type { QueryEngine } from "@pbix/runtime"
 import type { UseBoundStore, StoreApi } from "zustand"
@@ -116,29 +115,29 @@ function ChartTooltip({
 }
 
 // ── Main page ────────────────────────────────────────────
-export default function SalesOverview({ engine }: Props) {
+export default function SalesOverview({ engine, store }: Props) {
   // ── KPI queries ──────────────────────────────────────
   const totalRevenue = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     measures: [{ column: "Value", fn: "sum", alias: "revenue" }],
   })
   const avgDealSize = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     measures: [{ column: "Value", fn: "avg", alias: "avg" }],
   })
   const totalDeals = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     measures: [{ column: "Value", fn: "count", alias: "count" }],
   })
   const wonDeals = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     measures: [{ column: "Value", fn: "count", alias: "count" }],
     filters: [{ column: "Status", op: "eq", values: ["Won"] }],
   })
 
   // ── Chart queries ────────────────────────────────────
   const revenueByProduct = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["Product"],
     measures: [{ column: "Value", fn: "sum", alias: "revenue" }],
     orderBy: [{ column: "revenue", dir: "desc" }],
@@ -146,14 +145,14 @@ export default function SalesOverview({ engine }: Props) {
   })
 
   const revenueByTerritory = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["Territory"],
     measures: [{ column: "Value", fn: "sum", alias: "revenue" }],
     orderBy: [{ column: "revenue", dir: "desc" }],
   })
 
   const monthlyData = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["CloseDate"],
     measures: [
       { column: "Value", fn: "sum", alias: "revenue" },
@@ -163,22 +162,22 @@ export default function SalesOverview({ engine }: Props) {
   })
 
   const funnelStages = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["Sales Stage"],
     measures: [{ column: "Value", fn: "count", alias: "count" }],
     orderBy: [{ column: "count", dir: "desc" }],
   })
 
   const topDeals = useAggregation(engine, {
-    table: "Opportunities",
-    groupBy: ["Account"],
+    table: "v_opportunities",
+    groupBy: ["Account Name"],
     measures: [{ column: "Value", fn: "sum", alias: "value" }],
     orderBy: [{ column: "value", dir: "desc" }],
     limit: 10,
   })
 
   const dealsByIndustry = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["Industry"],
     measures: [
       { column: "Value", fn: "sum", alias: "revenue" },
@@ -235,20 +234,20 @@ export default function SalesOverview({ engine }: Props) {
           label="Total Revenue"
           value={formatCurrency(rev)}
           subtitle={`${formatCompact(total)} deals`}
-          color={PBI_PALETTE[0]}
+          color={theme.colors[0]}
           loading={kpiLoading}
         />
         <KpiCard
           label="Avg Deal Size"
           value={formatCurrency(avg)}
-          color={PBI_PALETTE[1]}
+          color={theme.colors[1]}
           loading={kpiLoading}
         />
         <KpiCard
           label="Total Deals"
           value={formatCompact(total)}
           subtitle={`${formatCompact(won)} won`}
-          color={PBI_PALETTE[2]}
+          color={theme.colors[2]}
           loading={kpiLoading}
         />
         <KpiCard
@@ -272,7 +271,7 @@ export default function SalesOverview({ engine }: Props) {
               <XAxis type="number" tickFormatter={(v: number) => formatCompact(v)} fontSize={11} />
               <YAxis type="category" dataKey="Product" width={100} fontSize={11} />
               <Tooltip content={<ChartTooltip />} />
-              <Bar dataKey="revenue" fill={PBI_PALETTE[0]} radius={[0, 4, 4, 0]} name="Revenue" />
+              <Bar dataKey="revenue" fill={theme.colors[0]} radius={[0, 4, 4, 0]} name="Revenue" />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -288,7 +287,7 @@ export default function SalesOverview({ engine }: Props) {
               <XAxis type="number" tickFormatter={(v: number) => formatCompact(v)} fontSize={11} />
               <YAxis type="category" dataKey="Territory" width={100} fontSize={11} />
               <Tooltip content={<ChartTooltip />} />
-              <Bar dataKey="revenue" fill={PBI_PALETTE[3]} radius={[0, 4, 4, 0]} name="Revenue" />
+              <Bar dataKey="revenue" fill={theme.colors[3]} radius={[0, 4, 4, 0]} name="Revenue" />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -312,7 +311,7 @@ export default function SalesOverview({ engine }: Props) {
               <Bar
                 yAxisId="revenue"
                 dataKey="revenue"
-                fill={PBI_PALETTE[0]}
+                fill={theme.colors[0]}
                 radius={[4, 4, 0, 0]}
                 name="Revenue"
                 barSize={24}
@@ -320,7 +319,7 @@ export default function SalesOverview({ engine }: Props) {
               <Line
                 yAxisId="deals"
                 dataKey="deals"
-                stroke={PBI_PALETTE[2]}
+                stroke={theme.colors[2]}
                 strokeWidth={2}
                 dot={{ r: 3 }}
                 name="Deals"
@@ -367,7 +366,7 @@ export default function SalesOverview({ engine }: Props) {
                       style={{
                         width: `${pct}%`,
                         height: "100%",
-                        background: PBI_PALETTE[i % PBI_PALETTE.length],
+                        background: theme.colors[i % theme.colors.length],
                         borderRadius: "0.25rem",
                         transition: "width 0.3s ease",
                       }}
@@ -398,10 +397,10 @@ export default function SalesOverview({ engine }: Props) {
               <tbody>
                 {topDeals.data?.map((d: any, i: number) => (
                   <tr
-                    key={d.Account ?? i}
+                    key={d["Account Name"] ?? i}
                     style={{ borderBottom: "1px solid #f3f4f6" }}
                   >
-                    <td style={{ padding: "0.375rem 0.5rem" }}>{d.Account}</td>
+                    <td style={{ padding: "0.375rem 0.5rem" }}>{d["Account Name"]}</td>
                     <td style={{ padding: "0.375rem 0.5rem", textAlign: "right", fontWeight: 500 }}>
                       {formatCurrency(d.value ?? 0)}
                     </td>
@@ -423,7 +422,7 @@ export default function SalesOverview({ engine }: Props) {
               <XAxis type="number" tickFormatter={(v: number) => formatCompact(v)} fontSize={11} />
               <YAxis type="category" dataKey="Industry" width={100} fontSize={11} />
               <Tooltip content={<ChartTooltip />} />
-              <Bar dataKey="revenue" fill={PBI_PALETTE[4]} radius={[0, 4, 4, 0]} name="Revenue" />
+              <Bar dataKey="revenue" fill={theme.colors[4]} radius={[0, 4, 4, 0]} name="Revenue" />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>

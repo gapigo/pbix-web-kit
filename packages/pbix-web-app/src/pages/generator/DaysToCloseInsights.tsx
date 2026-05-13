@@ -99,32 +99,32 @@ function ScatterTooltip({ active, payload }: any) {
 export default function DaysToCloseInsights({ engine }: Props) {
   /* ── KPI queries ── */
   const avgDays = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     measures: [{ column: "DaysToClose", fn: "avg", alias: "avg" }],
     filters: [wonFilter()],
   })
 
   const maxDaysAgg = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     measures: [{ column: "DaysToClose", fn: "max", alias: "max" }],
     filters: [wonFilter()],
   })
 
   const wonCountAgg = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     measures: [{ column: "Value", fn: "count", alias: "count" }],
     filters: [wonFilter()],
   })
 
   const wonRevenueAgg = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     measures: [{ column: "Value", fn: "sum", alias: "revenue" }],
     filters: [wonFilter()],
   })
 
   /* ── Chart queries ── */
   const daysByProduct = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["Product"],
     measures: [
       { column: "DaysToClose", fn: "avg", alias: "avgDays" },
@@ -137,7 +137,7 @@ export default function DaysToCloseInsights({ engine }: Props) {
   })
 
   const daysByTerritory = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["Territory"],
     measures: [
       { column: "DaysToClose", fn: "avg", alias: "avgDays" },
@@ -151,7 +151,7 @@ export default function DaysToCloseInsights({ engine }: Props) {
 
   /* ── Scatter query: avg days vs revenue by product ── */
   const scatterData = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["Product"],
     measures: [
       { column: "DaysToClose", fn: "avg", alias: "avgDays" },
@@ -167,10 +167,10 @@ export default function DaysToCloseInsights({ engine }: Props) {
   const detailRows = useQuery({
     engine,
     sql: `
-      SELECT "Account", "Product", "Territory", "Owner",
+      SELECT "Account Name", "Product", "Territory", "Owner",
              "DaysToClose", "Value",
              strftime("CloseDate", '%Y-%m-%d') AS CloseDate
-      FROM "Opportunities"
+      FROM "v_opportunities"
       WHERE LOWER("Status") = 'won'
       ORDER BY "DaysToClose" DESC
       LIMIT 50
@@ -320,7 +320,7 @@ export default function DaysToCloseInsights({ engine }: Props) {
             <table className="w-full text-sm">
               <thead className="bg-gray-50 sticky top-0">
                 <tr>
-                  {["Account", "Product", "Territory", "Owner", "Days to Close", "Value", "Close Date"].map((h) => (
+                  {["Account Name", "Product", "Territory", "Owner", "Days to Close", "Value", "Close Date"].map((h) => (
                     <th
                       key={h}
                       className="px-3 py-2 text-left font-medium text-gray-600 text-xs uppercase tracking-wider border-b whitespace-nowrap"
@@ -335,7 +335,7 @@ export default function DaysToCloseInsights({ engine }: Props) {
                   const days = Number(row.DaysToClose ?? 0)
                   return (
                     <tr key={i} className="hover:bg-gray-50 border-b border-gray-100 last:border-b-0">
-                      <td className="px-3 py-2 text-gray-700 font-medium">{row.Account ?? "—"}</td>
+                      <td className="px-3 py-2 text-gray-700 font-medium">{row["Account Name"] ?? "—"}</td>
                       <td className="px-3 py-2 text-gray-600">{row.Product ?? "—"}</td>
                       <td className="px-3 py-2 text-gray-600">{row.Territory ?? "—"}</td>
                       <td className="px-3 py-2 text-gray-600">{row.Owner ?? "—"}</td>

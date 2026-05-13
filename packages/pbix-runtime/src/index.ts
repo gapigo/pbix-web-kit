@@ -2,7 +2,11 @@
 export { DuckDBProvider, useDuckDb } from "./data/DuckDBProvider"
 export { loadParquet, registerTables } from "./data/ParquetLoader"
 export { QueryEngine, arrowToJSON } from "./data/QueryEngine"
+export { runQueryValidator } from "./data/QueryValidator"
+export type { QueryIssue } from "./data/QueryValidator"
 export type { Filter, AggFn, AggregateParams, TopNParams } from "./data/QueryEngine"
+export { autoFormat, dateAxisFormatter, currencyTooltipFormatter } from "./data/autoFormat"
+export type { ColType } from "./data/autoFormat"
 
 // State
 export { createDashboardStore } from "./state/createDashboardStore"

@@ -121,36 +121,36 @@ function DetailRow({ label, discountPct, frequency }: { label: string; discountP
 export default function SalesDiscountingInsights({ engine }: Props) {
   // ── KPI queries ──────────────────────────────────────
   const avgDiscount = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     measures: [{ column: "Discount", fn: "avg", alias: "avgDiscount" }],
   })
   const totalDiscounted = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     measures: [{ column: "Value", fn: "count", alias: "count" }],
     filters: [{ column: "Discount", op: "gt", values: [0] }],
   })
   const totalValue = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     measures: [{ column: "Value", fn: "sum", alias: "value" }],
   })
   const discountedValue = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     measures: [{ column: "Value", fn: "sum", alias: "value" }],
     filters: [{ column: "Discount", op: "gt", values: [0] }],
   })
   const totalDeals = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     measures: [{ column: "Value", fn: "count", alias: "count" }],
   })
   const zeroDiscount = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     measures: [{ column: "Value", fn: "count", alias: "count" }],
     filters: [{ column: "Discount", op: "eq", values: [0] }],
   })
 
   // ── Chart queries ────────────────────────────────────
   const discountByProduct = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["Product"],
     measures: [
       { column: "Discount", fn: "avg", alias: "avgDiscount" },
@@ -161,7 +161,7 @@ export default function SalesDiscountingInsights({ engine }: Props) {
   })
 
   const discountByTerritory = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["Territory"],
     measures: [
       { column: "Discount", fn: "avg", alias: "avgDiscount" },
@@ -171,8 +171,8 @@ export default function SalesDiscountingInsights({ engine }: Props) {
   })
 
   const discountBrackets = useAggregation(engine, {
-    table: "Opportunities",
-    groupBy: ["PipelineStep"],
+    table: "v_opportunities",
+    groupBy: ["Sales Stage"],
     measures: [
       { column: "Discount", fn: "avg", alias: "avgDiscount" },
       { column: "Value", fn: "count", alias: "deals" },
@@ -181,7 +181,7 @@ export default function SalesDiscountingInsights({ engine }: Props) {
   })
 
   const detailData = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["Product", "Territory"],
     measures: [
       { column: "Discount", fn: "avg", alias: "avgDiscount" },
@@ -221,6 +221,7 @@ export default function SalesDiscountingInsights({ engine }: Props) {
   const pipelineChart =
     discountBrackets.data?.map((d) => ({
       ...d,
+      stage: d["Sales Stage"],
       avgDiscountPct: (d.avgDiscount ?? 0) / 100,
     })) ?? []
 
@@ -276,7 +277,7 @@ export default function SalesDiscountingInsights({ engine }: Props) {
       <div style={sectionStyle}>
         <ChartCard title="Overall Discount Gauge">
           <GaugeVisual
-            table="Opportunities"
+            table="v_opportunities"
             measure="Discount"
             target={30}
             engine={engine}
@@ -297,7 +298,7 @@ export default function SalesDiscountingInsights({ engine }: Props) {
                 tickFormatter={(v: number) => `${(v * 100).toFixed(0)}%`}
                 fontSize={11}
               />
-              <YAxis type="category" dataKey="PipelineStep" width={120} fontSize={11} />
+              <YAxis type="category" dataKey="stage" width={120} fontSize={11} />
               <Tooltip content={<PercentTooltip />} />
               <Bar dataKey="avgDiscountPct" fill={PBI_PALETTE[3]} radius={[0, 4, 4, 0]} name="Avg Discount" />
             </BarChart>

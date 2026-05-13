@@ -16,7 +16,7 @@ interface Props {
 /* ── helpers ── */
 
 function winFilter() {
-  return { table: "Opportunities" as const, column: "Status" as const, op: "eq" as const, values: ["Won"] }
+  return { table: "v_opportunities" as const, column: "Status" as const, op: "eq" as const, values: ["Won"] }
 }
 
 function sumValue(alias: string) {
@@ -27,7 +27,7 @@ function countOpps(alias: string) {
   return { column: "Value" as const, fn: "count" as const, alias }
 }
 
-/* ── custom tooltip ── */
+/* ── custom tooltips ── */
 
 function PercentTooltip({ active, payload, label }: any) {
   if (!active || !payload?.length) return null
@@ -113,49 +113,49 @@ function mergeWinRate(
 /* ── main component ── */
 
 export default function WinLossInsights({ engine, store }: Props) {
-  /* ───────────────────── summary hooks ───────────────────── */
+  /* ───────────────────── summary KPI hooks ───────────────────── */
 
   const wonAgg = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     measures: [sumValue("totalValue"), countOpps("count")],
     filters: [winFilter()],
   })
 
   const lostAgg = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     measures: [sumValue("totalValue"), countOpps("count")],
-    filters: [{ table: "Opportunities", column: "Status", op: "eq", values: ["Lost"] }],
+    filters: [{ table: "v_opportunities", column: "Status", op: "eq", values: ["Lost"] }],
   })
 
   const totalOpps = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     measures: [countOpps("count")],
   })
 
   /* ── pie chart: status breakdown ── */
 
   const statusCounts = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["Status"],
     measures: [countOpps("count")],
     filters: [
-      { table: "Opportunities", column: "Status", op: "in", values: ["Won", "Lost"] },
+      { table: "v_opportunities", column: "Status", op: "in", values: ["Won", "Lost"] },
     ],
   })
 
   const statusValues = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["Status"],
     measures: [sumValue("totalValue")],
     filters: [
-      { table: "Opportunities", column: "Status", op: "in", values: ["Won", "Lost"] },
+      { table: "v_opportunities", column: "Status", op: "in", values: ["Won", "Lost"] },
     ],
   })
 
   /* ── by dimension: total + won queries ── */
 
   const totalByProduct = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["Product"],
     measures: [sumValue("totalValue"), countOpps("count")],
     orderBy: [{ column: "count", dir: "desc" }],
@@ -163,7 +163,7 @@ export default function WinLossInsights({ engine, store }: Props) {
   })
 
   const wonByProduct = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["Product"],
     measures: [sumValue("totalValue"), countOpps("count")],
     filters: [winFilter()],
@@ -172,7 +172,7 @@ export default function WinLossInsights({ engine, store }: Props) {
   })
 
   const totalByIndustry = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["Industry"],
     measures: [sumValue("totalValue"), countOpps("count")],
     orderBy: [{ column: "count", dir: "desc" }],
@@ -180,7 +180,7 @@ export default function WinLossInsights({ engine, store }: Props) {
   })
 
   const wonByIndustry = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["Industry"],
     measures: [sumValue("totalValue"), countOpps("count")],
     filters: [winFilter()],
@@ -189,7 +189,7 @@ export default function WinLossInsights({ engine, store }: Props) {
   })
 
   const totalByTerritory = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["Territory"],
     measures: [sumValue("totalValue"), countOpps("count")],
     orderBy: [{ column: "count", dir: "desc" }],
@@ -197,7 +197,7 @@ export default function WinLossInsights({ engine, store }: Props) {
   })
 
   const wonByTerritory = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["Territory"],
     measures: [sumValue("totalValue"), countOpps("count")],
     filters: [winFilter()],
@@ -205,27 +205,10 @@ export default function WinLossInsights({ engine, store }: Props) {
     limit: 10,
   })
 
-  const totalByPipeline = useAggregation(engine, {
-    table: "Opportunities",
-    groupBy: ["PipelineStep"],
-    measures: [sumValue("totalValue"), countOpps("count")],
-    orderBy: [{ column: "count", dir: "desc" }],
-    limit: 12,
-  })
-
-  const wonByPipeline = useAggregation(engine, {
-    table: "Opportunities",
-    groupBy: ["PipelineStep"],
-    measures: [sumValue("totalValue"), countOpps("count")],
-    filters: [winFilter()],
-    orderBy: [{ column: "count", dir: "desc" }],
-    limit: 12,
-  })
-
   /* ── scatter: win rate × deal value by product ── */
 
   const scatterTotal = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["Product"],
     measures: [sumValue("totalValue"), countOpps("count")],
     orderBy: [{ column: "count", dir: "desc" }],
@@ -233,7 +216,7 @@ export default function WinLossInsights({ engine, store }: Props) {
   })
 
   const scatterWon = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["Product"],
     measures: [sumValue("totalValue"), countOpps("count")],
     filters: [winFilter()],
@@ -264,7 +247,6 @@ export default function WinLossInsights({ engine, store }: Props) {
   const productData = mergeWinRate(totalByProduct.data, wonByProduct.data, "Product")
   const industryData = mergeWinRate(totalByIndustry.data, wonByIndustry.data, "Industry")
   const territoryData = mergeWinRate(totalByTerritory.data, wonByTerritory.data, "Territory")
-  const pipelineData = mergeWinRate(totalByPipeline.data, wonByPipeline.data, "PipelineStep")
 
   const scatterRows = mergeWinRate(scatterTotal.data, scatterWon.data, "Product")
 
@@ -274,7 +256,6 @@ export default function WinLossInsights({ engine, store }: Props) {
     totalByProduct.loading || wonByProduct.loading ||
     totalByIndustry.loading || wonByIndustry.loading ||
     totalByTerritory.loading || wonByTerritory.loading ||
-    totalByPipeline.loading || wonByPipeline.loading ||
     scatterTotal.loading || scatterWon.loading
 
   /* ───────────────────── render ───────────────────── */
@@ -392,18 +373,6 @@ export default function WinLossInsights({ engine, store }: Props) {
               <YAxis type="category" dataKey="Territory" width={140} tick={{ fontSize: 11 }} />
               <Tooltip content={<PercentTooltip />} />
               <Bar dataKey="winRate" fill={theme.colors[0]} radius={[0, 3, 3, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </Card>
-
-        <Card title="Win Rate by Pipeline Stage">
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={pipelineData} layout="vertical" margin={{ left: 100, right: 16 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-              <XAxis type="number" tickFormatter={(v: number) => formatPercent(v)} domain={[0, 1]} fontSize={11} />
-              <YAxis type="category" dataKey="PipelineStep" width={160} tick={{ fontSize: 11 }} />
-              <Tooltip content={<PercentTooltip />} />
-              <Bar dataKey="winRate" fill={theme.colors[5]} radius={[0, 3, 3, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </Card>

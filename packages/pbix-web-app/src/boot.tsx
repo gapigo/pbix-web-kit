@@ -2,8 +2,10 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 import {
   QueryEngine,
   createDashboardStore,
+  runQueryValidator,
   type Storyboard,
   type DashboardStore,
+  type QueryIssue,
 } from "@pbix/runtime"
 import type { AsyncDuckDB } from "@duckdb/duckdb-wasm"
 import { useDuckDb } from "duckdb-wasm-kit"
@@ -83,6 +85,9 @@ export function BootProvider({ children }: { children: ReactNode }) {
   const [store] = useState(() => createDashboardStore())
   const [ready, setReady] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [queryIssues, setQueryIssues] = useState<QueryIssue[]>([])
+  const [dismissed, setDismissed] = useState(false)
+  const [debugLog, setDebugLog] = useState<string>("init")
 
   useEffect(() => {
     if (!duckDb?.db) return
@@ -103,13 +108,19 @@ export function BootProvider({ children }: { children: ReactNode }) {
 
         // Create denormalized views for easier querying
         await createViews(duckDb.db)
+        const qe = new QueryEngine(duckDb.db)
+
+        // Run query validator before marking ready
+        const issues = await runQueryValidator(qe)
+        setQueryIssues(issues)
+
         if (!cancelled) {
           store.getState().setStoryboard(storyboard)
           if (storyboard.pages.length > 0) {
             store.getState().setActivePage(storyboard.pages[0].display_name)
           }
           store.getState().setPageContentReady(true)
-          setEngine(new QueryEngine(duckDb.db))
+          setEngine(qe)
           setReady(true)
         }
       } catch (err: any) {
@@ -134,6 +145,8 @@ export function BootProvider({ children }: { children: ReactNode }) {
     )
   }
 
+  const errorIssues = queryIssues.filter((i) => i.severity === "error")
+
   if (!ready) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
@@ -146,10 +159,39 @@ export function BootProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <EngineContext.Provider value={engine}>
-      <StoreContext.Provider value={store}>
-        {children}
-      </StoreContext.Provider>
-    </EngineContext.Provider>
+    <>
+      {!dismissed && errorIssues.length > 0 && (
+        <div className="fixed top-0 left-0 right-0 z-50 bg-red-50 border-b border-red-200 text-red-800 text-sm">
+          <div className="max-w-5xl mx-auto px-4 py-3 flex items-start gap-3">
+            <div className="flex-1">
+              <strong className="block mb-1">Query Errors ({errorIssues.length})</strong>
+              <ul className="list-disc pl-4 space-y-1">
+                {errorIssues.map((issue, i) => (
+                  <li key={i}>
+                    <strong>{issue.table}</strong>
+                    {issue.column ? <span>/{issue.column}</span> : null}: {issue.message}
+                    <br />
+                    <span className="text-red-600/70 text-xs">{issue.suggestion}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <button
+              onClick={() => setDismissed(true)}
+              className="text-red-400 hover:text-red-600 font-bold text-lg leading-none shrink-0"
+              aria-label="Dismiss"
+            >
+              &times;
+            </button>
+          </div>
+        </div>
+      )}
+      <EngineContext.Provider value={engine}>
+        <StoreContext.Provider value={store}>
+          {children}
+        </StoreContext.Provider>
+      </EngineContext.Provider>
+    </>
   )
+
 }

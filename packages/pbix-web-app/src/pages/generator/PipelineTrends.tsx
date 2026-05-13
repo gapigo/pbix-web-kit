@@ -3,6 +3,7 @@ import {
   theme,
   formatCurrency,
   formatCompact,
+  currencyTooltipFormatter,
 } from "@pbix/runtime"
 import {
   BarChart,
@@ -27,11 +28,11 @@ interface Props {
   store: UseBoundStore<StoreApi<DashboardStore>>
 }
 
-/** Aggregate pipeline revenue by PipelineStep — open deals only. */
+/** Aggregate pipeline revenue by Sales Stage — open deals only. */
 function usePipelineByStage(engine: QueryEngine | null) {
   return useAggregation(engine, {
-    table: "Opportunities",
-    groupBy: ["PipelineStep"],
+    table: "v_opportunities",
+    groupBy: ["Sales Stage"],
     measures: [
       { column: "Value", fn: "sum", alias: "revenue" },
       { column: "Value", fn: "count", alias: "count" },
@@ -45,7 +46,7 @@ function usePipelineByStage(engine: QueryEngine | null) {
 /** Aggregate pipeline revenue over time (by CloseDate truncated to month). */
 function usePipelineTrend(engine: QueryEngine | null) {
   return useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["CloseDate"],
     measures: [
       { column: "Value", fn: "sum", alias: "revenue" },
@@ -59,7 +60,7 @@ function usePipelineTrend(engine: QueryEngine | null) {
 /** Aggregate pipeline by Sales Stage. */
 function usePipelineBySalesStage(engine: QueryEngine | null) {
   return useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["Sales Stage"],
     measures: [
       { column: "Value", fn: "sum", alias: "revenue" },
@@ -73,8 +74,8 @@ function usePipelineBySalesStage(engine: QueryEngine | null) {
 /** Aggregate pipeline details for the table. */
 function usePipelineDetails(engine: QueryEngine | null) {
   return useAggregation(engine, {
-    table: "Opportunities",
-    groupBy: ["PipelineStep", "Owner", "Territory"],
+    table: "v_opportunities",
+    groupBy: ["Sales Stage", "Owner", "Territory"],
     measures: [
       { column: "Value", fn: "sum", alias: "revenue" },
       { column: "Value", fn: "count", alias: "count" },
@@ -131,7 +132,7 @@ export default function PipelineTrends({ engine }: Props) {
         "Negotiation",
         "Closed",
       ]
-      const idx = stageOrder.indexOf(r.PipelineStep ?? "")
+      const idx = stageOrder.indexOf(r["Sales Stage"] ?? "")
       const weight = idx >= 0 ? (idx + 1) / stageOrder.length : 0.5
       return sum + (Number(r.revenue) || 0) * weight
     }, 0) ?? 0
@@ -147,7 +148,7 @@ export default function PipelineTrends({ engine }: Props) {
   // Prepare stage bar data — limit to top 8 stages, group rest as "Other"
   const byStageWithPct =
     byStage.data?.map((r) => ({
-      name: r.PipelineStep ?? "Unknown",
+      name: r["Sales Stage"] ?? "Unknown",
       revenue: Number(r.revenue) || 0,
       count: Number(r.count) || 0,
       avgDeal: Number(r.avgDeal) || 0,
@@ -172,7 +173,7 @@ export default function PipelineTrends({ engine }: Props) {
   const detailRows =
     details.data?.map((r, i) => ({
       id: i,
-      stage: r.PipelineStep ?? "",
+      stage: r["Sales Stage"] ?? "",
       owner: r.Owner ?? "",
       territory: r.Territory ?? "",
       revenue: Number(r.revenue) || 0,

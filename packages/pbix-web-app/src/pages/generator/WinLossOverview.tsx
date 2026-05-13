@@ -121,12 +121,12 @@ export default function WinLossOverview({ engine }: Props) {
   /* ── KPI queries ── */
 
   const totalOpps = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     measures: [{ column: "Value", fn: "count", alias: "count" }],
   })
 
   const wonData = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     measures: [
       { column: "Value", fn: "count", alias: "won_count" },
       { column: "Value", fn: "sum", alias: "won_value" },
@@ -135,12 +135,12 @@ export default function WinLossOverview({ engine }: Props) {
   })
 
   const totalValue = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     measures: [{ column: "Value", fn: "sum", alias: "total_value" }],
   })
 
   const avgDeal = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     measures: [{ column: "Value", fn: "avg", alias: "avg_value" }],
     filters: [{ column: "Status", op: "eq", values: ["Won"] }],
   })
@@ -149,12 +149,12 @@ export default function WinLossOverview({ engine }: Props) {
 
   // Close % by Product
   const prodTotal = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["Product"],
     measures: [{ column: "Value", fn: "count", alias: "total" }],
   })
   const prodWon = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["Product"],
     measures: [{ column: "Value", fn: "count", alias: "won" }],
     filters: [{ column: "Status", op: "eq", values: ["Won"] }],
@@ -162,12 +162,12 @@ export default function WinLossOverview({ engine }: Props) {
 
   // Close % by Manager
   const mgrTotal = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["Manager"],
     measures: [{ column: "Value", fn: "count", alias: "total" }],
   })
   const mgrWon = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["Manager"],
     measures: [{ column: "Value", fn: "count", alias: "won" }],
     filters: [{ column: "Status", op: "eq", values: ["Won"] }],
@@ -175,12 +175,12 @@ export default function WinLossOverview({ engine }: Props) {
 
   // Monthly trend
   const moTotal = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["CloseDate"],
     measures: [{ column: "Value", fn: "count", alias: "total" }],
   })
   const moWon = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["CloseDate"],
     measures: [{ column: "Value", fn: "count", alias: "won" }],
     filters: [{ column: "Status", op: "eq", values: ["Won"] }],
@@ -188,7 +188,7 @@ export default function WinLossOverview({ engine }: Props) {
 
   // Detail table
   const detail = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["Product", "Status", "Manager"],
     measures: [
       { column: "Value", fn: "count", alias: "count" },

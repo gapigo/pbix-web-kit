@@ -69,28 +69,28 @@ function dollarTick(value: number) {
 export default function RevenueSourceBreakdown({ engine }: Props) {
   /* ────────── KPI queries ────────── */
   const totalRevenue = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     measures: [{ column: "Value", fn: "sum", alias: "val" }],
   })
   const totalDeals = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     measures: [{ column: "Value", fn: "count", alias: "cnt" }],
   })
   const avgDeal = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     measures: [{ column: "Value", fn: "avg", alias: "val" }],
   })
   const maxDeal = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     measures: [{ column: "Value", fn: "max", alias: "val" }],
   })
   const wonRevenue = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     measures: [{ column: "Value", fn: "sum", alias: "val" }],
     filters: [{ column: "Status", op: "eq", values: ["Won"] }],
   })
   const lostRevenue = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     measures: [{ column: "Value", fn: "sum", alias: "val" }],
     filters: [{ column: "Status", op: "eq", values: ["Lost"] }],
   })
@@ -112,7 +112,7 @@ export default function RevenueSourceBreakdown({ engine }: Props) {
 
   /* ────────── Revenue by Product ────────── */
   const byProduct = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["Product"],
     measures: [{ column: "Value", fn: "sum", alias: "revenue" }],
     orderBy: [{ column: "revenue", dir: "desc" }],
@@ -120,7 +120,7 @@ export default function RevenueSourceBreakdown({ engine }: Props) {
 
   /* ────────── Revenue by Product LOB ────────── */
   const byLob = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["Product LOB"],
     measures: [
       { column: "Value", fn: "sum", alias: "revenue" },
@@ -131,7 +131,7 @@ export default function RevenueSourceBreakdown({ engine }: Props) {
 
   /* ────────── Revenue by Territory ────────── */
   const byTerritory = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["Territory"],
     measures: [{ column: "Value", fn: "sum", alias: "revenue" }],
     orderBy: [{ column: "revenue", dir: "desc" }],
@@ -139,7 +139,7 @@ export default function RevenueSourceBreakdown({ engine }: Props) {
 
   /* ────────── Revenue by Industry ────────── */
   const byIndustry = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["Industry"],
     measures: [{ column: "Value", fn: "sum", alias: "revenue" }],
     orderBy: [{ column: "revenue", dir: "desc" }],
@@ -147,7 +147,7 @@ export default function RevenueSourceBreakdown({ engine }: Props) {
 
   /* ────────── Revenue by Owner ────────── */
   const byOwner = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["Owner"],
     measures: [
       { column: "Value", fn: "sum", alias: "revenue" },
@@ -158,7 +158,7 @@ export default function RevenueSourceBreakdown({ engine }: Props) {
 
   /* ────────── Revenue by Sales Stage ────────── */
   const byStage = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["Sales Stage"],
     measures: [
       { column: "Value", fn: "sum", alias: "revenue" },
@@ -169,11 +169,11 @@ export default function RevenueSourceBreakdown({ engine }: Props) {
 
   /* ────────── Top accounts ────────── */
   const byAccount = useAggregation(engine, {
-    table: "Opportunities",
-    groupBy: ["Account"],
+    table: "v_opportunities",
+    groupBy: ["Account Name"],
     measures: [{ column: "Value", fn: "sum", alias: "revenue" }],
     orderBy: [{ column: "revenue", dir: "desc" }],
-    topN: 10,
+    limit: 10,
   })
 
   /* ── Treemap data helpers ── */
@@ -432,7 +432,7 @@ export default function RevenueSourceBreakdown({ engine }: Props) {
                 {byAccount.data.map((row, i) => (
                   <tr key={i} className="hover:bg-gray-50 border-b border-gray-100 last:border-b-0">
                     <td className="px-3 py-2 text-gray-500 text-xs font-medium w-8">{i + 1}</td>
-                    <td className="px-3 py-2 text-gray-700 font-medium">{row.Account ?? "—"}</td>
+                    <td className="px-3 py-2 text-gray-700 font-medium">{row["Account Name"] ?? "—"}</td>
                     <td className="px-3 py-2 text-gray-700 whitespace-nowrap">
                       {row.revenue != null ? formatCurrency(Number(row.revenue)) : "—"}
                     </td>

@@ -1,11 +1,18 @@
-import { useAggregation, useQuery, theme, formatCurrency, formatCompact } from "@pbix/runtime"
+import { useAggregation, theme, formatCurrency, formatCompact, autoFormat, currencyTooltipFormatter, dateAxisFormatter } from "@pbix/runtime"
 import type { QueryEngine } from "@pbix/runtime"
 import type { UseBoundStore, StoreApi } from "zustand"
 import type { DashboardStore } from "@pbix/runtime"
 
 import {
-  LineChart, Line, BarChart, Bar, ComposedChart,
-  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
+  ComposedChart,
+  Bar,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
 } from "recharts"
 import React from "react"
 
@@ -65,60 +72,74 @@ function dollarTick(value: number) {
   return `$${value}`
 }
 
+/** Parse a CloseDate value to YYYY-MM label (handles SQL date and string forms). */
+function monthLabel(d: unknown): string {
+  if (!d) return ""
+  const s = String(d)
+  const date = s.length >= 10 ? new Date(s.slice(0, 10)) : new Date(s)
+  if (isNaN(date.getTime())) return s.slice(0, 7) // fallback raw substring
+  return date.toLocaleDateString("en-US", { month: "short", year: "2-digit" })
+}
+
 /* ── Page ── */
 export default function TrendAnalytics({ engine, store }: Props) {
   /* ────────── KPI queries ────────── */
   const totalRevenue = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     measures: [{ column: "Value", fn: "sum", alias: "val" }],
   })
   const avgDeal = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     measures: [{ column: "Value", fn: "avg", alias: "val" }],
   })
   const openPipeline = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     measures: [{ column: "Value", fn: "sum", alias: "val" }],
     filters: [{ column: "Status", op: "ne", values: ["Closed"] }],
   })
-
-  // Win rate via raw SQL (conditional counting)
-  const winRateData = useQuery({
-    engine,
-    sql: `
-      SELECT
-        COUNT(*) AS total,
-        COUNT(CASE WHEN LOWER(Status) = 'won' THEN 1 END) AS won
-      FROM "Opportunities"
-    `,
+  const totalCount = useAggregation(engine, {
+    table: "v_opportunities",
+    measures: [{ column: "Value", fn: "count", alias: "val" }],
   })
 
-  const kpiLoad = totalRevenue.loading || avgDeal.loading || openPipeline.loading || winRateData.loading
-  const kpiErr = totalRevenue.error || avgDeal.error || openPipeline.error || winRateData.error
+  const kpiLoad = totalRevenue.loading || avgDeal.loading || openPipeline.loading || totalCount.loading
+  const kpiErr = totalRevenue.error || avgDeal.error || openPipeline.error || totalCount.error
 
   const totalRev = totalRevenue.data?.[0]?.val as number | undefined
   const avgVal = avgDeal.data?.[0]?.val as number | undefined
   const pipeVal = openPipeline.data?.[0]?.val as number | undefined
-  const totalOpps = winRateData.data?.[0]?.total as number | undefined
-  const wonOpps = winRateData.data?.[0]?.won as number | undefined
-  const winRate = totalOpps && wonOpps ? wonOpps / totalOpps : undefined
+  const oppsCount = totalCount.data?.[0]?.val as number | undefined
 
-  /* ────────── Monthly revenue trend ────────── */
-  const monthlyTrend = useQuery({
-    engine,
-    sql: `
-      SELECT strftime("CloseDate", '%Y-%m') AS month,
-             SUM("Value") AS revenue,
-             COUNT(*) AS deals
-      FROM "Opportunities"
-      GROUP BY month
-      ORDER BY month
-    `,
+  /* ────────── Monthly revenue trend (ComposedChart: bars + line) ────────── */
+  const monthlyTrend = useAggregation(engine, {
+    table: "v_opportunities",
+    groupBy: ["CloseDate"],
+    measures: [
+      { column: "Value", fn: "sum", alias: "revenue" },
+      { column: "Value", fn: "count", alias: "deals" },
+    ],
+    orderBy: [{ column: "CloseDate", dir: "asc" }],
+  })
+
+  // Aggregate monthly from daily data
+  const trendBuckets: Record<string, { month: string; revenue: number; deals: number }> = {}
+  for (const row of monthlyTrend.data ?? []) {
+    const key = monthLabel(row.CloseDate)
+    if (!key) continue
+    if (!trendBuckets[key]) trendBuckets[key] = { month: key, revenue: 0, deals: 0 }
+    trendBuckets[key].revenue += Number(row.revenue) || 0
+    trendBuckets[key].deals += Number(row.deals) || 0
+  }
+  const trendChart = Object.values(trendBuckets).sort((a, b) => {
+    // Parse months like "Jan 24" → sortable key
+    const da = new Date(a.month)
+    const db = new Date(b.month)
+    return da.getTime() - db.getTime()
   })
 
   /* ────────── Revenue by Product LOB ────────── */
   const byLob = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["Product LOB"],
     measures: [
       { column: "Value", fn: "sum", alias: "revenue" },
@@ -129,16 +150,16 @@ export default function TrendAnalytics({ engine, store }: Props) {
 
   /* ────────── Revenue by Territory ────────── */
   const byTerritory = useAggregation(engine, {
-    table: "Opportunities",
+    table: "v_opportunities",
     groupBy: ["Territory"],
     measures: [{ column: "Value", fn: "sum", alias: "revenue" }],
     orderBy: [{ column: "revenue", dir: "desc" }],
   })
 
-  /* ────────── Pipeline by Stage ────────── */
+  /* ────────── Revenue by Sales Stage ────────── */
   const byStage = useAggregation(engine, {
-    table: "Opportunities",
-    groupBy: ["PipelineStep"],
+    table: "v_opportunities",
+    groupBy: ["Sales Stage"],
     measures: [
       { column: "Value", fn: "sum", alias: "revenue" },
       { column: "Value", fn: "count", alias: "deals" },
@@ -146,16 +167,21 @@ export default function TrendAnalytics({ engine, store }: Props) {
     orderBy: [{ column: "revenue", dir: "desc" }],
   })
 
+  /* ────────── Revenue by Region ────────── */
+  const byRegion = useAggregation(engine, {
+    table: "v_opportunities",
+    groupBy: ["Region"],
+    measures: [{ column: "Value", fn: "sum", alias: "revenue" }],
+    orderBy: [{ column: "revenue", dir: "desc" }],
+  })
+
   /* ────────── Top deals detail ────────── */
-  const topDeals = useQuery({
-    engine,
-    sql: `
-      SELECT "Account", "Value", "Product", "Status", "PipelineStep",
-             strftime("CloseDate", '%Y-%m-%d') AS CloseDate
-      FROM "Opportunities"
-      ORDER BY "Value" DESC
-      LIMIT 20
-    `,
+  const topDeals = useAggregation(engine, {
+    table: "v_opportunities",
+    groupBy: ["Account Name", "Product", "Status", "Sales Stage", "CloseDate", "Owner"],
+    measures: [{ column: "Value", fn: "sum", alias: "revenue" }],
+    orderBy: [{ column: "revenue", dir: "desc" }],
+    limit: 20,
   })
 
   /* ══════════════ RENDER ══════════════ */
@@ -178,46 +204,53 @@ export default function TrendAnalytics({ engine, store }: Props) {
           color={C[1]}
         />
         <KpiCard
-          label="Win Rate"
-          value={winRate !== undefined ? `${(winRate * 100).toFixed(1)}%` : "—"}
+          label="Open Pipeline"
+          value={pipeVal !== undefined ? formatCompact(pipeVal) : "—"}
           loading={kpiLoad}
           error={kpiErr}
           color={C[2]}
         />
         <KpiCard
-          label="Open Pipeline"
-          value={pipeVal !== undefined ? formatCompact(pipeVal) : "—"}
+          label="Total Opportunities"
+          value={oppsCount !== undefined ? formatCompact(oppsCount) : "—"}
           loading={kpiLoad}
           error={kpiErr}
           color={C[3]}
         />
       </div>
 
-      {/* ───── Monthly Revenue Trend ───── */}
-      <Section title="Revenue Trend" subtitle="Monthly revenue over time">
+      {/* ───── Monthly Revenue Trend (ComposedChart) ───── */}
+      <Section title="Revenue Trend" subtitle="Monthly revenue (bars) and deal count (line) over time">
         {monthlyTrend.loading ? (
           <div className="h-72 bg-gray-100 animate-pulse rounded-lg" />
-        ) : monthlyTrend.error || !monthlyTrend.data?.length ? (
+        ) : monthlyTrend.error || !trendChart.length ? (
           <div className="h-72 flex items-center justify-center text-gray-400 text-sm">—</div>
         ) : (
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={monthlyTrend.data}>
+              <ComposedChart data={trendChart} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                 <XAxis dataKey="month" tick={{ fontSize: 11 }} />
-                <YAxis tick={{ fontSize: 11 }} tickFormatter={dollarTick} />
-                <Tooltip formatter={(v: number) => formatCurrency(v)} labelStyle={{ fontWeight: 600 }} />
-                <Legend />
-                <Line
-                  type="monotone"
-                  dataKey="revenue"
-                  name="Revenue"
-                  stroke={C[0]}
-                  strokeWidth={2.5}
-                  dot={{ r: 3, fill: C[0] }}
-                  activeDot={{ r: 6 }}
+                <YAxis yAxisId="left" tick={{ fontSize: 11 }} tickFormatter={dollarTick} />
+                <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11 }} />
+                <Tooltip
+                  formatter={(v: number, name: string) =>
+                    name === "Revenue" ? formatCurrency(v) : formatCompact(v)
+                  }
                 />
-              </LineChart>
+                <Legend />
+                <Bar yAxisId="left" dataKey="revenue" name="Revenue" fill={C[0]} radius={[3, 3, 0, 0]} />
+                <Line
+                  yAxisId="right"
+                  type="monotone"
+                  dataKey="deals"
+                  name="Deals"
+                  stroke={C[2]}
+                  strokeWidth={2}
+                  dot={{ r: 3, fill: C[2] }}
+                  activeDot={{ r: 5 }}
+                />
+              </ComposedChart>
             </ResponsiveContainer>
           </div>
         )}
@@ -249,29 +282,51 @@ export default function TrendAnalytics({ engine, store }: Props) {
         )}
       </Section>
 
-      {/* ───── Revenue by Territory ───── */}
-      <Section title="Revenue by Territory" subtitle="Total revenue by territory">
-        {byTerritory.loading ? (
-          <div className="h-64 bg-gray-100 animate-pulse rounded-lg" />
-        ) : byTerritory.error || !byTerritory.data?.length ? (
-          <div className="h-64 flex items-center justify-center text-gray-400 text-sm">—</div>
-        ) : (
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={byTerritory.data} layout="vertical" margin={{ left: 80 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" horizontal={false} />
-                <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={dollarTick} />
-                <YAxis type="category" dataKey="Territory" tick={{ fontSize: 11 }} width={100} />
-                <Tooltip formatter={(v: number) => formatCurrency(v)} />
-                <Bar dataKey="revenue" name="Revenue" fill={C[0]} radius={[0, 3, 3, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        )}
-      </Section>
+      {/* ───── Revenue by Territory + Region side-by-side ───── */}
+      <div className="grid grid-cols-2 gap-5">
+        <Section title="Revenue by Territory">
+          {byTerritory.loading ? (
+            <div className="h-64 bg-gray-100 animate-pulse rounded-lg" />
+          ) : byTerritory.error || !byTerritory.data?.length ? (
+            <div className="h-64 flex items-center justify-center text-gray-400 text-sm">—</div>
+          ) : (
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <ComposedChart data={byTerritory.data} layout="vertical" margin={{ left: 80 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" horizontal={false} />
+                  <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={dollarTick} />
+                  <YAxis type="category" dataKey="Territory" tick={{ fontSize: 11 }} width={100} />
+                  <Tooltip formatter={(v: number) => formatCurrency(v)} />
+                  <Bar dataKey="revenue" name="Revenue" fill={C[1]} radius={[0, 3, 3, 0]} />
+                </ComposedChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+        </Section>
 
-      {/* ───── Pipeline by Stage ───── */}
-      <Section title="Pipeline by Stage" subtitle="Revenue value and deal count by pipeline stage">
+        <Section title="Revenue by Region">
+          {byRegion.loading ? (
+            <div className="h-64 bg-gray-100 animate-pulse rounded-lg" />
+          ) : byRegion.error || !byRegion.data?.length ? (
+            <div className="h-64 flex items-center justify-center text-gray-400 text-sm">—</div>
+          ) : (
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <ComposedChart data={byRegion.data} layout="vertical" margin={{ left: 60 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" horizontal={false} />
+                  <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={dollarTick} />
+                  <YAxis type="category" dataKey="Region" tick={{ fontSize: 11 }} width={80} />
+                  <Tooltip formatter={(v: number) => formatCurrency(v)} />
+                  <Bar dataKey="revenue" name="Revenue" fill={C[3]} radius={[0, 3, 3, 0]} />
+                </ComposedChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+        </Section>
+      </div>
+
+      {/* ───── Revenue by Sales Stage ───── */}
+      <Section title="Revenue by Sales Stage" subtitle="Revenue value and deal count by sales stage">
         {byStage.loading ? (
           <div className="h-64 bg-gray-100 animate-pulse rounded-lg" />
         ) : byStage.error || !byStage.data?.length ? (
@@ -279,16 +334,18 @@ export default function TrendAnalytics({ engine, store }: Props) {
         ) : (
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={byStage.data} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
+              <ComposedChart data={byStage.data} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                <XAxis dataKey="PipelineStep" tick={{ fontSize: 11 }} />
-                <YAxis tick={{ fontSize: 11 }} tickFormatter={dollarTick} />
+                <XAxis dataKey="Sales Stage" tick={{ fontSize: 11 }} />
+                <YAxis yAxisId="left" tick={{ fontSize: 11 }} tickFormatter={dollarTick} />
+                <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11 }} />
                 <Tooltip formatter={(v: number, name: string) =>
                   name === "revenue" ? formatCurrency(v) : formatCompact(v)
                 } />
                 <Legend />
-                <Bar dataKey="revenue" name="Revenue" fill={C[1]} radius={[3, 3, 0, 0]} />
-              </BarChart>
+                <Bar yAxisId="left" dataKey="revenue" name="Revenue" fill={C[1]} radius={[3, 3, 0, 0]} />
+                <Line yAxisId="right" type="monotone" dataKey="deals" name="Deals" stroke={C[3]} strokeWidth={2} dot={{ r: 3 }} />
+              </ComposedChart>
             </ResponsiveContainer>
           </div>
         )}
@@ -307,7 +364,7 @@ export default function TrendAnalytics({ engine, store }: Props) {
             <table className="w-full text-sm">
               <thead className="bg-gray-50 sticky top-0">
                 <tr>
-                  {["Account", "Value", "Product", "Status", "Pipeline Step", "Close Date"].map((h) => (
+                  {["Account Name", "Value", "Product", "Status", "Sales Stage", "Owner", "Close Date"].map((h) => (
                     <th key={h} className="px-3 py-2 text-left font-medium text-gray-600 text-xs uppercase tracking-wider border-b whitespace-nowrap">
                       {h}
                     </th>
@@ -317,9 +374,9 @@ export default function TrendAnalytics({ engine, store }: Props) {
               <tbody>
                 {topDeals.data.map((row, i) => (
                   <tr key={i} className="hover:bg-gray-50 border-b border-gray-100 last:border-b-0">
-                    <td className="px-3 py-2 text-gray-700 font-medium">{row.Account ?? "—"}</td>
+                    <td className="px-3 py-2 text-gray-700 font-medium">{row["Account Name"] ?? "—"}</td>
                     <td className="px-3 py-2 text-gray-700 whitespace-nowrap">
-                      {row.Value != null ? formatCurrency(Number(row.Value)) : "—"}
+                      {row.revenue != null ? formatCurrency(Number(row.revenue)) : "—"}
                     </td>
                     <td className="px-3 py-2 text-gray-600">{row.Product ?? "—"}</td>
                     <td className="px-3 py-2">
@@ -333,8 +390,11 @@ export default function TrendAnalytics({ engine, store }: Props) {
                         {row.Status ?? "—"}
                       </span>
                     </td>
-                    <td className="px-3 py-2 text-gray-600">{row.PipelineStep ?? "—"}</td>
-                    <td className="px-3 py-2 text-gray-500 whitespace-nowrap">{row.CloseDate ?? "—"}</td>
+                    <td className="px-3 py-2 text-gray-600">{row["Sales Stage"] ?? "—"}</td>
+                    <td className="px-3 py-2 text-gray-600">{row.Owner ?? "—"}</td>
+                    <td className="px-3 py-2 text-gray-500 whitespace-nowrap">
+                      {row.CloseDate ? autoFormat(row.CloseDate, "CloseDate") : "—"}
+                    </td>
                   </tr>
                 ))}
               </tbody>
