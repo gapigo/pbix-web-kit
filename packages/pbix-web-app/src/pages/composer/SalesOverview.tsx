@@ -1,53 +1,65 @@
 import { KpiCard, BarChartVisual, DataTableVisual, MapPlaceholder, ComboChartVisual, FunnelVisual, SlicerVisual } from "@pbix/runtime"
-import { useEngine, useStore } from "../../boot"
 import type { QueryEngine } from "@pbix/runtime"
 import type { UseBoundStore, StoreApi } from "zustand"
 import type { DashboardStore } from "@pbix/runtime"
 
-interface Props {
-  engine: QueryEngine | null
-  store: UseBoundStore<StoreApi<DashboardStore>>
-}
+interface Props { engine: QueryEngine | null; store: UseBoundStore<StoreApi<DashboardStore>> }
 
 export default function SalesOverview({ engine }: Props) {
-  const filters = [{ column: "Status", op: "eq" as const, values: ["Won"] }]
-  const store = useStore()!
+  const wonFilters = [{ column: "Status", op: "eq" as const, values: ["Won"] }]
+  const openFilters = [{ column: "Status", op: "eq" as const, values: ["Open"] }]
 
   return (
     <div className="grid grid-cols-12 gap-4">
-      {/* KPI Row */}
-      <div className="col-span-3"><KpiCard measure={{ table: "Opportunities", column: "Value", agg: "sum" }} label="Revenue Won" engine={engine} filters={filters} format="currency" /></div>
-      <div className="col-span-3"><KpiCard measure={{ table: "Owners", column: "Rev Goal", agg: "sum" }} label="Rev Goal" engine={engine} format="currency" /></div>
-      <div className="col-span-3"><KpiCard measure={{ table: "Opportunities", column: "Value", agg: "sum" }} label="Revenue In Pipeline" engine={engine} filters={[{ column: "Status", op: "eq", values: ["Open"] }]} format="currency" /></div>
-      <div className="col-span-3"><KpiCard measure={{ table: "Opportunities", column: "Value", agg: "count" }} label="Forecast %" engine={engine} format="percent" /></div>
-
-      {/* Slicer */}
+      {/* KPI Row — use v_opportunities for direct column access */}
       <div className="col-span-3">
-        <SlicerVisual table="Opportunity Forecast Adjustment" column="Forecast Adjustment" label="Forecast Adjustment" engine={engine} />
+        <KpiCard measure={{ table: "v_opportunities", column: "Value", agg: "sum" }} label="Revenue Won" engine={engine} filters={wonFilters} format="currency" />
+      </div>
+      <div className="col-span-3">
+        <KpiCard measure={{ table: "v_opportunities", column: "Value", agg: "sum" }} label="Revenue Pipeline" engine={engine} filters={openFilters} format="currency" />
+      </div>
+      <div className="col-span-3">
+        <KpiCard measure={{ table: "v_opportunities", column: "Value", agg: "sum" }} label="Total Pipeline Value" engine={engine} format="currency" />
+      </div>
+      <div className="col-span-3">
+        <KpiCard measure={{ table: "v_opportunities", column: "OpportunitySeq", agg: "count" }} label="Total Opportunities" engine={engine} format="compact" />
       </div>
 
-      {/* Bar chart - Revenue by Product */}
-      <div className="col-span-4">
-        <BarChartVisual table="Opportunities" category={{ column: "Product", maxItems: 10 }} values={[{ column: "Value", agg: "sum", label: "Revenue Won" }, { column: "Value", agg: "sum", label: "Revenue Pipeline" }]} engine={engine} />
+      {/* Slicer: Sales Stage */}
+      <div className="col-span-3">
+        <SlicerVisual table="v_opportunities" column="Sales Stage" label="Sales Stage" engine={engine} />
+      </div>
+
+      {/* Bar chart: Revenue by Product */}
+      <div className="col-span-9">
+        <BarChartVisual table="v_opportunities" category={{ column: "Product", maxItems: 10 }} values={[{ column: "Value", agg: "sum", label: "Revenue Won" }]} engine={engine} filters={wonFilters} />
+      </div>
+
+      {/* Revenue by Territory */}
+      <div className="col-span-6">
+        <BarChartVisual table="v_opportunities" category={{ column: "Territory", maxItems: 15 }} values={[{ column: "Value", agg: "sum", label: "Revenue Won" }]} engine={engine} filters={wonFilters} />
       </div>
 
       {/* Map placeholder */}
-      <div className="col-span-5"><MapPlaceholder name="Sales by Territory" /></div>
+      <div className="col-span-6"><MapPlaceholder name="Revenue by Territory" /></div>
 
-      {/* Combo chart */}
-      <div className="col-span-7">
-        <ComboChartVisual table="Opportunities" category={{ column: "Owner" }} bars={[{ column: "Value", agg: "sum", label: "Revenue Won" }]} lines={[{ column: "Value", agg: "sum", label: "Pipeline" }]} engine={engine} />
+      {/* Funnel by Sales Stage */}
+      <div className="col-span-12">
+        <FunnelVisual table="v_opportunities" category={{ column: "Sales Stage" }} value={{ column: "Value", agg: "sum", label: "Revenue" }} engine={engine} />
       </div>
 
-      {/* Funnel */}
-      <div className="col-span-5"><FunnelVisual table="Opportunities" category={{ column: "PipelineStep" }} value={{ column: "Value", agg: "sum", label: "Revenue" }} engine={engine} /></div>
-
-      {/* Tables */}
+      {/* Tables: by Product, by Territory */}
       <div className="col-span-6">
-        <DataTableVisual table="Opportunities" columns={[{ column: "Territory", role: "row" }, { column: "Value", agg: "sum", role: "value", format: "currency", label: "Revenue Won" }, { column: "Value", agg: "sum", role: "value", format: "currency", label: "Pipeline" }]} engine={engine} virtualized={false} />
+        <DataTableVisual table="v_opportunities" columns={[
+          { column: "Product", role: "row" },
+          { column: "Value", agg: "sum", role: "value", format: "currency", label: "Revenue Won" },
+        ]} engine={engine} filters={wonFilters} virtualized={false} />
       </div>
       <div className="col-span-6">
-        <DataTableVisual table="Opportunities" columns={[{ column: "Product", role: "row" }, { column: "Value", agg: "sum", role: "value", format: "currency", label: "Revenue Won" }, { column: "Value", agg: "sum", role: "value", format: "currency", label: "Pipeline" }]} engine={engine} virtualized={false} />
+        <DataTableVisual table="v_opportunities" columns={[
+          { column: "Territory", role: "row" },
+          { column: "Value", agg: "sum", role: "value", format: "currency", label: "Revenue Won" },
+        ]} engine={engine} filters={wonFilters} virtualized={false} />
       </div>
     </div>
   )

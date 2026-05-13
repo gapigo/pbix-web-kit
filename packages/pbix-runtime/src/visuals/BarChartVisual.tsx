@@ -65,7 +65,7 @@ export function BarChartVisual({
   const isHorizontal = orientation === "horizontal"
 
   return (
-    <div className={`h-64 ${className}`}>
+    <div style={{ width: '100%', height: 256 }} className={className}>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data} layout={isHorizontal ? "vertical" : "horizontal"}>
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />

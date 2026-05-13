@@ -1,73 +1,59 @@
-import { KpiCard, BarChartVisual, DataTableVisual, SlicerVisual, MapPlaceholder } from "@pbix/runtime"
-import { useEngine, useStore } from "../../boot"
+import { KpiCard, BarChartVisual, LineChartVisual, DataTableVisual } from "@pbix/runtime"
 import type { QueryEngine } from "@pbix/runtime"
-import type { UseBoundStore, StoreApi } from "zustand"
-import type { DashboardStore } from "@pbix/runtime"
 
 interface Props {
   engine: QueryEngine | null
-  store: UseBoundStore<StoreApi<DashboardStore>>
 }
 
 export default function Template({ engine }: Props) {
-  const filters = [{ column: "Status", op: "eq" as const, values: ["Won"] }]
-  const store = useStore()!
+  const wonFilters = [{ column: "Status", op: "eq" as const, values: ["Won"] }]
+  const openFilters = [{ column: "Status", op: "eq" as const, values: ["Open"] }]
 
   return (
     <div className="grid grid-cols-12 gap-4">
-      {/* Example KPI Row */}
-      <div className="col-span-3"><KpiCard measure={{ table: "Opportunities", column: "Value", agg: "sum" }} label="Total Revenue" engine={engine} filters={filters} format="currency" /></div>
-      <div className="col-span-3"><KpiCard measure={{ table: "Opportunities", column: "Value", agg: "count" }} label="Total Deals" engine={engine} filters={filters} format="compact" /></div>
-      <div className="col-span-3"><KpiCard measure={{ table: "Opportunities", column: "Value", agg: "avg" }} label="Avg Deal Size" engine={engine} filters={filters} format="currency" /></div>
-      <div className="col-span-3"><KpiCard measure={{ table: "Opportunities", column: "Discount", agg: "avg" }} label="Avg Discount %" engine={engine} filters={filters} format="percent" /></div>
-
-      {/* Slicer Row */}
+      {/* KPI Row */}
       <div className="col-span-3">
-        <SlicerVisual table="Opportunities" column="Product" label="Product Filter" engine={engine} />
+        <KpiCard measure={{ table: "v_opportunities", column: "Value", agg: "sum" }} label="Revenue Won" engine={engine} filters={wonFilters} format="currency" />
       </div>
-      <div className="col-span-2">
-        <SlicerVisual table="Opportunities" column="Territory" label="Territory Filter" engine={engine} />
+      <div className="col-span-3">
+        <KpiCard measure={{ table: "v_opportunities", column: "Value", agg: "sum" }} label="Pipeline Revenue" engine={engine} filters={openFilters} format="currency" />
+      </div>
+      <div className="col-span-3">
+        <KpiCard measure={{ table: "v_opportunities", column: "Value", agg: "avg" }} label="Avg Deal Size" engine={engine} format="currency" />
+      </div>
+      <div className="col-span-3">
+        <KpiCard measure={{ table: "v_opportunities", column: "OpportunitySeq", agg: "count" }} label="Total Opportunities" engine={engine} format="compact" />
       </div>
 
-      {/* Revenue by Product LOB */}
-      <div className="col-span-5">
+      {/* Bar: Revenue by Product */}
+      <div className="col-span-6">
         <BarChartVisual
-          table="Opportunities"
-          category={{ column: "Product LOB", maxItems: 8 }}
+          table="v_opportunities"
+          category={{ column: "Product", maxItems: 10 }}
           values={[{ column: "Value", agg: "sum", label: "Revenue" }]}
           engine={engine}
         />
       </div>
 
-      {/* Revenue by Territory Map */}
-      <div className="col-span-7">
-        <MapPlaceholder name="Revenue by Territory" />
-      </div>
-
-      {/* Deal Details Table */}
+      {/* Line: Revenue Trend by CloseDate */}
       <div className="col-span-6">
-        <DataTableVisual
-          table="Opportunities"
-          columns={[
-            { column: "Product", role: "row" },
-            { column: "Owner", role: "row" },
-            { column: "Value", agg: "sum", role: "value", format: "currency", label: "Revenue" },
-            { column: "Discount", agg: "avg", role: "value", format: "percent", label: "Avg Discount" },
-          ]}
+        <LineChartVisual
+          table="v_opportunities"
+          category={{ column: "CloseDate" }}
+          values={[{ column: "Value", agg: "sum", label: "Revenue Won" }]}
           engine={engine}
-          virtualized={false}
+          filters={wonFilters}
         />
       </div>
 
-      {/* Pipeline Summary Table */}
-      <div className="col-span-6">
+      {/* Table: Revenue by Territory */}
+      <div className="col-span-12">
         <DataTableVisual
-          table="Opportunities"
+          table="v_opportunities"
           columns={[
-            { column: "PipelineStep", role: "row" },
+            { column: "Territory", role: "row" },
             { column: "Value", agg: "sum", role: "value", format: "currency", label: "Revenue" },
-            { column: "Value", agg: "count", role: "value", format: "compact", label: "Deal Count" },
-            { column: "Discount", agg: "avg", role: "value", format: "percent", label: "Avg Discount" },
+            { column: "OpportunitySeq", agg: "count", role: "value", format: "compact", label: "Deals" },
           ]}
           engine={engine}
           virtualized={false}

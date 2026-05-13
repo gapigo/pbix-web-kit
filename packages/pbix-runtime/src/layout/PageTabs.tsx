@@ -15,12 +15,12 @@ export function PageTabs({ storyboard, activePage, onPageChange, mode = "compose
         <button
           key={page.name}
           role="tab"
-          aria-selected={activePage === page.name}
-          onClick={() => onPageChange(page.name)}
+          aria-selected={activePage === page.display_name}
+          onClick={() => onPageChange(page.display_name)}
           className={`
             px-3 py-1.5 text-sm rounded-md whitespace-nowrap transition-colors
             ${
-              activePage === page.name
+              activePage === page.display_name
                 ? "bg-blue-600 text-white"
                 : "text-gray-600 hover:bg-gray-100"
             }

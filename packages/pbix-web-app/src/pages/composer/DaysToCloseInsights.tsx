@@ -1,5 +1,4 @@
 import { KpiCard, BarChartVisual, DataTableVisual, ScatterChartVisual, SlicerVisual } from "@pbix/runtime"
-import { useStore } from "../../boot"
 import type { QueryEngine } from "@pbix/runtime"
 import type { UseBoundStore, StoreApi } from "zustand"
 import type { DashboardStore } from "@pbix/runtime"
@@ -16,58 +15,75 @@ export default function DaysToCloseInsights({ engine }: Props) {
     <div className="grid grid-cols-12 gap-4">
       {/* KPI Row */}
       <div className="col-span-3">
-        <KpiCard measure={{ table: "Opportunities", column: "Value", agg: "count" }} label="Total Opportunities" engine={engine} format="compact" />
+        <KpiCard measure={{ table: "v_opportunities", column: "DaysToClose", agg: "avg" }} label="Avg Days to Close" engine={engine} filters={wonFilter} format="compact" color="#4f46e5" />
       </div>
       <div className="col-span-3">
-        <KpiCard measure={{ table: "Opportunities", column: "Value", agg: "sum" }} label="Total Revenue" engine={engine} format="currency" />
+        <KpiCard measure={{ table: "v_opportunities", column: "DaysToClose", agg: "max" }} label="Max Days to Close" engine={engine} filters={wonFilter} format="compact" color="#0891b2" />
       </div>
       <div className="col-span-3">
-        <KpiCard measure={{ table: "Opportunities", column: "Value", agg: "avg" }} label="Avg Deal Size" engine={engine} format="currency" />
+        <KpiCard measure={{ table: "v_opportunities", column: "Value", agg: "count" }} label="Won Deals" engine={engine} filters={wonFilter} format="compact" color="#059669" />
       </div>
       <div className="col-span-3">
-        <KpiCard measure={{ table: "Opportunities", column: "Value", agg: "count" }} label="Won Deals" engine={engine} filters={wonFilter} format="compact" color="#16a34a" />
+        <KpiCard measure={{ table: "v_opportunities", column: "Value", agg: "sum" }} label="Revenue Won" engine={engine} filters={wonFilter} format="currency" color="#d97706" />
       </div>
 
-      {/* Revenue by Pipeline Stage */}
+      {/* Scatter: DaysToClose vs Revenue (by Product) */}
       <div className="col-span-6">
-        <BarChartVisual table="Opportunities" category={{ column: "PipelineStep", maxItems: 10 }} values={[{ column: "Value", agg: "sum", label: "Revenue" }]} engine={engine} />
+        <ScatterChartVisual
+          table="v_opportunities"
+          x={{ column: "DaysToClose", agg: "avg", label: "Days to Close" }}
+          y={{ column: "Value", agg: "sum", label: "Revenue" }}
+          category={{ column: "Product" }}
+          engine={engine}
+          filters={wonFilter}
+        />
       </div>
 
-      {/* Revenue by Territory */}
-      <div className="col-span-6">
-        <BarChartVisual table="Opportunities" category={{ column: "Territory", maxItems: 10 }} values={[{ column: "Value", agg: "sum", label: "Revenue" }]} engine={engine} orientation="horizontal" />
+      {/* Slicer: Sales Stage */}
+      <div className="col-span-3">
+        <SlicerVisual table="v_opportunities" column="Sales Stage" label="Sales Stage" engine={engine} />
       </div>
 
-      {/* Deal Count vs Revenue by Pipeline Step */}
-      <div className="col-span-6">
-        <ScatterChartVisual table="Opportunities" x={{ column: "Value", agg: "count", label: "Deal Count" }} y={{ column: "Value", agg: "sum", label: "Revenue" }} category={{ column: "PipelineStep" }} engine={engine} />
+      {/* Avg DaysToClose by Territory */}
+      <div className="col-span-3">
+        <BarChartVisual
+          table="v_opportunities"
+          category={{ column: "Territory", maxItems: 8 }}
+          values={[{ column: "DaysToClose", agg: "avg", label: "Avg Days to Close" }]}
+          engine={engine}
+          filters={wonFilter}
+        />
       </div>
 
-      {/* Avg Revenue by Product */}
+      {/* Avg DaysToClose by Product */}
       <div className="col-span-6">
-        <BarChartVisual table="Opportunities" category={{ column: "Product", maxItems: 10 }} values={[{ column: "Value", agg: "avg", label: "Avg Revenue" }]} engine={engine} />
+        <BarChartVisual
+          table="v_opportunities"
+          category={{ column: "Product", maxItems: 10 }}
+          values={[{ column: "DaysToClose", agg: "avg", label: "Avg Days to Close" }]}
+          engine={engine}
+          filters={wonFilter}
+          orientation="horizontal"
+        />
       </div>
 
-      {/* Slicers */}
+      {/* Detail Table */}
       <div className="col-span-6">
-        <SlicerVisual table="Opportunities" column="Status" label="Status" engine={engine} />
-      </div>
-      <div className="col-span-6">
-        <SlicerVisual table="Opportunities" column="Product" label="Product" engine={engine} />
-      </div>
-
-      {/* Detail Table — opportunity breakdown with close date */}
-      <div className="col-span-12">
-        <DataTableVisual table="Opportunities" columns={[
-          { column: "CloseDate", role: "row" },
-          { column: "PipelineStep", role: "row" },
-          { column: "Product", role: "row" },
-          { column: "Territory", role: "row" },
-          { column: "Owner", role: "row" },
-          { column: "Value", agg: "sum", role: "value", format: "currency", label: "Revenue" },
-          { column: "Sales Stage", role: "value", label: "Stage" },
-          { column: "Discount", role: "value", label: "Discount" },
-        ]} engine={engine} virtualized={false} />
+        <DataTableVisual
+          table="v_opportunities"
+          columns={[
+            { column: "Account Name", role: "row" },
+            { column: "Product", role: "row" },
+            { column: "Owner", role: "row" },
+            { column: "DaysToClose", agg: "avg", role: "value", label: "Days to Close" },
+            { column: "Value", agg: "sum", role: "value", format: "currency", label: "Revenue" },
+            { column: "Sales Stage", role: "value", label: "Stage" },
+            { column: "CloseDate", role: "value", label: "Close Date" },
+          ]}
+          engine={engine}
+          filters={wonFilter}
+          virtualized={false}
+        />
       </div>
     </div>
   )

@@ -50,7 +50,7 @@ export function LineChartVisual({
   const valCols = values.map((v) => v.label ?? v.column)
 
   return (
-    <div className={`h-64 ${className}`}>
+    <div style={{ width: '100%', height: 256 }} className={className}>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />

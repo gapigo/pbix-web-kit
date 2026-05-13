@@ -10,20 +10,8 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src'),
     },
   },
+  publicDir: path.resolve(__dirname, 'public'),
   build: {
-    rolldownOptions: {
-      external: [
-        '@pbix/runtime',
-        '@duckdb/duckdb-wasm',
-        'duckdb-wasm-kit',
-        'zustand',
-        '@tanstack/react-query',
-        '@tanstack/react-virtual',
-        'react-router-dom',
-        'recharts',
-        'lucide-react',
-      ],
-    },
     target: 'es2022',
   },
 })

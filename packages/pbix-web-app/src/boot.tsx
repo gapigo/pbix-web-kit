@@ -33,6 +33,7 @@ const PARQUET_TABLES = [
 
 async function loadParquetToDuckDB(db: AsyncDuckDB, url: string, tableName: string): Promise<void> {
   const response = await fetch(url)
+  if (!response.ok) throw new Error(`Failed to fetch ${url}: ${response.status}`)
   const buf = await response.arrayBuffer()
   await db.registerFileBuffer(tableName, new Uint8Array(buf))
   const conn = await db.connect()
@@ -40,6 +41,36 @@ async function loadParquetToDuckDB(db: AsyncDuckDB, url: string, tableName: stri
     await conn.query(`
       CREATE TABLE IF NOT EXISTS "${tableName}" AS
       SELECT * FROM read_parquet('${tableName}')
+    `)
+  } finally {
+    await conn.close()
+  }
+}
+
+async function createViews(db: AsyncDuckDB): Promise<void> {
+  const conn = await db.connect()
+  try {
+    // Denormalized opportunity view with all joins
+    await conn.query(`
+      CREATE VIEW IF NOT EXISTS v_opportunities AS
+      SELECT
+        o.*,
+        p.Product,
+        p."Product Category" AS "Product LOB",
+        t.Territory,
+        t.Region,
+        t."State Or Province",
+        a."Account Name",
+        a."State or Province" AS "Account State",
+        own.Owner,
+        own.Manager,
+        i.Industry
+      FROM Opportunities o
+      LEFT JOIN Products p ON o.ProductSeq = p.ProductSeq
+      LEFT JOIN Accounts a ON o.AccountSeq = a.AccountSeq
+      LEFT JOIN Territories t ON a.TerritorySeq = t.TerritorySeq
+      LEFT JOIN Owners own ON o.SystemUserSeq = own.SystemUserSeq
+      LEFT JOIN Industries i ON a.IndustrySeq = i.IndustrySeq
     `)
   } finally {
     await conn.close()
@@ -70,10 +101,12 @@ export function BootProvider({ children }: { children: ReactNode }) {
           await loadParquetToDuckDB(duckDb.db, t.url, t.name)
         }
 
+        // Create denormalized views for easier querying
+        await createViews(duckDb.db)
         if (!cancelled) {
           store.getState().setStoryboard(storyboard)
           if (storyboard.pages.length > 0) {
-            store.getState().setActivePage(storyboard.pages[0].name)
+            store.getState().setActivePage(storyboard.pages[0].display_name)
           }
           store.getState().setPageContentReady(true)
           setEngine(new QueryEngine(duckDb.db))

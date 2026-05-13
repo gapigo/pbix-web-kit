@@ -66,7 +66,7 @@ export function TreemapVisual({
   }
 
   return (
-    <div className={`h-64 ${className}`}>
+    <div style={{ width: '100%', height: 256 }} className={className}>
       <ResponsiveContainer width="100%" height="100%">
         <Treemap
           data={data}

@@ -144,7 +144,7 @@ function renderTable(
                   >
                     {columns.map((col, ci) => (
                       <td key={ci} className="px-3 py-1.5 border-b border-gray-100 text-gray-700 whitespace-nowrap">
-                        {formatCell(displayData[virtualRow.index]?.[col.column], col.format)}
+                        {formatCell(displayData[virtualRow.index]?.[col.label ?? col.column], col.format)}
                       </td>
                     ))}
                   </tr>
@@ -157,7 +157,7 @@ function renderTable(
                 <tr key={ri} className="hover:bg-gray-50">
                   {columns.map((col, ci) => (
                     <td key={ci} className="px-3 py-1.5 border-b border-gray-100 text-gray-700 whitespace-nowrap">
-                      {formatCell(row[col.column], col.format)}
+                      {formatCell(row[col.label ?? col.column], col.format)}
                     </td>
                   ))}
                 </tr>
