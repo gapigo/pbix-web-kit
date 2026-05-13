@@ -10,12 +10,20 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@duckdb/duckdb-wasm": "1.33.1-dev45.0",
+    "@tanstack/react-query": "^5.100.10",
+    "@tanstack/react-virtual": "^3.13.24",
+    "apache-arrow": "^21.1.0",
     "clsx": "^2.1.1",
+    "duckdb-wasm-kit": "^0.1.39",
     "lucide-react": "^1.14.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
+    "react-router-dom": "^7.15.0",
     "recharts": "^3.8.1",
-    "tailwind-merge": "^3.6.0"
+    "reselect": "^5.1.1",
+    "tailwind-merge": "^3.6.0",
+    "zustand": "^5.0.13"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

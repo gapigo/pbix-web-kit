@@ -131,3 +131,15 @@ Tipos do raw layout que são chrome (não dados):
 
 São extraídos no IR como `Visual(type='chrome')` mas o `ReportCanvas` renderiza como
 `null` por default. Toggle via `showChrome` prop se quiser preservar.
+
+## 14. SDK pbix-runtime (Rodada C)
+
+A SDK exporta primitives data/state/visuals/layout. Todas as queries passam por DuckDB-WASM (não JS). Filtros vivem em Zustand store por dashboard (factory, não singleton). URL sync via useUrlSyncedFilters.
+
+## 15. Storyboard pipeline (Rodada C)
+
+pbix-storyboard transforma o IR em um modelo narrativo (Storyboard) com briefs por página, samples de dados e medidas em plain English. Esse é o input principal para LLMs futuras.
+
+## 16. Composer vs Generator (Rodada C)
+
+Dois modos de usar o kit. Composer importa apenas componentes prontos; Generator pode criar componentes. Veja EVALUATION.md para análise comparativa e SKILL.md para decisão recomendada.

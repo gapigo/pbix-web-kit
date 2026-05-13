@@ -1,6 +1,5 @@
 import { useState, useMemo } from "react"
 import type { Visual } from "./types"
-import { getTable, resolveColumn } from "@/lib/tableLookup"
 
 interface SlicerVisualProps {
   visual: Visual
@@ -13,21 +12,21 @@ export function SlicerVisual({ visual, data, onFilter, activeFilters }: SlicerVi
   const valuesField = visual.fields.find(f => f.role === "Values")
   if (!valuesField) return <div className="text-muted-foreground text-xs p-4">No field</div>
 
-  const tableData = getTable(data, valuesField.table)
+  const tableData = data[valuesField.table]
   if (!tableData || tableData.length === 0) {
     return <div className="text-muted-foreground text-xs p-4">No data</div>
   }
 
-  // Resolve the column with tolerant matching (handles "Revenue Won" vs "Revenue_Won")
-  let col = resolveColumn(tableData[0], valuesField.column)
-  if (!col) {
-    // Fallback: first string column in the table
+  // Try to find the column — fallback to first string column
+  let col = valuesField.column
+  if (!(col in tableData[0])) {
+    // Try other columns in the table
     for (const [k, v] of Object.entries(tableData[0])) {
       if (typeof v === "string") { col = k; break }
     }
   }
 
-  if (!col) {
+  if (!(col in tableData[0])) {
     return <div className="text-muted-foreground text-xs p-4">No data</div>
   }
 
@@ -35,7 +34,7 @@ export function SlicerVisual({ visual, data, onFilter, activeFilters }: SlicerVi
   const uniqueValues = useMemo(() => {
     const vals = new Set<string>()
     for (const row of tableData) {
-      const v = row[col!]
+      const v = row[col]
       if (v != null && v !== "") vals.add(String(v))
     }
     return Array.from(vals).sort()

@@ -1,7 +1,6 @@
 import { useState, useMemo } from "react"
 import type { Visual } from "./types"
 import { evaluateField, buildMeasureMap } from "@/lib/measureEvaluator"
-import { getTable, resolveColumn } from "@/lib/tableLookup"
 import irData from "@/data/ir.json"
 import { useFilteredData } from "@/components/layout/FilterContext"
 
@@ -14,11 +13,12 @@ export function DataTableVisual({ visual, data }: DataTableVisualProps) {
   const rowFields = visual.fields.filter(f => f.role === "Rows")
   const valueFields = visual.fields.filter(f => f.role === "Values")
 
-  // Find data table with tolerant lookup
+  // Try to find data table
   const allTables = [...new Set(visual.fields.map(f => f.table))]
   const firstTable = allTables[0]
-  const tableData = getTable(data, firstTable)
+  const tableData = data[firstTable]
   const filteredData = useFilteredData(tableData)
+
 
   if (!tableData || tableData.length === 0) {
     return <div className="text-muted-foreground text-xs p-4">No data available</div>
@@ -30,32 +30,11 @@ export function DataTableVisual({ visual, data }: DataTableVisualProps) {
   // Build measure map for evaluation
   const measureMap = useMemo(() => buildMeasureMap((irData as any).measures || []), [])
 
-  // Aggregate values group by row fields (or list rows if no grouping)
+  // Aggregate values group by row fields
   const aggregated = useMemo(() => {
-    // CASE A: No rowFields = list, not aggregation. Show each row individually.
-    if (rowFields.length === 0) {
-      return filteredData.slice(0, 200).map(row => {
-        const result: Record<string, any> = {}
-        for (const vf of valueFields) {
-          const realCol = resolveColumn(row, vf.column)
-          const raw = realCol ? row[realCol] : undefined
-          if (typeof raw === "number") {
-            result[vf.column] = formatNum(raw)
-          } else {
-            result[vf.column] = raw == null ? "" : String(raw)
-          }
-        }
-        return result
-      })
-    }
-
-    // CASE B: Grouped aggregation
-    const groups: Record<string, Record<string, number | string>> = {}
+    const groups: Record<string, Record<string, number>> = {}
     for (const row of filteredData) {
-      const key = rowFields.map(f => {
-        const realCol = resolveColumn(row, f.column)
-        return String(realCol ? row[realCol] ?? "" : "")
-      }).join("|")
+      const key = rowFields.map(f => String(row[f.column] ?? "")).join("|")
       if (!groups[key]) {
         groups[key] = {}
       }
@@ -63,44 +42,26 @@ export function DataTableVisual({ visual, data }: DataTableVisualProps) {
         const measureKey = `${vf.table}.${vf.column}`
         const isMeasure = measureMap.has(measureKey)
         if (isMeasure) {
+          // Skip if already computed for this group
           if (groups[key] && groups[key][vf.column] !== undefined) continue
           // Build row context filter from row fields
           const rowFilters: Record<string, string[]> = {}
           for (const rf of rowFields) {
-            const realCol = resolveColumn(row, rf.column)
-            const val = String(realCol ? row[realCol] ?? "" : "")
+            const val = String(row[rf.column] ?? "")
             if (val) rowFilters[rf.column] = [val]
           }
           const evalVal = evaluateField(vf, data, rowFilters, measureMap)
           if (evalVal !== null) {
             groups[key][vf.column] = evalVal
           } else {
-            // Fallback: sum raw column with tolerant lookup
-            const realCol = resolveColumn(row, vf.column)
-            const val = realCol ? Number(row[realCol] ?? 0) : 0
-            groups[key][vf.column] = ((groups[key][vf.column] as number) ?? 0) + (Number.isFinite(val) ? val : 0)
+            // Fallback: sum raw column
+            const val = Number(row[vf.column] ?? 0)
+            groups[key][vf.column] = (groups[key][vf.column] ?? 0) + val
           }
         } else {
-          // Raw column. Decide by data type, not by column name.
-          const realCol = resolveColumn(row, vf.column)
-          const raw = realCol ? row[realCol] : undefined
-          if (typeof raw === "number" && Number.isFinite(raw)) {
-            // Numeric: sum
-            groups[key][vf.column] = ((groups[key][vf.column] as number) ?? 0) + raw
-          } else if (typeof raw === "string" && raw.trim() !== "" && !Number.isFinite(Number(raw))) {
-            // Pure text: keep first value
-            if (groups[key][vf.column] === undefined) {
-              groups[key][vf.column] = raw
-            }
-          } else {
-            // Numeric-as-string or other: try to sum
-            const asNum = Number(raw)
-            if (Number.isFinite(asNum)) {
-              groups[key][vf.column] = ((groups[key][vf.column] as number) ?? 0) + asNum
-            } else if (groups[key][vf.column] === undefined) {
-              groups[key][vf.column] = raw == null ? "" : String(raw)
-            }
-          }
+          // Raw column: simple sum
+          const val = Number(row[vf.column] ?? 0)
+          groups[key][vf.column] = (groups[key][vf.column] ?? 0) + val
         }
       }
     }
@@ -108,9 +69,7 @@ export function DataTableVisual({ visual, data }: DataTableVisualProps) {
       const parts = key.split("|")
       const result: Record<string, any> = {}
       rowFields.forEach((f, i) => { result[f.column] = parts[i] || "" })
-      Object.entries(vals).forEach(([col, val]) => {
-        result[col] = typeof val === "number" ? formatNum(val) : String(val ?? "")
-      })
+      Object.entries(vals).forEach(([col, val]) => { result[col] = formatNum(val) })
       return result
     })
   }, [filteredData, rowFields, valueFields, data, measureMap])

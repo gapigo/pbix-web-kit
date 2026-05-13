@@ -1,7 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card"
 import type { Visual } from "./types"
 import { evaluateField, buildMeasureMap } from "@/lib/measureEvaluator"
-import { getTable, resolveColumn } from "@/lib/tableLookup"
 import irData from "@/data/ir.json"
 import { useFilters } from "@/components/layout/FilterContext"
 
@@ -13,6 +12,7 @@ interface KpiCardProps {
 export function KpiCard({ visual, data }: KpiCardProps) {
   const computedValues = visual.config?.computed_values as Record<string, number> | undefined
   const { filters: globalFilters } = useFilters()
+
 
   // Get the first indicator field
   const indicatorField = visual.fields.find(f => f.role === "Indicator")
@@ -31,12 +31,14 @@ export function KpiCard({ visual, data }: KpiCardProps) {
     value = evaluateField(indicatorField, data, globalFilters, measureMap);
   }
 
-  // Fallback: try to compute from raw data (simple sum) with tolerant lookup
+
+  // Fallback: try to compute from raw data (simple sum)
   if (value === null && indicatorField) {
-    const tableData = getTable(data, indicatorField.table)
+    const tableData = data[indicatorField.table]
     if (tableData && tableData.length > 0) {
-      const col = resolveColumn(tableData[0], indicatorField.column)
-      if (col) {
+      const col = indicatorField.column
+      // Check if column exists in raw data
+      if (col in tableData[0]) {
         value = tableData.reduce((sum: number, row: any) => sum + (Number(row[col]) || 0), 0)
       }
     }
