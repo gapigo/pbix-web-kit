@@ -31,6 +31,8 @@ const PARQUET_TABLES = [
   { name: "Owners", url: "/parquet/Owners.parquet" },
   { name: "Products", url: "/parquet/Products.parquet" },
   { name: "Territories", url: "/parquet/Territories.parquet" },
+  // E-Commerce data
+  { name: "Orders", url: "/data/flipkart/Orders.parquet" },
 ]
 
 async function loadParquetToDuckDB(db: AsyncDuckDB, url: string, tableName: string): Promise<void> {
@@ -79,6 +81,24 @@ async function createViews(db: AsyncDuckDB): Promise<void> {
   }
 }
 
+async function createEcommerceViews(db: AsyncDuckDB): Promise<void> {
+  const conn = await db.connect()
+  try {
+    await conn.query(`
+      CREATE VIEW IF NOT EXISTS v_orders AS
+      SELECT
+        o.*,
+        CAST(strftime('%Y-%m', o.Order_Date::DATE) AS TEXT) as YearMonth,
+        CAST(strftime('%Y', o.Order_Date::DATE) AS INTEGER) as Year,
+        CAST(strftime('%m', o.Order_Date::DATE) AS INTEGER) as Month,
+        ROUND(o.Profit / NULLIF(o.Sales, 0) * 100, 2) as Profit_Margin_Pct
+      FROM Orders o
+    `)
+  } finally {
+    await conn.close()
+  }
+}
+
 export function BootProvider({ children }: { children: ReactNode }) {
   const duckDb = useDuckDb()
   const [engine, setEngine] = useState<QueryEngine | null>(null)
@@ -106,8 +126,9 @@ export function BootProvider({ children }: { children: ReactNode }) {
           await loadParquetToDuckDB(duckDb.db, t.url, t.name)
         }
 
-        // Create denormalized views for easier querying
+        // Create denormalized views
         await createViews(duckDb.db)
+        await createEcommerceViews(duckDb.db)
         const qe = new QueryEngine(duckDb.db)
 
         // Run query validator before marking ready

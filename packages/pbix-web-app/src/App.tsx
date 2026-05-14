@@ -8,7 +8,7 @@ import {
   selectFilterCount,
 } from "@pbix/runtime"
 import { BootProvider, useEngine, useStore } from "./boot"
-import { lazy, Suspense, useEffect } from "react"
+import { lazy, Suspense, useEffect, useState } from "react"
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: 30_000, retry: 1 } },
@@ -47,6 +47,16 @@ const generatorPages: Record<string, any> = {
   "template": lazy(() => import("./pages/generator/Template")),
 }
 
+
+// E-Commerce pages (Generator only)
+const ecommercePages: Record<string, any> = {
+  "executive-overview": lazy(() => import("./pages/generator-ecommerce/ExecutiveOverview")),
+  "product-analysis": lazy(() => import("./pages/generator-ecommerce/ProductAnalysis")),
+  "regional-performance": lazy(() => import("./pages/generator-ecommerce/RegionalPerformance")),
+  "discount-impact": lazy(() => import("./pages/generator-ecommerce/DiscountImpact")),
+  "customer-segments": lazy(() => import("./pages/generator-ecommerce/CustomerSegments")),
+  "shipping-analysis": lazy(() => import("./pages/generator-ecommerce/ShippingAnalysis")),
+}
 function DashboardContent() {
   const engine = useEngine()
   const store = useStore()!
@@ -78,6 +88,10 @@ function DashboardContent() {
       }
     }
   }, [pageName, storyboard, store])
+  // Clear filters when navigating between pages to avoid stale cross-page filters
+  useEffect(() => {
+    store.getState().clearFilters()
+  }, [pageName, store])
 
   if (!storyboard) return null
 
@@ -107,6 +121,14 @@ function DashboardContent() {
             >
               Generator
             </Link>
+            <Link
+              to="/ecommerce/executive-overview"
+              className={`px-3 py-1 text-xs rounded-md font-medium transition-colors ${
+                mode === "ecommerce" ? "bg-white shadow-sm text-gray-900" : "text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              E-Commerce
+            </Link>
           </div>
           {filterCount > 0 && (
             <span className="text-xs text-blue-600 font-medium">
@@ -131,6 +153,70 @@ function DashboardContent() {
     </DashboardShell>
   )
 }
+// ─── E-Commerce content (no storyboard, hardcoded pages) ───
+const ECOMMERCE_PAGE_NAMES = [
+  { slug: "executive-overview", label: "Executive Overview" },
+  { slug: "product-analysis", label: "Product Analysis" },
+  { slug: "regional-performance", label: "Regional Performance" },
+  { slug: "discount-impact", label: "Discount Impact" },
+  { slug: "customer-segments", label: "Customer Segments" },
+  { slug: "shipping-analysis", label: "Shipping Analysis" },
+]
+
+function EcommerceContent() {
+  const engine = useEngine()
+  const store = useStore()!
+  const { pageName } = useParams<{ pageName: string }>()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    // clear filters on navigation
+    store.getState().clearFilters()
+  }, [pageName, store])
+
+  const currentSlug = pageName ?? "executive-overview"
+  const PageComponent = ecommercePages[currentSlug]
+
+  return (
+    <div className="min-h-screen bg-[#F8FAFC] font-['Inter',system-ui,sans-serif]">
+      {/* Header */}
+      <header className="sticky top-0 z-50 bg-white border-b border-[#E2E8F0] shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
+        <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+          <h1 className="text-[14px] font-semibold text-[#0A2342]">E-Commerce Analytics</h1>
+          <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-0.5">
+            <Link to="/generator/sales-overview"
+              className="px-3 py-1 text-xs rounded-md font-medium transition-colors text-gray-500 hover:text-gray-700">
+              Regional Sales
+            </Link>
+            <span className="px-3 py-1 text-xs rounded-md font-medium bg-white shadow-sm text-gray-900">
+              E-Commerce
+            </span>
+          </div>
+        </div>
+        {/* Page tabs */}
+        <div className="max-w-7xl mx-auto px-6 flex gap-1 pb-0">
+          {ECOMMERCE_PAGE_NAMES.map((p) => (
+            <button
+              key={p.slug}
+              onClick={() => navigate(`/ecommerce/${p.slug}`)}
+              className={`px-4 py-2 text-xs font-medium border-b-2 transition-colors ${
+                currentSlug === p.slug
+                  ? "border-[#0F52BA] text-[#0F52BA] font-semibold"
+                  : "border-transparent text-[#6B7280] hover:text-[#0F52BA] hover:bg-[#F8FAFC]"
+              }`}
+            >
+              {p.label}
+            </button>
+          ))}
+        </div>
+      </header>
+
+      <Suspense fallback={<div className="h-64 bg-gray-100 animate-pulse rounded-lg m-6" />}>
+        {PageComponent ? <PageComponent engine={engine} store={store} /> : null}
+      </Suspense>
+    </div>
+  )
+}
 
 export default function App() {
   return (
@@ -139,6 +225,8 @@ export default function App() {
         <BootProvider>
           <Routes>
             <Route path="/:mode/:pageName" element={<DashboardContent />} />
+            <Route path="/ecommerce/:pageName" element={<EcommerceContent />} />
+            <Route path="/ecommerce" element={<EcommerceContent />} />
             <Route path="/" element={<DashboardContent />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
