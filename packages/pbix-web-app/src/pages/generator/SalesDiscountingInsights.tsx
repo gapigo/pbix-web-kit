@@ -1,388 +1,209 @@
-import { useAggregation, theme, formatCurrency, formatPercent, formatCompact, PBI_PALETTE } from "@pbix/runtime"
-import { GaugeVisual } from "@pbix/runtime"
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Legend,
-} from "recharts"
+import { useAggregation, useDistinctValues, useFilter, useFilters } from "@pbix/runtime"
 import type { QueryEngine } from "@pbix/runtime"
 import type { UseBoundStore, StoreApi } from "zustand"
 import type { DashboardStore } from "@pbix/runtime"
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip,
+} from "recharts"
+import {
+  colors, cardClass, kpiValueClass, kpiLabelClass, sectionLabelClass,
+  tableHeaderClass, tableCellClass,
+  fmtCurrency, fmtNum, fmtPct,
+  CustomTooltip, CHART_HEIGHT, axisStyle, gridStyle, pctTick, currencyTick,
+} from "@/lib/designTokens"
 
 interface Props {
   engine: QueryEngine | null
   store: UseBoundStore<StoreApi<DashboardStore>>
 }
 
-// ── Inline KPI card ──────────────────────────────────────
-function KpiCard({
-  label,
-  value,
-  subtitle,
-  color,
-  loading,
-}: {
-  label: string
-  value: string
-  subtitle?: string
-  color: string
-  loading: boolean
-}) {
-  return (
-    <div
-      style={{
-        background: "#fff",
-        borderRadius: theme.radius.card,
-        padding: theme.spacing.card,
-        border: "1px solid #e5e7eb",
-        display: "flex",
-        flexDirection: "column",
-        gap: "0.25rem",
-      }}
-    >
-      <span style={{ fontSize: "0.75rem", fontWeight: 600, color: theme.semantic.muted, textTransform: "uppercase", letterSpacing: "0.05em" }}>
-        {label}
-      </span>
-      <span style={{ fontSize: "1.75rem", fontWeight: 700, color }}>
-        {loading ? "—" : value}
-      </span>
-      {subtitle && (
-        <span style={{ fontSize: "0.75rem", color: theme.semantic.muted }}>{subtitle}</span>
-      )}
-    </div>
-  )
-}
+export default function SalesDiscountingInsights({ engine, store }: Props) {
+  const [territoryFilter, setTerritoryFilter] = useFilter(store, "v_opportunities.Territory")
+  const [ownerFilter, setOwnerFilter] = useFilter(store, "v_opportunities.Owner")
+  const allFilters = useFilters(store)
+  const filterArr = Object.values(allFilters).flat()
 
-// ── Reusable chart wrapper ───────────────────────────────
-function ChartCard({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div
-      style={{
-        background: "#fff",
-        borderRadius: theme.radius.card,
-        padding: theme.spacing.card,
-        border: "1px solid #e5e7eb",
-        display: "flex",
-        flexDirection: "column",
-        gap: "0.75rem",
-      }}
-    >
-      <span style={{ fontSize: "0.875rem", fontWeight: 600 }}>{title}</span>
-      {children}
-    </div>
-  )
-}
+  const activeTerritory = territoryFilter?.values?.[0] ?? null
+  const activeOwner = ownerFilter?.values?.[0] ?? null
 
-// ── Custom percent tooltip ───────────────────────────────
-function PercentTooltip({ active, payload, label }: any) {
-  if (!active || !payload?.length) return null
-  return (
-    <div
-      style={{
-        background: "#fff",
-        border: "1px solid #d1d5db",
-        borderRadius: "0.375rem",
-        padding: "0.5rem 0.75rem",
-        fontSize: "0.8rem",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.12)",
-      }}
-    >
-      <div style={{ fontWeight: 600, marginBottom: "0.25rem" }}>{label}</div>
-      {payload.map((entry: any, i: number) => (
-        <div key={i} style={{ color: entry.color }}>
-          {entry.name}: {typeof entry.value === "number" ? formatPercent(entry.value / 100) : entry.value}
-        </div>
-      ))}
-    </div>
-  )
-}
+  // Distinct values for selects
+  const territories = useDistinctValues(engine, "v_opportunities", "Territory")
+  const owners = useDistinctValues(engine, "v_opportunities", "Owner")
 
-// ── Detail row component ─────────────────────────────────
-function DetailRow({ label, discountPct, frequency }: { label: string; discountPct: number; frequency: number }) {
-  return (
-    <tr style={{ borderBottom: "1px solid #f3f4f6" }}>
-      <td style={{ padding: "0.375rem 0.5rem" }}>{label}</td>
-      <td style={{ padding: "0.375rem 0.5rem", textAlign: "right", fontWeight: 500 }}>
-        {formatPercent(discountPct)}
-      </td>
-      <td style={{ padding: "0.375rem 0.5rem", textAlign: "right" }}>
-        {formatCompact(frequency)}
-      </td>
-    </tr>
-  )
-}
-
-// ── Main page ────────────────────────────────────────────
-export default function SalesDiscountingInsights({ engine }: Props) {
-  // ── KPI queries ──────────────────────────────────────
+  // KPI: Avg Discount %
   const avgDiscount = useAggregation(engine, {
     table: "v_opportunities",
-    measures: [{ column: "Discount", fn: "avg", alias: "avgDiscount" }],
-  })
-  const totalDiscounted = useAggregation(engine, {
-    table: "v_opportunities",
-    measures: [{ column: "Value", fn: "count", alias: "count" }],
-    filters: [{ column: "Discount", op: "gt", values: [0] }],
-  })
-  const totalValue = useAggregation(engine, {
-    table: "v_opportunities",
-    measures: [{ column: "Value", fn: "sum", alias: "value" }],
-  })
-  const discountedValue = useAggregation(engine, {
-    table: "v_opportunities",
-    measures: [{ column: "Value", fn: "sum", alias: "value" }],
-    filters: [{ column: "Discount", op: "gt", values: [0] }],
-  })
-  const totalDeals = useAggregation(engine, {
-    table: "v_opportunities",
-    measures: [{ column: "Value", fn: "count", alias: "count" }],
-  })
-  const zeroDiscount = useAggregation(engine, {
-    table: "v_opportunities",
-    measures: [{ column: "Value", fn: "count", alias: "count" }],
-    filters: [{ column: "Discount", op: "eq", values: [0] }],
+    measures: [{ column: "Discount", fn: "avg", alias: "val" }],
+    filters: filterArr.length > 0 ? filterArr : undefined,
   })
 
-  // ── Chart queries ────────────────────────────────────
-  const discountByProduct = useAggregation(engine, {
+  // KPI: Max Discount
+  const maxDiscount = useAggregation(engine, {
     table: "v_opportunities",
-    groupBy: ["Product"],
-    measures: [
-      { column: "Discount", fn: "avg", alias: "avgDiscount" },
-      { column: "Value", fn: "count", alias: "deals" },
-    ],
-    orderBy: [{ column: "avgDiscount", dir: "desc" }],
-    limit: 10,
+    measures: [{ column: "Discount", fn: "max", alias: "val" }],
+    filters: filterArr.length > 0 ? filterArr : undefined,
   })
 
-  const discountByTerritory = useAggregation(engine, {
+  // KPI: Revenue at Risk (Value sum where Discount > 0)
+  const revAtRisk = useAggregation(engine, {
+    table: "v_opportunities",
+    measures: [{ column: "Value", fn: "sum", alias: "val" }],
+    filters: [...filterArr, { column: "Discount", op: "gte", values: [0.01] }],
+  })
+
+  // KPI: Deals with Discount (count where Discount > 0)
+  const dealsWithDiscount = useAggregation(engine, {
+    table: "v_opportunities",
+    measures: [{ column: "OpportunitySeq", fn: "count", alias: "val" }],
+    filters: [...filterArr, { column: "Discount", op: "gte", values: [0.01] }],
+  })
+
+  // Bar: Avg Discount by Territory (horizontal)
+  const territoryBar = useAggregation(engine, {
+    table: "v_opportunities",
+    groupBy: ["Territory"],
+    measures: [{ column: "Discount", fn: "avg", alias: "val" }],
+    filters: filterArr.length > 0 ? filterArr : undefined,
+    orderBy: [{ column: "val", dir: "desc" }],
+    limit: 12,
+  })
+
+  // Bar: Avg Discount by Owner/Manager
+  const ownerBar = useAggregation(engine, {
+    table: "v_opportunities",
+    groupBy: ["Owner"],
+    measures: [{ column: "Discount", fn: "avg", alias: "val" }],
+    filters: filterArr.length > 0 ? filterArr : undefined,
+    orderBy: [{ column: "val", dir: "desc" }],
+    limit: 15,
+  })
+
+  // Table: Territory × Avg Discount × Revenue × Count
+  const tableData = useAggregation(engine, {
     table: "v_opportunities",
     groupBy: ["Territory"],
     measures: [
-      { column: "Discount", fn: "avg", alias: "avgDiscount" },
-      { column: "Value", fn: "count", alias: "deals" },
+      { column: "Discount", fn: "avg", alias: "avgDisc" },
+      { column: "Value", fn: "sum", alias: "revenue" },
+      { column: "OpportunitySeq", fn: "count", alias: "cnt" },
     ],
-    orderBy: [{ column: "avgDiscount", dir: "desc" }],
+    filters: filterArr.length > 0 ? filterArr : undefined,
+    orderBy: [{ column: "avgDisc", dir: "desc" }],
+    limit: 20,
   })
-
-  const discountBrackets = useAggregation(engine, {
-    table: "v_opportunities",
-    groupBy: ["Sales Stage"],
-    measures: [
-      { column: "Discount", fn: "avg", alias: "avgDiscount" },
-      { column: "Value", fn: "count", alias: "deals" },
-    ],
-    orderBy: [{ column: "avgDiscount", dir: "desc" }],
-  })
-
-  const detailData = useAggregation(engine, {
-    table: "v_opportunities",
-    groupBy: ["Product", "Territory"],
-    measures: [
-      { column: "Discount", fn: "avg", alias: "avgDiscount" },
-      { column: "Value", fn: "count", alias: "deals" },
-      { column: "Value", fn: "sum", alias: "totalValue" },
-    ],
-    orderBy: [{ column: "avgDiscount", dir: "desc" }],
-    limit: 50,
-  })
-
-  // ── Derived KPIs ─────────────────────────────────────
-  const avgDiscPct = (avgDiscount.data?.[0]?.avgDiscount ?? 0) / 100
-  const discCount = totalDiscounted.data?.[0]?.count ?? 0
-  const totalVal = totalValue.data?.[0]?.value ?? 0
-  const discVal = discountedValue.data?.[0]?.value ?? 0
-  const totalDealCount = totalDeals.data?.[0]?.count ?? 0
-  const zeroCount = zeroDiscount.data?.[0]?.count ?? 0
-  const discRate = totalDealCount > 0 ? (discCount / totalDealCount) * 100 : 0
-  const discValuePct = totalVal > 0 ? ((discVal / totalVal) * 100).toFixed(1) : "0.0"
-
-  // ── Loading state ────────────────────────────────────
-  const kpiLoading = avgDiscount.loading || totalDiscounted.loading || totalValue.loading || totalDeals.loading
-
-  // ── Format chart data: discount as decimal → percent ──
-  const productChart =
-    discountByProduct.data?.map((d) => ({
-      ...d,
-      avgDiscountPct: (d.avgDiscount ?? 0) / 100,
-    })) ?? []
-
-  const territoryChart =
-    discountByTerritory.data?.map((d) => ({
-      ...d,
-      avgDiscountPct: (d.avgDiscount ?? 0) / 100,
-    })) ?? []
-
-  const pipelineChart =
-    discountBrackets.data?.map((d) => ({
-      ...d,
-      stage: d["Sales Stage"],
-      avgDiscountPct: (d.avgDiscount ?? 0) / 100,
-    })) ?? []
-
-  const sectionStyle: React.CSSProperties = {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-    gap: theme.spacing.gap,
-  }
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: theme.spacing.gap,
-        padding: theme.spacing.page,
-        fontFamily: theme.fontFamily.sans,
-      }}
-    >
-      {/* ── Row 1: KPI Cards ───────────────────────────────── */}
-      <div style={sectionStyle}>
-        <KpiCard
-          label="Avg Discount"
-          value={formatPercent(avgDiscPct)}
-          subtitle={`across ${formatCompact(totalDealCount)} deals`}
-          color={PBI_PALETTE[0]}
-          loading={kpiLoading}
-        />
-        <KpiCard
-          label="Deals with Discount"
-          value={formatCompact(discCount)}
-          subtitle={`${discRate.toFixed(1)}% of all deals`}
-          color={PBI_PALETTE[1]}
-          loading={kpiLoading}
-        />
-        <KpiCard
-          label="Discounted Value"
-          value={formatCurrency(discVal)}
-          subtitle={`${discValuePct}% of total value`}
-          color={PBI_PALETTE[2]}
-          loading={kpiLoading}
-        />
-        <KpiCard
-          label="Full-Price Deals"
-          value={formatCompact(zeroCount)}
-          subtitle="no discount applied"
-          color={theme.semantic.muted}
-          loading={zeroDiscount.loading}
-        />
+    <div className="grid grid-cols-12 gap-4">
+      {/* == FILTERS == */}
+      <div className="col-span-12 flex items-center gap-4 flex-wrap">
+        {/* Territory select */}
+        <select
+          value={activeTerritory ?? ""}
+          onChange={(e) =>
+            setTerritoryFilter(
+              e.target.value
+                ? { column: "v_opportunities.Territory", op: "eq", values: [e.target.value] }
+                : null
+            )
+          }
+          className="border border-[#E2E8F0] rounded-md px-3 py-1.5 text-sm bg-white text-[#1F2937]"
+        >
+          <option value="">All Territories</option>
+          {(territories.data ?? []).map((t: string) => (
+            <option key={t} value={t}>{t}</option>
+          ))}
+        </select>
+
+        {/* Owner select */}
+        <select
+          value={activeOwner ?? ""}
+          onChange={(e) =>
+            setOwnerFilter(
+              e.target.value
+                ? { column: "v_opportunities.Owner", op: "eq", values: [e.target.value] }
+                : null
+            )
+          }
+          className="border border-[#E2E8F0] rounded-md px-3 py-1.5 text-sm bg-white text-[#1F2937]"
+        >
+          <option value="">All Owners</option>
+          {(owners.data ?? []).map((o: string) => (
+            <option key={o} value={o}>{o}</option>
+          ))}
+        </select>
       </div>
 
-      {/* ── Row 2: Avg Discount Gauge + Pipeline Step ──────── */}
-      <div style={sectionStyle}>
-        <ChartCard title="Overall Discount Gauge">
-          <GaugeVisual
-            table="v_opportunities"
-            measure="Discount"
-            target={30}
-            engine={engine}
-            className=""
-          />
-        </ChartCard>
-
-        <ChartCard title="Discount by Pipeline Step">
-          <ResponsiveContainer width="100%" height={260}>
-            <BarChart
-              data={pipelineChart}
-              layout="vertical"
-              margin={{ left: 20, right: 20, top: 4, bottom: 4 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-              <XAxis
-                type="number"
-                tickFormatter={(v: number) => `${(v * 100).toFixed(0)}%`}
-                fontSize={11}
-              />
-              <YAxis type="category" dataKey="stage" width={120} fontSize={11} />
-              <Tooltip content={<PercentTooltip />} />
-              <Bar dataKey="avgDiscountPct" fill={PBI_PALETTE[3]} radius={[0, 4, 4, 0]} name="Avg Discount" />
-            </BarChart>
-          </ResponsiveContainer>
-        </ChartCard>
+      {/* == KPIs == */}
+      <div className={`${cardClass} col-span-3`}>
+        <p className={kpiLabelClass}>Avg Discount %</p>
+        <p className={kpiValueClass}>{fmtPct(avgDiscount.data?.[0]?.val as number | null)}</p>
+      </div>
+      <div className={`${cardClass} col-span-3`}>
+        <p className={kpiLabelClass}>Max Discount</p>
+        <p className={kpiValueClass}>{fmtPct(maxDiscount.data?.[0]?.val as number | null)}</p>
+      </div>
+      <div className={`${cardClass} col-span-3`}>
+        <p className={kpiLabelClass}>Revenue at Risk</p>
+        <p className={kpiValueClass}>{fmtCurrency(revAtRisk.data?.[0]?.val as number | null)}</p>
+      </div>
+      <div className={`${cardClass} col-span-3`}>
+        <p className={kpiLabelClass}>Deals with Discount</p>
+        <p className={kpiValueClass}>{fmtNum(dealsWithDiscount.data?.[0]?.val as number | null)}</p>
       </div>
 
-      {/* ── Row 3: Discount by Product + Discount by Territory ── */}
-      <div style={sectionStyle}>
-        <ChartCard title="Avg Discount by Product (Top 10)">
-          <ResponsiveContainer width="100%" height={280}>
-            <BarChart
-              data={productChart}
-              layout="vertical"
-              margin={{ left: 20, right: 20, top: 4, bottom: 4 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-              <XAxis
-                type="number"
-                tickFormatter={(v: number) => `${(v * 100).toFixed(0)}%`}
-                fontSize={11}
-              />
-              <YAxis type="category" dataKey="Product" width={100} fontSize={11} />
-              <Tooltip content={<PercentTooltip />} />
-              <Bar dataKey="avgDiscountPct" fill={PBI_PALETTE[0]} radius={[0, 4, 4, 0]} name="Avg Discount" />
-            </BarChart>
-          </ResponsiveContainer>
-        </ChartCard>
-
-        <ChartCard title="Avg Discount by Territory">
-          <ResponsiveContainer width="100%" height={280}>
-            <BarChart
-              data={territoryChart}
-              layout="vertical"
-              margin={{ left: 20, right: 20, top: 4, bottom: 4 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-              <XAxis
-                type="number"
-                tickFormatter={(v: number) => `${(v * 100).toFixed(0)}%`}
-                fontSize={11}
-              />
-              <YAxis type="category" dataKey="Territory" width={100} fontSize={11} />
-              <Tooltip content={<PercentTooltip />} />
-              <Bar dataKey="avgDiscountPct" fill={PBI_PALETTE[4]} radius={[0, 4, 4, 0]} name="Avg Discount" />
-            </BarChart>
-          </ResponsiveContainer>
-        </ChartCard>
+      {/* == Bar: Avg Discount by Territory == */}
+      <div className={`${cardClass} col-span-6`}>
+        <p className={sectionLabelClass}>Avg Discount by Territory</p>
+        <ResponsiveContainer width="100%" height={CHART_HEIGHT.large}>
+          <BarChart data={territoryBar.data ?? []} layout="vertical" margin={{ left: 20, right: 20 }}>
+            <CartesianGrid {...gridStyle} />
+            <XAxis type="number" tick={pctTick} {...axisStyle} domain={[0, 1]} />
+            <YAxis type="category" dataKey="Territory" width={100} tick={{ fontSize: 11 }} />
+            <Tooltip content={<CustomTooltip formatter={(v: number) => fmtPct(v)} />} />
+            <Bar dataKey="val" fill={colors.warning} radius={[0, 4, 4, 0]} barSize={16} />
+          </BarChart>
+        </ResponsiveContainer>
       </div>
 
-      {/* ── Row 4: Detail Table ────────────────────────────── */}
-      <div style={{ ...sectionStyle, gridTemplateColumns: "1fr" }}>
-        <ChartCard title="Discount Detail by Product & Territory">
-          <div style={{ fontSize: "0.8rem", maxHeight: "400px", overflowY: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
-              <thead>
-                <tr style={{ borderBottom: "2px solid #e5e7eb", position: "sticky", top: 0, background: "#fff" }}>
-                  <th style={{ textAlign: "left", padding: "0.375rem 0.5rem", fontWeight: 600, color: theme.semantic.muted }}>Product</th>
-                  <th style={{ textAlign: "left", padding: "0.375rem 0.5rem", fontWeight: 600, color: theme.semantic.muted }}>Territory</th>
-                  <th style={{ textAlign: "right", padding: "0.375rem 0.5rem", fontWeight: 600, color: theme.semantic.muted }}>Avg Discount</th>
-                  <th style={{ textAlign: "right", padding: "0.375rem 0.5rem", fontWeight: 600, color: theme.semantic.muted }}>Deals</th>
-                  <th style={{ textAlign: "right", padding: "0.375rem 0.5rem", fontWeight: 600, color: theme.semantic.muted }}>Total Value</th>
+      {/* == Bar: Avg Discount by Owner == */}
+      <div className={`${cardClass} col-span-6`}>
+        <p className={sectionLabelClass}>Avg Discount by Owner</p>
+        <ResponsiveContainer width="100%" height={CHART_HEIGHT.large}>
+          <BarChart data={ownerBar.data ?? []} layout="vertical" margin={{ left: 20, right: 20 }}>
+            <CartesianGrid {...gridStyle} />
+            <XAxis type="number" tick={pctTick} {...axisStyle} domain={[0, 1]} />
+            <YAxis type="category" dataKey="Owner" width={120} tick={{ fontSize: 11 }} />
+            <Tooltip content={<CustomTooltip formatter={(v: number) => fmtPct(v)} />} />
+            <Bar dataKey="val" fill={colors.electric} radius={[0, 4, 4, 0]} barSize={16} />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+
+      {/* == Table: Territory breakdown == */}
+      <div className={`${cardClass} col-span-12`}>
+        <p className={sectionLabelClass}>Discounting by Territory</p>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr>
+                <th className={tableHeaderClass}>Territory</th>
+                <th className={tableHeaderClass}>Avg Discount</th>
+                <th className={tableHeaderClass}>Revenue</th>
+                <th className={tableHeaderClass}>Deals</th>
+              </tr>
+            </thead>
+            <tbody>
+              {(tableData.data ?? []).map((row: any, i: number) => (
+                <tr key={i} className="hover:bg-[#F1F5F9] transition-colors">
+                  <td className={tableCellClass}>{row.Territory}</td>
+                  <td className={tableCellClass}>{fmtPct(row.avgDisc)}</td>
+                  <td className={tableCellClass}>{fmtCurrency(row.revenue)}</td>
+                  <td className={tableCellClass}>{fmtNum(row.cnt)}</td>
                 </tr>
-              </thead>
-              <tbody>
-                {detailData.data?.map((d: any, i: number) => (
-                  <tr key={`${d.Product}-${d.Territory}-${i}`} style={{ borderBottom: "1px solid #f3f4f6" }}>
-                    <td style={{ padding: "0.375rem 0.5rem" }}>{d.Product ?? "—"}</td>
-                    <td style={{ padding: "0.375rem 0.5rem" }}>{d.Territory ?? "—"}</td>
-                    <td style={{ padding: "0.375rem 0.5rem", textAlign: "right", fontWeight: 500 }}>
-                      {formatPercent((d.avgDiscount ?? 0) / 100)}
-                    </td>
-                    <td style={{ padding: "0.375rem 0.5rem", textAlign: "right" }}>
-                      {formatCompact(d.deals ?? 0)}
-                    </td>
-                    <td style={{ padding: "0.375rem 0.5rem", textAlign: "right" }}>
-                      {formatCurrency(d.totalValue ?? 0)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </ChartCard>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   )

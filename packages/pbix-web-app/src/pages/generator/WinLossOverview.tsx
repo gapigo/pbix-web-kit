@@ -1,426 +1,322 @@
-import { useAggregation, theme, formatCurrency, formatPercent, formatCompact } from "@pbix/runtime"
+import { useState, useMemo, useCallback } from 'react'
+import { useAggregation, useDistinctValues, useFilter, useFilters } from '@pbix/runtime'
+import type { QueryEngine } from '@pbix/runtime'
+import type { UseBoundStore, StoreApi } from 'zustand'
+import type { DashboardStore } from '@pbix/runtime'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip, LineChart, Line } from 'recharts'
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  LineChart, Line, Legend,
-} from "recharts"
-import type { QueryEngine } from "@pbix/runtime"
-import type { UseBoundStore, StoreApi } from "zustand"
-import type { DashboardStore } from "@pbix/runtime"
+  colors, cardClass, kpiValueClass, kpiLabelClass, sectionLabelClass,
+  tableHeaderClass, tableCellClass, filterChipClass, CHART_HEIGHT,
+  axisStyle, gridStyle, currencyTick, pctTick, CustomTooltip, fmtCurrency, fmtNum, fmtPct,
+} from '@/lib/designTokens'
 
-interface Props {
-  engine: QueryEngine | null
-  store: UseBoundStore<StoreApi<DashboardStore>>
-}
+type Period = '6M' | '1Y' | 'All'
 
-/* ─── helpers ─── */
+interface Props { engine: QueryEngine | null; store: UseBoundStore<StoreApi<DashboardStore>> }
 
-function winRate(won: number, total: number): number {
-  if (total === 0) return 0
-  return won / total
-}
+export default function WinLossOverview({ engine, store }: Props) {
+  const [ownerFilter, setOwnerFilter] = useFilter(store, 'Owner')
+  const allFilters = useFilters(store)
+  const baseFilters = useMemo(() => Object.values(allFilters).filter(f => f.column !== 'Owner').flat(), [allFilters])
 
-function mergeGrouped<T extends Record<string, any>>(
-  keys: string,
-  totals: T[] | undefined,
-  wons: T[] | undefined,
-): (T & { closeRate: number })[] {
-  const wonMap = new Map((wons ?? []).map((r) => [r[keys], r]))
-  return (totals ?? []).map((row) => {
-    const won = wonMap.get(row[keys])
-    return {
-      ...row,
-      won: won?.won ?? 0,
-      closeRate: winRate(won?.won ?? 0, row.total ?? 0),
-    }
-  })
-}
+  const [period, setPeriod] = useState<Period>('All')
 
-/* ─── custom tooltips ─── */
+  const periodCutoff = useMemo(() => {
+    if (period === 'All') return null
+    const d = new Date()
+    if (period === '6M') d.setMonth(d.getMonth() - 6)
+    else d.setFullYear(d.getFullYear() - 1)
+    return d.toISOString()
+  }, [period])
 
-function PercentTooltip({ active, payload, label }: any) {
-  if (!active || !payload?.length) return null
-  return (
-    <div
-      style={{
-        background: "#fff",
-        border: `1px solid ${theme.semantic.muted}22`,
-        borderRadius: theme.radius.card,
-        padding: "0.5rem 0.75rem",
-        fontSize: 13,
-        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-      }}
-    >
-      <div style={{ fontWeight: 600, marginBottom: 4 }}>{label}</div>
-      {payload.map((entry: any, i: number) => (
-        <div key={i} style={{ color: entry.color, marginBottom: 2 }}>
-          {entry.name}: {formatPercent(entry.value)}
-        </div>
-      ))}
-    </div>
+  const periodFilter = useMemo(
+    () => (periodCutoff ? [{ column: 'CloseDate' as const, op: 'gte' as const, values: [periodCutoff] }] : []),
+    [periodCutoff],
   )
-}
 
-/* ─── KPI card ─── */
+  const allActive = useMemo(() => [...baseFilters, ...periodFilter], [baseFilters, periodFilter])
+  const allActiveDefined = useMemo(() => (allActive.length > 0 ? allActive : undefined), [allActive])
 
-function KpiCard({
-  label,
-  value,
-  subtitle,
-  color,
-}: {
-  label: string
-  value: string
-  subtitle?: string
-  color?: string
-}) {
-  return (
-    <div
-      style={{
-        background: "#fff",
-        border: `1px solid ${theme.semantic.muted}22`,
-        borderRadius: theme.radius.card,
-        padding: "1rem 1.25rem",
-        display: "flex",
-        flexDirection: "column",
-        gap: 2,
-      }}
-    >
-      <span style={{ fontSize: 13, color: theme.semantic.muted }}>{label}</span>
-      <span style={{ fontSize: 28, fontWeight: 700, color: color ?? "#333" }}>{value}</span>
-      {subtitle && (
-        <span style={{ fontSize: 12, color: theme.semantic.muted }}>{subtitle}</span>
-      )}
-    </div>
-  )
-}
+  const wonFilters = useMemo(() => [...allActive, { column: 'Status', op: 'eq' as const, values: ['Won'] }], [allActive])
+  const openFilters = useMemo(() => [...allActive, { column: 'Status', op: 'eq' as const, values: ['Open'] }], [allActive])
 
-/* ─── card wrapper ─── */
+  const owners = useDistinctValues(engine, 'v_opportunities', 'Owner')
+  const handleOwnerChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    const v = e.target.value
+    if (v) setOwnerFilter({ column: 'Owner', op: 'eq' as const, values: [v] })
+    else setOwnerFilter(null)
+  }, [setOwnerFilter])
 
-function Card({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div
-      style={{
-        background: "#fff",
-        border: `1px solid ${theme.semantic.muted}22`,
-        borderRadius: theme.radius.card,
-        padding: "1rem 1.25rem",
-        display: "flex",
-        flexDirection: "column",
-        gap: "0.75rem",
-      }}
-    >
-      <h3 style={{ margin: 0, fontSize: 15, fontWeight: 600, color: "#333" }}>{title}</h3>
-      {children}
-    </div>
-  )
-}
+  // ── KPIs ──
+  const revWon = useAggregation(engine, { table: 'v_opportunities', measures: [{ column: 'Value', fn: 'sum', alias: 'val' }], filters: wonFilters })
+  const pipeline = useAggregation(engine, { table: 'v_opportunities', measures: [{ column: 'Value', fn: 'sum', alias: 'val' }], filters: openFilters })
 
-/* ─── main page ─── */
-
-export default function WinLossOverview({ engine }: Props) {
-  /* ── KPI queries ── */
-
-  const totalOpps = useAggregation(engine, {
-    table: "v_opportunities",
-    measures: [{ column: "Value", fn: "count", alias: "count" }],
+  const closedCount = useAggregation(engine, {
+    table: 'v_opportunities',
+    measures: [{ column: 'OpportunitySeq', fn: 'count', alias: 'val' }],
+    filters: [...allActive, { column: 'Status', op: 'in' as const, values: ['Won', 'Lost'] }],
   })
-
-  const wonData = useAggregation(engine, {
-    table: "v_opportunities",
-    measures: [
-      { column: "Value", fn: "count", alias: "won_count" },
-      { column: "Value", fn: "sum", alias: "won_value" },
-    ],
-    filters: [{ column: "Status", op: "eq", values: ["Won"] }],
+  const wonCount = useAggregation(engine, {
+    table: 'v_opportunities',
+    measures: [{ column: 'OpportunitySeq', fn: 'count', alias: 'val' }],
+    filters: wonFilters,
   })
-
-  const totalValue = useAggregation(engine, {
-    table: "v_opportunities",
-    measures: [{ column: "Value", fn: "sum", alias: "total_value" }],
-  })
-
   const avgDeal = useAggregation(engine, {
-    table: "v_opportunities",
-    measures: [{ column: "Value", fn: "avg", alias: "avg_value" }],
-    filters: [{ column: "Status", op: "eq", values: ["Won"] }],
+    table: 'v_opportunities',
+    measures: [{ column: 'Value', fn: 'avg', alias: 'val' }],
+    filters: wonFilters,
   })
 
-  /* ── grouped queries (total + won, merged client-side) ── */
+  const closePct = useMemo(() => {
+    const wc = wonCount.data?.[0]?.val
+    const cc = closedCount.data?.[0]?.val
+    return wc != null && cc != null && cc > 0 ? (wc / cc) * 100 : null
+  }, [wonCount.data, closedCount.data])
 
-  // Close % by Product
-  const prodTotal = useAggregation(engine, {
-    table: "v_opportunities",
-    groupBy: ["Product"],
-    measures: [{ column: "Value", fn: "count", alias: "total" }],
-  })
-  const prodWon = useAggregation(engine, {
-    table: "v_opportunities",
-    groupBy: ["Product"],
-    measures: [{ column: "Value", fn: "count", alias: "won" }],
-    filters: [{ column: "Status", op: "eq", values: ["Won"] }],
-  })
-
-  // Close % by Manager
-  const mgrTotal = useAggregation(engine, {
-    table: "v_opportunities",
-    groupBy: ["Manager"],
-    measures: [{ column: "Value", fn: "count", alias: "total" }],
-  })
-  const mgrWon = useAggregation(engine, {
-    table: "v_opportunities",
-    groupBy: ["Manager"],
-    measures: [{ column: "Value", fn: "count", alias: "won" }],
-    filters: [{ column: "Status", op: "eq", values: ["Won"] }],
+  // ── Bar: Revenue by Product Top 10 ──
+  const prodData = useAggregation(engine, {
+    table: 'v_opportunities',
+    groupBy: ['Product'],
+    measures: [{ column: 'Value', fn: 'sum', alias: 'val' }],
+    filters: allActiveDefined,
+    orderBy: [{ column: 'val', dir: 'desc' }],
+    limit: 10,
   })
 
-  // Monthly trend
-  const moTotal = useAggregation(engine, {
-    table: "v_opportunities",
-    groupBy: ["CloseDate"],
-    measures: [{ column: "Value", fn: "count", alias: "total" }],
-  })
-  const moWon = useAggregation(engine, {
-    table: "v_opportunities",
-    groupBy: ["CloseDate"],
-    measures: [{ column: "Value", fn: "count", alias: "won" }],
-    filters: [{ column: "Status", op: "eq", values: ["Won"] }],
+  // ── Bar: Revenue by Owner/Manager Top 5 ──
+  const ownerData = useAggregation(engine, {
+    table: 'v_opportunities',
+    groupBy: ['Owner'],
+    measures: [{ column: 'Value', fn: 'sum', alias: 'val' }],
+    filters: allActiveDefined,
+    orderBy: [{ column: 'val', dir: 'desc' }],
+    limit: 5,
   })
 
-  // Detail table
-  const detail = useAggregation(engine, {
-    table: "v_opportunities",
-    groupBy: ["Product", "Status", "Manager"],
-    measures: [
-      { column: "Value", fn: "count", alias: "count" },
-      { column: "Value", fn: "sum", alias: "amount" },
-    ],
-    orderBy: [{ column: "Value", dir: "desc" }],
+  // ── Table: Owner × Revenue Won × Deals Won × Close % ──
+  const tRevWon = useAggregation(engine, {
+    table: 'v_opportunities', groupBy: ['Owner'],
+    measures: [{ column: 'Value', fn: 'sum', alias: 'val' }],
+    filters: wonFilters,
+    orderBy: [{ column: 'val', dir: 'desc' }],
+  })
+  const tDealsWon = useAggregation(engine, {
+    table: 'v_opportunities', groupBy: ['Owner'],
+    measures: [{ column: 'OpportunitySeq', fn: 'count', alias: 'val' }],
+    filters: wonFilters,
+  })
+  const tClosed = useAggregation(engine, {
+    table: 'v_opportunities', groupBy: ['Owner'],
+    measures: [{ column: 'OpportunitySeq', fn: 'count', alias: 'val' }],
+    filters: [...allActive, { column: 'Status', op: 'in' as const, values: ['Won', 'Lost'] }],
   })
 
-  /* ── derived KPIs ── */
-
-  const loading = totalOpps.loading || wonData.loading || totalValue.loading || avgDeal.loading
-
-  const totalCount = totalOpps.data?.[0]?.count ?? 0
-  const wonCount = wonData.data?.[0]?.won_count ?? 0
-  const wonAmount = wonData.data?.[0]?.won_value ?? 0
-  const totalAmount = totalValue.data?.[0]?.total_value ?? 0
-  const avgSize = avgDeal.data?.[0]?.avg_value ?? 0
-
-  const countWinRate = winRate(wonCount, totalCount)
-  const weightedWinRate = totalAmount > 0 ? wonAmount / totalAmount : 0
-
-  /* ── merge grouped results ── */
-
-  const productChart = mergeGrouped("Product", prodTotal.data, prodWon.data)
-    .sort((a, b) => b.closeRate - a.closeRate)
-
-  const managerChart = mergeGrouped("Manager", mgrTotal.data, mgrWon.data)
-    .sort((a, b) => b.closeRate - a.closeRate)
-
-  // Monthly trend: merge, then aggregate by YYYY-MM
-  const mergedMonthly = mergeGrouped("CloseDate", moTotal.data, moWon.data)
-  const monthBuckets: Record<string, { month: string; won: number; total: number }> = {}
-  for (const row of mergedMonthly) {
-    if (!row.CloseDate) continue
-    const raw = String(row.CloseDate)
-    const monthKey = raw.length >= 7 ? raw.slice(0, 7) : raw
-    if (!monthBuckets[monthKey]) monthBuckets[monthKey] = { month: monthKey, won: 0, total: 0 }
-    monthBuckets[monthKey].won += row.won ?? 0
-    monthBuckets[monthKey].total += row.total ?? 0
-  }
-  const trendChart = Object.values(monthBuckets)
-    .map((b) => ({ ...b, closeRate: winRate(b.won, b.total) }))
-    .sort((a, b) => a.month.localeCompare(b.month))
-
-  /* ── render ── */
+  const tableRows = useMemo(() => {
+    const revMap = new Map((tRevWon.data ?? []).map(r => [r.Owner, r.val]))
+    const dwMap = new Map((tDealsWon.data ?? []).map(r => [r.Owner, r.val]))
+    const clMap = new Map((tClosed.data ?? []).map(r => [r.Owner, r.val]))
+    const owners = new Set([...revMap.keys(), ...dwMap.keys(), ...clMap.keys()])
+    return Array.from(owners)
+      .map(o => ({
+        owner: o,
+        revWon: revMap.get(o) ?? 0,
+        dealsWon: dwMap.get(o) ?? 0,
+        closePct: (() => {
+          const wc = dwMap.get(o) ?? 0
+          const cc = clMap.get(o) ?? 0
+          return cc > 0 ? (wc / cc) * 100 : 0
+        })(),
+      }))
+      .sort((a, b) => b.revWon - a.revWon)
+  }, [tRevWon.data, tDealsWon.data, tClosed.data])
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: theme.spacing.gap, padding: theme.spacing.page }}>
-      {/* ── 4 KPI cards ── */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
-          gap: theme.spacing.gap,
-        }}
-      >
-        <KpiCard
-          label="Total Opportunities"
-          value={formatCompact(totalCount)}
-          subtitle={`${totalCount.toLocaleString()} deals`}
-          color={theme.colors[0]}
-        />
-        <KpiCard
-          label="Won Amount"
-          value={formatCurrency(wonAmount)}
-          subtitle={`of ${formatCurrency(totalAmount)} pipeline`}
-          color={theme.semantic.success}
-        />
-        <KpiCard
-          label="Win Rate"
-          value={formatPercent(countWinRate)}
-          subtitle={`${formatCompact(wonCount)} won / ${formatCompact(totalCount)} total`}
-          color={theme.colors[2]}
-        />
-        <KpiCard
-          label="Avg Deal Size (Won)"
-          value={formatCurrency(avgSize)}
-          subtitle={loading ? "Loading\u2026" : undefined}
-          color={theme.colors[4]}
-        />
+    <div className="grid grid-cols-12 gap-5">
+      {/* ── KPI Row ── */}
+      <div className="col-span-3">
+        <div className={cardClass}>
+          <div className={kpiLabelClass}>Revenue Won</div>
+          <div className={kpiValueClass} style={{ color: colors.success }}>{fmtCurrency(revWon.data?.[0]?.val)}</div>
+        </div>
+      </div>
+      <div className="col-span-3">
+        <div className={cardClass}>
+          <div className={kpiLabelClass}>Pipeline</div>
+          <div className={kpiValueClass} style={{ color: colors.brand }}>{fmtCurrency(pipeline.data?.[0]?.val)}</div>
+        </div>
+      </div>
+      <div className="col-span-3">
+        <div className={cardClass}>
+          <div className={kpiLabelClass}>Close %</div>
+          <div className={kpiValueClass} style={{ color: colors.warning }}>{fmtPct(closePct)}</div>
+        </div>
+      </div>
+      <div className="col-span-3">
+        <div className={cardClass}>
+          <div className={kpiLabelClass}>Avg Deal Size</div>
+          <div className={kpiValueClass} style={{ color: colors.electric }}>{fmtCurrency(avgDeal.data?.[0]?.val)}</div>
+        </div>
       </div>
 
-      {/* ── Weighted Win Rate callout ── */}
-      <div
-        style={{
-          background: "#F5F8FF",
-          border: `1px solid ${theme.colors[0]}33`,
-          borderRadius: theme.radius.card,
-          padding: "0.5rem 1rem",
-          fontSize: 13,
-          color: theme.semantic.muted,
-        }}
-      >
-        <strong>Weighted Win Rate:</strong>{" "}
-        {formatPercent(weightedWinRate)} (by value) vs{" "}
-        {formatPercent(countWinRate)} (by count){" \u2014 "}
-        {weightedWinRate > countWinRate
-          ? "won deals skew larger"
-          : weightedWinRate < countWinRate
-            ? "won deals skew smaller"
-            : "even distribution"}
+      {/* ── Filters ── */}
+      <div className="col-span-6">
+        <div className={sectionLabelClass}>Owner</div>
+        <select
+          value={(ownerFilter as any)?.values?.[0] ?? ''}
+          onChange={handleOwnerChange}
+          className="w-full rounded-lg border border-[#E2E8F0] px-3 py-2 text-sm bg-white text-[#1F2937]"
+        >
+          <option value="">All Owners</option>
+          {(owners.data ?? []).map(o => <option key={o} value={o}>{o}</option>)}
+        </select>
+      </div>
+      <div className="col-span-6">
+        <div className={sectionLabelClass}>Period</div>
+        <div className="flex gap-2">
+          {(['6M', '1Y', 'All'] as Period[]).map(p => (
+            <button
+              key={p}
+              onClick={() => setPeriod(p)}
+              className={filterChipClass(period === p)}
+            >
+              {p === '6M' ? 'Last 6 Months' : p === '1Y' ? 'Last Year' : 'All Time'}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* ── bar charts row ── */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: theme.spacing.gap }}>
-        <Card title="Close % by Product">
-          <ResponsiveContainer width="100%" height={280}>
-            <BarChart data={productChart} layout="vertical" margin={{ left: 20, right: 20, top: 4, bottom: 4 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
-              <XAxis type="number" tickFormatter={(v: number) => formatPercent(v)} fontSize={11} />
-              <YAxis type="category" dataKey="Product" width={120} fontSize={11} tick={{ fill: "#666" }} />
-              <Tooltip content={<PercentTooltip />} />
-              <Bar dataKey="closeRate" name="Close %" fill={theme.colors[0]} radius={[0, 4, 4, 0]} />
+      {/* ── Revenue by Product Top 10 ── */}
+      <div className="col-span-6">
+        <div className={cardClass}>
+          <div className={sectionLabelClass}>Revenue by Product — Top 10</div>
+          <ResponsiveContainer width="100%" height={CHART_HEIGHT.large}>
+            <BarChart data={prodData.data ?? []} layout="vertical" margin={{ left: 100, right: 20, top: 4, bottom: 4 }}>
+              <CartesianGrid {...gridStyle} />
+              <XAxis type="number" tick={currencyTick} {...axisStyle} />
+              <YAxis type="category" dataKey="Product" width={90} {...axisStyle} />
+              <Tooltip content={<CustomTooltip formatter={fmtCurrency} />} />
+              <Bar dataKey="val" fill={colors.chart[0]} radius={[0, 4, 4, 0]} maxBarSize={20} />
             </BarChart>
           </ResponsiveContainer>
-        </Card>
-
-        <Card title="Close % by Manager">
-          <ResponsiveContainer width="100%" height={280}>
-            <BarChart data={managerChart} layout="vertical" margin={{ left: 20, right: 20, top: 4, bottom: 4 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
-              <XAxis type="number" tickFormatter={(v: number) => formatPercent(v)} fontSize={11} />
-              <YAxis type="category" dataKey="Manager" width={120} fontSize={11} tick={{ fill: "#666" }} />
-              <Tooltip content={<PercentTooltip />} />
-              <Bar dataKey="closeRate" name="Close %" fill={theme.colors[1]} radius={[0, 4, 4, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </Card>
+        </div>
       </div>
 
-      {/* ── trend line chart ── */}
-      <Card title="Win Rate Trend">
-        <ResponsiveContainer width="100%" height={220}>
-          <LineChart data={trendChart} margin={{ left: 20, right: 20, top: 4, bottom: 4 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
-            <XAxis dataKey="month" fontSize={11} tick={{ fill: "#666" }} />
-            <YAxis
-              domain={[0, 1]}
-              tickFormatter={(v: number) => formatPercent(v)}
-              fontSize={11}
-              tick={{ fill: "#666" }}
-            />
-            <Tooltip content={<PercentTooltip />} />
-            <Legend />
-            <Line
-              type="monotone"
-              dataKey="closeRate"
-              name="Win Rate"
-              stroke={theme.colors[0]}
-              strokeWidth={2}
-              dot={{ r: 3, fill: theme.colors[0] }}
-              activeDot={{ r: 5 }}
-            />
+      {/* ── Revenue by Owner/Manager Top 5 ── */}
+      <div className="col-span-6">
+        <div className={cardClass}>
+          <div className={sectionLabelClass}>Revenue by Owner — Top 5</div>
+          <ResponsiveContainer width="100%" height={CHART_HEIGHT.large}>
+            <BarChart data={ownerData.data ?? []} layout="vertical" margin={{ left: 100, right: 20, top: 4, bottom: 4 }}>
+              <CartesianGrid {...gridStyle} />
+              <XAxis type="number" tick={currencyTick} {...axisStyle} />
+              <YAxis type="category" dataKey="Owner" width={90} {...axisStyle} />
+              <Tooltip content={<CustomTooltip formatter={fmtCurrency} />} />
+              <Bar dataKey="val" fill={colors.chart[1]} radius={[0, 4, 4, 0]} maxBarSize={20} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* ── Owner Table ── */}
+      <div className="col-span-6">
+        <div className={cardClass}>
+          <div className={sectionLabelClass}>Owner Performance</div>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr>
+                  <th className={tableHeaderClass}>Owner</th>
+                  <th className={tableHeaderClass}>Revenue Won</th>
+                  <th className={tableHeaderClass}>Deals Won</th>
+                  <th className={tableHeaderClass}>Close %</th>
+                </tr>
+              </thead>
+              <tbody>
+                {tableRows.map(r => (
+                  <tr key={r.owner}>
+                    <td className={tableCellClass}>{r.owner}</td>
+                    <td className={tableCellClass}>{fmtCurrency(r.revWon)}</td>
+                    <td className={tableCellClass}>{fmtNum(r.dealsWon)}</td>
+                    <td className={tableCellClass}>{fmtPct(r.closePct)}</td>
+                  </tr>
+                ))}
+                {tableRows.length === 0 && (
+                  <tr><td colSpan={4} className="text-center py-6 text-[#6B7280] text-sm">No data</td></tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Win Rate Trend (monthly) ── */}
+      <WinRateTrend engine={engine} filters={allActive} />
+    </div>
+  )
+}
+
+// Separate component to handle the monthly win rate trend query
+function WinRateTrend({ engine, filters }: { engine: QueryEngine | null; filters: any[] }) {
+  const wonPerMonth = useAggregation(engine, {
+    table: 'v_opportunities',
+    groupBy: ['CloseDate'],
+    measures: [{ column: 'OpportunitySeq', fn: 'count', alias: 'val' }],
+    filters: filters.length > 0
+      ? [...filters, { column: 'Status', op: 'eq' as const, values: ['Won'] }]
+      : [{ column: 'Status', op: 'eq' as const, values: ['Won'] }],
+  })
+  const totalPerMonth = useAggregation(engine, {
+    table: 'v_opportunities',
+    groupBy: ['CloseDate'],
+    measures: [{ column: 'OpportunitySeq', fn: 'count', alias: 'val' }],
+    filters: filters.length > 0
+      ? [...filters, { column: 'Status', op: 'in' as const, values: ['Won', 'Lost'] }]
+      : [{ column: 'Status', op: 'in' as const, values: ['Won', 'Lost'] }],
+  })
+
+  const trendData = useMemo(() => {
+    if (!wonPerMonth.data || !totalPerMonth.data) return []
+    const wonBuckets = new Map<string, number>()
+    const totalBuckets = new Map<string, number>()
+
+    for (const r of wonPerMonth.data) {
+      const d = new Date(r.CloseDate)
+      if (isNaN(d.getTime())) continue
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+      wonBuckets.set(key, (wonBuckets.get(key) ?? 0) + r.val)
+    }
+    for (const r of totalPerMonth.data) {
+      const d = new Date(r.CloseDate)
+      if (isNaN(d.getTime())) continue
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+      totalBuckets.set(key, (totalBuckets.get(key) ?? 0) + r.val)
+    }
+
+    const months = Array.from(new Set([...wonBuckets.keys(), ...totalBuckets.keys()])).sort()
+    return months.map(m => ({
+      month: m,
+      rate: (() => {
+        const won = wonBuckets.get(m) ?? 0
+        const total = totalBuckets.get(m) ?? 0
+        return total > 0 ? (won / total) * 100 : 0
+      })(),
+    }))
+  }, [wonPerMonth.data, totalPerMonth.data])
+
+  return (
+    <div className="col-span-6">
+      <div className={cardClass}>
+        <div className={sectionLabelClass}>Win Rate Over Time (Monthly)</div>
+        <ResponsiveContainer width="100%" height={CHART_HEIGHT.large}>
+          <LineChart data={trendData} margin={{ left: 8, right: 16, top: 8, bottom: 4 }}>
+            <CartesianGrid {...gridStyle} />
+            <XAxis dataKey="month" {...axisStyle} tick={{ ...axisStyle, fontSize: 10 }} angle={-20} textAnchor="end" height={40} />
+            <YAxis domain={[0, 100]} tick={pctTick} {...axisStyle} />
+            <Tooltip content={<CustomTooltip formatter={(v: number) => `${Number(v).toFixed(1)}%`} />} />
+            <Line type="monotone" dataKey="rate" stroke={colors.chart[2]} strokeWidth={2} dot={{ r: 3, fill: colors.chart[2] }} />
           </LineChart>
         </ResponsiveContainer>
-      </Card>
-
-      {/* ── data table ── */}
-      <Card title="Win / Loss Detail">
-        <div style={{ overflowX: "auto", fontSize: 13 }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              textAlign: "left",
-            }}
-          >
-            <thead>
-              <tr style={{ borderBottom: `2px solid #eee` }}>
-                <th style={{ padding: "0.5rem 0.75rem", fontWeight: 600, color: theme.semantic.muted }}>Product</th>
-                <th style={{ padding: "0.5rem 0.75rem", fontWeight: 600, color: theme.semantic.muted }}>Status</th>
-                <th style={{ padding: "0.5rem 0.75rem", fontWeight: 600, color: theme.semantic.muted }}>Manager</th>
-                <th style={{ padding: "0.5rem 0.75rem", fontWeight: 600, color: theme.semantic.muted, textAlign: "right" }}>Deals</th>
-                <th style={{ padding: "0.5rem 0.75rem", fontWeight: 600, color: theme.semantic.muted, textAlign: "right" }}>Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              {(detail.data ?? []).length === 0 && !detail.loading && (
-                <tr>
-                  <td colSpan={5} style={{ padding: "2rem", textAlign: "center", color: theme.semantic.muted }}>
-                    No data available
-                  </td>
-                </tr>
-              )}
-              {(detail.data ?? []).map((row: any, i: number) => (
-                <tr
-                  key={i}
-                  style={{
-                    borderBottom: "1px solid #f0f0f0",
-                    background:
-                      row.Status === "Won" ? "#F0FFF4" : row.Status === "Lost" ? "#FFF5F5" : undefined,
-                  }}
-                >
-                  <td style={{ padding: "0.5rem 0.75rem" }}>{row.Product ?? "\u2014"}</td>
-                  <td style={{ padding: "0.5rem 0.75rem" }}>
-                    <span
-                      style={{
-                        display: "inline-block",
-                        padding: "0.1rem 0.5rem",
-                        borderRadius: theme.radius.chip,
-                        fontSize: 12,
-                        fontWeight: 600,
-                        background:
-                          row.Status === "Won"
-                            ? "#E6F4EA"
-                            : row.Status === "Lost"
-                              ? "#FCE8E6"
-                              : "#F3F3F3",
-                        color:
-                          row.Status === "Won"
-                            ? theme.semantic.success
-                            : row.Status === "Lost"
-                              ? theme.semantic.danger
-                              : theme.semantic.muted,
-                      }}
-                    >
-                      {row.Status ?? "\u2014"}
-                    </span>
-                  </td>
-                  <td style={{ padding: "0.5rem 0.75rem" }}>{row.Manager ?? "\u2014"}</td>
-                  <td style={{ padding: "0.5rem 0.75rem", textAlign: "right" }}>
-                    {formatCompact(row.count ?? 0)}
-                  </td>
-                  <td style={{ padding: "0.5rem 0.75rem", textAlign: "right" }}>
-                    {row.amount == null ? "\u2014" : formatCurrency(row.amount)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </Card>
+      </div>
     </div>
   )
 }

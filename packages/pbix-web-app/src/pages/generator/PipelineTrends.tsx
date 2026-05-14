@@ -1,490 +1,331 @@
-import {
-  useAggregation,
-  theme,
-  formatCurrency,
-  formatCompact,
-  currencyTooltipFormatter,
-} from "@pbix/runtime"
-import {
-  BarChart,
-  Bar,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Legend,
-  Cell,
-} from "recharts"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useState, useMemo } from "react"
+import { useAggregation, useDistinctValues, useFilter, useFilters } from "@pbix/runtime"
 import type { QueryEngine } from "@pbix/runtime"
 import type { UseBoundStore, StoreApi } from "zustand"
 import type { DashboardStore } from "@pbix/runtime"
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid,
+  ResponsiveContainer, Tooltip, LineChart, Line, Legend,
+} from "recharts"
+import {
+  cardClass, kpiValueClass, kpiLabelClass, sectionLabelClass,
+  tableHeaderClass, tableCellClass, filterChipClass,
+  fmtCurrency, fmtNum, fmtDate, CustomTooltip,
+  CHART_HEIGHT, axisStyle, gridStyle, currencyTick,
+} from "@/lib/designTokens"
+
+const STAGES = ["1-Qualify", "2-Develop", "3-Proposal", "4-Close"]
+const CHART_COLORS = ["#0F52BA", "#1A7A4A", "#C17D00", "#7C3AED", "#0891B2"]
 
 interface Props {
   engine: QueryEngine | null
   store: UseBoundStore<StoreApi<DashboardStore>>
 }
 
-/** Aggregate pipeline revenue by Sales Stage — open deals only. */
-function usePipelineByStage(engine: QueryEngine | null) {
-  return useAggregation(engine, {
+export default function PipelineTrends({ engine, store }: Props) {
+  const [activeStages, setActiveStages] = useState<Set<string>>(new Set())
+  const allFilters = useFilters(store)
+  const filterArr = useMemo(() => Object.values(allFilters).flat(), [allFilters])
+  const [territory, setTerritoryFilter] = useFilter(store, "Territory")
+  const storeFilter = useMemo(() => filterArr, [filterArr])
+
+  const openFilter = useMemo<{ column: string; op: "eq"; values: string[] }[]>(
+    () => [{ column: "Status", op: "eq", values: ["Open"] }],
+    [],
+  )
+
+  const stageFilter = useMemo(() => {
+    if (activeStages.size === 0) return undefined
+    return { column: "Sales Stage" as const, op: "in" as const, values: [...activeStages] }
+  }, [activeStages])
+
+  const combinedFilters = useMemo(() => {
+    const f = [...openFilter, ...storeFilter]
+    if (stageFilter) f.push(stageFilter)
+    return f.length > 0 ? f : undefined
+  }, [openFilter, storeFilter, stageFilter])
+
+  const qualFilters = useMemo(() => {
+    const f = [...openFilter, ...storeFilter]
+    f.push({ column: "Sales Stage" as const, op: "in" as const, values: ["2-Develop", "3-Proposal", "4-Close"] })
+    return f
+  }, [openFilter, storeFilter])
+
+  // ── KPI queries ──────────────────────────────
+  const oppCount = useAggregation(engine, {
+    table: "v_opportunities",
+    measures: [{ column: "OpportunitySeq", fn: "count", alias: "cnt" }],
+    filters: combinedFilters,
+  })
+  const totalPipeline = useAggregation(engine, {
+    table: "v_opportunities",
+    measures: [{ column: "Value", fn: "sum", alias: "val" }],
+    filters: combinedFilters,
+  })
+  const avgDaysRemaining = useAggregation(engine, {
+    table: "v_opportunities",
+    measures: [{ column: "Days Remaining In Pipeline", fn: "avg", alias: "avg" }],
+    filters: combinedFilters,
+  })
+  const qualifiedPipeline = useAggregation(engine, {
+    table: "v_opportunities",
+    measures: [{ column: "Value", fn: "sum", alias: "val" }],
+    filters: qualFilters,
+  })
+
+  // ── Bar: Revenue by Product (horizontal) ─────
+  const revByProduct = useAggregation(engine, {
+    table: "v_opportunities",
+    groupBy: ["Product"],
+    measures: [{ column: "Value", fn: "sum", alias: "val" }],
+    filters: combinedFilters,
+    orderBy: [{ column: "val", dir: "desc" }],
+    limit: 10,
+  })
+
+  // ── Line: Pipeline by Industry over time ─────
+  const indOverTime = useAggregation(engine, {
+    table: "v_opportunities",
+    groupBy: ["Industry", "CloseDate"],
+    measures: [{ column: "Value", fn: "sum", alias: "val" }],
+    filters: combinedFilters,
+  })
+
+  // ── Funnel: by Sales Stage ───────────────────
+  const funnelData = useAggregation(engine, {
     table: "v_opportunities",
     groupBy: ["Sales Stage"],
-    measures: [
-      { column: "Value", fn: "sum", alias: "revenue" },
-      { column: "Value", fn: "count", alias: "count" },
-      { column: "Value", fn: "avg", alias: "avgDeal" },
-    ],
-    filters: [{ column: "Status", op: "eq", values: ["Open"] }],
-    orderBy: [{ column: "Value", dir: "desc" }],
+    measures: [{ column: "Value", fn: "sum", alias: "val" }],
+    filters: storeFilter.length > 0 ? [...openFilter, ...storeFilter] : openFilter,
   })
-}
 
-/** Aggregate pipeline revenue over time (by CloseDate truncated to month). */
-function usePipelineTrend(engine: QueryEngine | null) {
-  return useAggregation(engine, {
+  // ── Table: Pipeline Details ──────────────────
+  const tableData = useAggregation(engine, {
     table: "v_opportunities",
-    groupBy: ["CloseDate"],
-    measures: [
-      { column: "Value", fn: "sum", alias: "revenue" },
-      { column: "Value", fn: "count", alias: "count" },
+    groupBy: [
+      "Territory", "Days Remaining In Pipeline", "Weeks Open",
+      "Industry", "Account Name", "Owner", "Sales Stage", "Product",
     ],
-    filters: [{ column: "Status", op: "eq", values: ["Open"] }],
-    orderBy: [{ column: "CloseDate", dir: "asc" }],
-  })
-}
-
-/** Aggregate pipeline by Sales Stage. */
-function usePipelineBySalesStage(engine: QueryEngine | null) {
-  return useAggregation(engine, {
-    table: "v_opportunities",
-    groupBy: ["Sales Stage"],
-    measures: [
-      { column: "Value", fn: "sum", alias: "revenue" },
-      { column: "Value", fn: "count", alias: "count" },
-    ],
-    filters: [{ column: "Status", op: "eq", values: ["Open"] }],
-    orderBy: [{ column: "Value", dir: "desc" }],
-  })
-}
-
-/** Aggregate pipeline details for the table. */
-function usePipelineDetails(engine: QueryEngine | null) {
-  return useAggregation(engine, {
-    table: "v_opportunities",
-    groupBy: ["Sales Stage", "Owner", "Territory"],
-    measures: [
-      { column: "Value", fn: "sum", alias: "revenue" },
-      { column: "Value", fn: "count", alias: "count" },
-      { column: "Value", fn: "avg", alias: "avgDeal" },
-    ],
-    filters: [{ column: "Status", op: "eq", values: ["Open"] }],
-    orderBy: [{ column: "Value", dir: "desc" }],
+    measures: [{ column: "Value", fn: "sum", alias: "val" }],
+    filters: combinedFilters,
+    orderBy: [{ column: "val", dir: "desc" }],
     limit: 50,
   })
-}
 
-/** Format a date string (YYYY-MM-DD) to a short month label. */
-function monthLabel(dateStr: string): string {
-  if (!dateStr) return ""
-  const d = new Date(dateStr)
-  return d.toLocaleDateString("en-US", { month: "short", year: "2-digit" })
-}
+  // ── Distinct for territory select ───────────
+  const territories = useDistinctValues(engine, "v_opportunities", "Territory")
 
-function CustomTooltip({ active, payload, label }: any) {
-  if (!active || !payload?.length) return null
-  return (
-    <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-3 text-sm">
-      <p className="font-medium text-gray-700 mb-1">{label}</p>
-      {payload.map((entry: any, i: number) => (
-        <p key={i} style={{ color: entry.color }}>
-          {entry.name}: {formatCurrency(entry.value)}
-        </p>
-      ))}
-    </div>
-  )
-}
-
-export default function PipelineTrends({ engine }: Props) {
-  const byStage = usePipelineByStage(engine)
-  const trend = usePipelineTrend(engine)
-  const bySalesStage = usePipelineBySalesStage(engine)
-  const details = usePipelineDetails(engine)
-
-  const loading = byStage.loading || trend.loading || bySalesStage.loading || details.loading
-
-  // Compute KPIs from aggregated data
-  const totalPipelineRevenue =
-    byStage.data?.reduce((sum, r) => sum + (Number(r.revenue) || 0), 0) ?? 0
-  const totalCount =
-    byStage.data?.reduce((sum, r) => sum + (Number(r.count) || 0), 0) ?? 0
-  const avgDealSize = totalCount > 0 ? totalPipelineRevenue / totalCount : 0
-  const weightedPipeline =
-    byStage.data?.reduce((sum, r) => {
-      const stageOrder = [
-        "Prospecting",
-        "Qualification",
-        "Needs Analysis",
-        "Proposal",
-        "Negotiation",
-        "Closed",
-      ]
-      const idx = stageOrder.indexOf(r["Sales Stage"] ?? "")
-      const weight = idx >= 0 ? (idx + 1) / stageOrder.length : 0.5
-      return sum + (Number(r.revenue) || 0) * weight
-    }, 0) ?? 0
-
-  // Prepare trend chart data — parse CloseDate as month label
-  const trendData =
-    trend.data?.map((r) => ({
-      month: monthLabel(r.CloseDate),
-      revenue: Number(r.revenue) || 0,
-      count: Number(r.count) || 0,
-    })) ?? []
-
-  // Prepare stage bar data — limit to top 8 stages, group rest as "Other"
-  const byStageWithPct =
-    byStage.data?.map((r) => ({
-      name: r["Sales Stage"] ?? "Unknown",
-      revenue: Number(r.revenue) || 0,
-      count: Number(r.count) || 0,
-      avgDeal: Number(r.avgDeal) || 0,
-    })) ?? []
-  const sortedStages = byStageWithPct.sort((a, b) => b.revenue - a.revenue)
-  const topStages = sortedStages.slice(0, 8)
-  const otherRevenue = sortedStages.slice(8).reduce((s, r) => s + r.revenue, 0)
-  const otherCount = sortedStages.slice(8).reduce((s, r) => s + r.count, 0)
-  if (otherRevenue > 0) {
-    topStages.push({ name: "Other", revenue: otherRevenue, count: otherCount, avgDeal: 0 })
-  }
-
-  // Prepare sales stage data
-  const stageData =
-    bySalesStage.data?.map((r, i) => ({
-      name: r["Sales Stage"] ?? "Unknown",
-      revenue: Number(r.revenue) || 0,
-      fill: theme.colors[i % theme.colors.length],
-    })) ?? []
-
-  // Prepare detail rows
-  const detailRows =
-    details.data?.map((r, i) => ({
-      id: i,
-      stage: r["Sales Stage"] ?? "",
-      owner: r.Owner ?? "",
-      territory: r.Territory ?? "",
-      revenue: Number(r.revenue) || 0,
-      count: Number(r.count) || 0,
-      avgDeal: Number(r.avgDeal) || 0,
-    })) ?? []
-
-  if (loading) {
-    return (
-      <div className="grid grid-cols-12 gap-4 animate-pulse">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="col-span-3 h-28 bg-gray-200 rounded-lg" />
-        ))}
-        <div className="col-span-7 h-72 bg-gray-200 rounded-lg" />
-        <div className="col-span-5 h-72 bg-gray-200 rounded-lg" />
-        <div className="col-span-12 h-64 bg-gray-200 rounded-lg" />
-      </div>
+  // ── Process top-5 industries line chart ──────
+  const topIndustries = useMemo(() => {
+    if (!indOverTime.data) return []
+    const totals: Record<string, number> = {}
+    indOverTime.data.forEach((r: any) => {
+      const ind = r.Industry ?? "Unknown"
+      totals[ind] = (totals[ind] || 0) + Number(r.val ?? 0)
+    })
+    const top5 = new Set(
+      Object.entries(totals)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5)
+        .map(([k]) => k),
     )
+    const byMonth: Record<string, Record<string, number>> = {}
+    indOverTime.data.forEach((r: any) => {
+      const ind = r.Industry ?? "Unknown"
+      if (!top5.has(ind)) return
+      const month = fmtDate(r.CloseDate)
+      if (!byMonth[month]) byMonth[month] = {}
+      byMonth[month][ind] = (byMonth[month][ind] || 0) + Number(r.val ?? 0)
+    })
+    return Object.entries(byMonth)
+      .map(([month, vals]) => ({ month, ...vals }))
+      .sort((a, b) => {
+        const da = new Date(a.month)
+        const db = new Date(b.month)
+        return da.getTime() - db.getTime()
+      })
+  }, [indOverTime.data])
+
+  // ── Funnel data: order by stage ──────────────
+  const sortedFunnel = useMemo(() => {
+    if (!funnelData.data) return []
+    const order: Record<string, number> = {
+      "1-Qualify": 1, "2-Develop": 2, "3-Proposal": 3, "4-Close": 4,
+    }
+    const arr = [...funnelData.data]
+      .map((r: any) => ({ ...r, _val: Number(r.val ?? 0) }))
+      .sort((a: any, b: any) => (order[a["Sales Stage"]] ?? 99) - (order[b["Sales Stage"]] ?? 99))
+    const maxVal = Math.max(...arr.map((r: any) => r._val), 1)
+    return arr.map((r: any) => ({ ...r, widthPct: (r._val / maxVal) * 100 }))
+  }, [funnelData.data])
+
+  // ── Handlers ─────────────────────────────────
+  const toggleStage = (s: string) =>
+    setActiveStages((prev) => {
+      const next = new Set(prev)
+      next.has(s) ? next.delete(s) : next.add(s)
+      return next
+    })
+
+  const handleTerritory = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const v = e.target.value
+    setTerritoryFilter(v ? { column: "Territory", op: "eq", values: [v] } : null)
   }
 
+  // ── Render ───────────────────────────────────
   return (
-    <div className="space-y-4">
-      {/* KPI Row */}
-      <div className="grid grid-cols-12 gap-4">
-        <div className="col-span-3">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-500">
-                Pipeline Revenue
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div
-                className="text-2xl font-bold"
-                style={{ color: theme.colors[0] }}
-              >
-                {formatCurrency(totalPipelineRevenue)}
-              </div>
-              <p className="text-xs text-gray-400 mt-1">
-                {formatCompact(totalCount)} open opportunities
-              </p>
-            </CardContent>
-          </Card>
+    <div className="grid grid-cols-12 gap-4">
+      {/* ─── Filters ─── */}
+      <div className="col-span-12 flex items-center gap-4 flex-wrap">
+        <span className={sectionLabelClass}>Sales Stage</span>
+        {STAGES.map((s) => (
+          <button key={s} onClick={() => toggleStage(s)} className={filterChipClass(activeStages.has(s))}>
+            {s}
+          </button>
+        ))}
+        <span className={`${sectionLabelClass} ml-4`}>Territory</span>
+        <select
+          value={territory?.values?.[0] ?? ""}
+          onChange={handleTerritory}
+          className="px-3 py-1.5 rounded-lg border border-[#E2E8F0] text-sm bg-white text-[#1F2937]"
+        >
+          <option value="">All Territories</option>
+          {territories.data?.map((t: string) => (
+            <option key={t} value={t}>{t}</option>
+          ))}
+        </select>
+      </div>
+
+      {/* ─── KPI Row ─── */}
+      <div className="col-span-3">
+        <div className={cardClass}>
+          <div className={kpiLabelClass}>Opportunity Count</div>
+          <div className={kpiValueClass}>{fmtNum(oppCount.data?.[0]?.cnt ?? 0)}</div>
         </div>
-        <div className="col-span-3">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-500">
-                Open Opportunities
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div
-                className="text-2xl font-bold"
-                style={{ color: theme.colors[1] }}
-              >
-                {formatCompact(totalCount)}
-              </div>
-              <p className="text-xs text-gray-400 mt-1">
-                {formatCurrency(avgDealSize)} avg deal size
-              </p>
-            </CardContent>
-          </Card>
+      </div>
+      <div className="col-span-3">
+        <div className={cardClass}>
+          <div className={kpiLabelClass}>Total Pipeline</div>
+          <div className={kpiValueClass}>{fmtCurrency(totalPipeline.data?.[0]?.val ?? 0)}</div>
         </div>
-        <div className="col-span-3">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-500">
-                Avg Deal Size
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div
-                className="text-2xl font-bold"
-                style={{ color: theme.colors[2] }}
-              >
-                {formatCurrency(avgDealSize)}
-              </div>
-              <p className="text-xs text-gray-400 mt-1">
-                weighted pipeline {formatCurrency(weightedPipeline)}
-              </p>
-            </CardContent>
-          </Card>
+      </div>
+      <div className="col-span-3">
+        <div className={cardClass}>
+          <div className={kpiLabelClass}>Avg Days Remaining</div>
+          <div className={kpiValueClass}>{fmtNum(avgDaysRemaining.data?.[0]?.avg ?? 0)}</div>
         </div>
-        <div className="col-span-3">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-500">
-                Weighted Pipeline
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div
-                className="text-2xl font-bold"
-                style={{ color: theme.colors[3] }}
-              >
-                {formatCurrency(weightedPipeline)}
-              </div>
-              <p className="text-xs text-gray-400 mt-1">
-                stage-probability adjusted
-              </p>
-            </CardContent>
-          </Card>
+      </div>
+      <div className="col-span-3">
+        <div className={cardClass}>
+          <div className={kpiLabelClass}>Qualified Pipeline</div>
+          <div className={kpiValueClass}>{fmtCurrency(qualifiedPipeline.data?.[0]?.val ?? 0)}</div>
         </div>
       </div>
 
-      {/* Trend + Stage side-by-side */}
-      <div className="grid grid-cols-12 gap-4">
-        {/* Pipeline Revenue Trend */}
-        <div className="col-span-7">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base font-semibold">
-                Pipeline Revenue Trend
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={trendData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                  <XAxis
-                    dataKey="month"
-                    tick={{ fontSize: 12, fill: "#6b7280" }}
-                    interval="preserveStartEnd"
-                  />
-                  <YAxis
-                    tickFormatter={(v: number) => formatCompact(v)}
-                    tick={{ fontSize: 12, fill: "#6b7280" }}
-                    width={70}
-                  />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="revenue"
-                    name="Revenue"
-                    stroke={theme.colors[0]}
-                    strokeWidth={2}
-                    dot={{ r: 3, fill: theme.colors[0] }}
-                    activeDot={{ r: 5 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Pipeline by Stage (Bar) */}
-        <div className="col-span-5">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base font-semibold">
-                Pipeline by Stage
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={topStages} layout="vertical">
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    stroke="#e5e7eb"
-                    horizontal={false}
-                  />
-                  <XAxis
-                    type="number"
-                    tickFormatter={(v: number) => formatCompact(v)}
-                    tick={{ fontSize: 11, fill: "#6b7280" }}
-                  />
-                  <YAxis
-                    dataKey="name"
-                    type="category"
-                    tick={{ fontSize: 11, fill: "#6b7280" }}
-                    width={100}
-                  />
-                  <Tooltip
-                    formatter={(value: number, name: string) => {
-                      if (name === "revenue") return [formatCurrency(value), "Revenue"]
-                      if (name === "count") return [formatCompact(value), "Count"]
-                      return [value, name]
-                    }}
-                  />
-                  <Bar
-                    dataKey="revenue"
-                    name="Revenue"
-                    fill={theme.colors[0]}
-                    radius={[0, 4, 4, 0]}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
+      {/* ─── Bar: Revenue by Product (horizontal) ─── */}
+      <div className="col-span-6">
+        <div className={cardClass}>
+          <div className={sectionLabelClass}>Revenue by Product (Open)</div>
+          <ResponsiveContainer width="100%" height={CHART_HEIGHT.large}>
+            <BarChart data={revByProduct.data} layout="vertical" margin={{ left: 80 }}>
+              <CartesianGrid {...gridStyle} />
+              <XAxis type="number" tickFormatter={currencyTick} {...axisStyle} />
+              <YAxis type="category" dataKey="Product" {...axisStyle} />
+              <Tooltip content={<CustomTooltip formatter={fmtCurrency} />} />
+              <Bar dataKey="val" fill="#0F52BA" radius={[0, 3, 3, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       </div>
 
-      {/* Pipeline by Sales Stage + Details side-by-side */}
-      <div className="grid grid-cols-12 gap-4">
-        {/* Sales Stage Horizontal Bar */}
-        <div className="col-span-5">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base font-semibold">
-                Pipeline by Sales Stage
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={stageData} layout="vertical">
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    stroke="#e5e7eb"
-                    horizontal={false}
-                  />
-                  <XAxis
-                    type="number"
-                    tickFormatter={(v: number) => formatCompact(v)}
-                    tick={{ fontSize: 11, fill: "#6b7280" }}
-                  />
-                  <YAxis
-                    dataKey="name"
-                    type="category"
-                    tick={{ fontSize: 11, fill: "#6b7280" }}
-                    width={110}
-                  />
-                  <Tooltip
-                    formatter={(value: number) => formatCurrency(value)}
-                  />
-                  <Bar dataKey="revenue" name="Revenue" radius={[0, 4, 4, 0]}>
-                    {stageData.map((entry, i) => (
-                      <Cell key={i} fill={entry.fill} />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
+      {/* ─── Line: Pipeline by Top 5 Industries over time ─── */}
+      <div className="col-span-6">
+        <div className={cardClass}>
+          <div className={sectionLabelClass}>Pipeline by Industry over Time</div>
+          <ResponsiveContainer width="100%" height={CHART_HEIGHT.large}>
+            <LineChart data={topIndustries} margin={{ left: 8 }}>
+              <CartesianGrid {...gridStyle} />
+              <XAxis dataKey="month" {...axisStyle} />
+              <YAxis tickFormatter={currencyTick} {...axisStyle} />
+              <Tooltip content={<CustomTooltip formatter={fmtCurrency} />} />
+              <Legend wrapperStyle={{ fontSize: 11 }} />
+              {topIndustries.length > 0 &&
+                Object.keys(topIndustries[0])
+                  .filter((k) => k !== "month")
+                  .map((ind, i) => (
+                    <Line
+                      key={ind}
+                      type="monotone"
+                      dataKey={ind}
+                      stroke={CHART_COLORS[i % 5]}
+                      strokeWidth={2}
+                      dot={false}
+                    />
+                  ))}
+            </LineChart>
+          </ResponsiveContainer>
         </div>
+      </div>
 
-        {/* Stage Details Table */}
-        <div className="col-span-7">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base font-semibold">
-                Pipeline Details
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-0">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-gray-200 bg-gray-50">
-                      <th className="text-left px-4 py-2.5 font-medium text-gray-500 text-xs uppercase tracking-wider">
-                        Stage
-                      </th>
-                      <th className="text-left px-4 py-2.5 font-medium text-gray-500 text-xs uppercase tracking-wider">
-                        Owner
-                      </th>
-                      <th className="text-left px-4 py-2.5 font-medium text-gray-500 text-xs uppercase tracking-wider">
-                        Territory
-                      </th>
-                      <th className="text-right px-4 py-2.5 font-medium text-gray-500 text-xs uppercase tracking-wider">
-                        Revenue
-                      </th>
-                      <th className="text-right px-4 py-2.5 font-medium text-gray-500 text-xs uppercase tracking-wider">
-                        Deals
-                      </th>
-                      <th className="text-right px-4 py-2.5 font-medium text-gray-500 text-xs uppercase tracking-wider">
-                        Avg Deal
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {detailRows.length === 0 && (
-                      <tr>
-                        <td
-                          colSpan={6}
-                          className="text-center py-8 text-gray-400"
-                        >
-                          No data available
-                        </td>
-                      </tr>
-                    )}
-                    {detailRows.map((row) => (
-                      <tr
-                        key={row.id}
-                        className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
-                      >
-                        <td className="px-4 py-2.5 text-gray-900">
-                          {row.stage || "—"}
-                        </td>
-                        <td className="px-4 py-2.5 text-gray-600">
-                          {row.owner || "—"}
-                        </td>
-                        <td className="px-4 py-2.5 text-gray-600">
-                          {row.territory || "—"}
-                        </td>
-                        <td className="px-4 py-2.5 text-right font-medium">
-                          {formatCurrency(row.revenue)}
-                        </td>
-                        <td className="px-4 py-2.5 text-right text-gray-600">
-                          {formatCompact(row.count)}
-                        </td>
-                        <td className="px-4 py-2.5 text-right text-gray-600">
-                          {formatCurrency(row.avgDeal)}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+      {/* ─── Funnel: Pipeline Funnel ─── */}
+      <div className="col-span-6">
+        <div className={cardClass}>
+          <div className={sectionLabelClass}>Pipeline Funnel</div>
+          <div className="flex flex-col gap-3">
+            {sortedFunnel.length === 0 && (
+              <div className="text-sm text-[#6B7280] italic">No data</div>
+            )}
+            {sortedFunnel.map((r: any) => (
+              <div key={r["Sales Stage"]} className="flex items-center gap-3">
+                <span className="w-24 text-xs text-[#6B7280] text-right">{r["Sales Stage"]}</span>
+                <div
+                  className="h-8 rounded-r-md bg-[#0F52BA] transition-all flex items-center justify-end pr-2"
+                  style={{ width: `${Math.max(r.widthPct, 4)}%` }}
+                >
+                  <span className="text-xs font-semibold text-white">{fmtCurrency(r._val)}</span>
+                </div>
               </div>
-            </CardContent>
-          </Card>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ─── Table: Pipeline Details ─── */}
+      <div className="col-span-6">
+        <div className={cardClass}>
+          <div className={sectionLabelClass}>Pipeline Details</div>
+          <div className="overflow-auto max-h-[320px]">
+            <table className="w-full">
+              <thead>
+                <tr>
+                  <th className={tableHeaderClass}>Territory</th>
+                  <th className={tableHeaderClass}>Days</th>
+                  <th className={tableHeaderClass}>Weeks</th>
+                  <th className={tableHeaderClass}>Industry</th>
+                  <th className={tableHeaderClass}>Account</th>
+                  <th className={tableHeaderClass}>Owner</th>
+                  <th className={tableHeaderClass}>Stage</th>
+                  <th className={tableHeaderClass}>Product</th>
+                  <th className={tableHeaderClass}>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                {tableData.data?.map((r: any, i: number) => (
+                  <tr key={i}>
+                    <td className={tableCellClass}>{r.Territory}</td>
+                    <td className={tableCellClass}>{r["Days Remaining In Pipeline"]}</td>
+                    <td className={tableCellClass}>{r["Weeks Open"]}</td>
+                    <td className={tableCellClass}>{r.Industry}</td>
+                    <td className={tableCellClass}>{r["Account Name"]}</td>
+                    <td className={tableCellClass}>{r.Owner}</td>
+                    <td className={tableCellClass}>{r["Sales Stage"]}</td>
+                    <td className={tableCellClass}>{r.Product}</td>
+                    <td className={tableCellClass}>{fmtCurrency(r.val)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

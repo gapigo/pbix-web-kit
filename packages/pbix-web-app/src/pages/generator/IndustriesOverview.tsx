@@ -1,381 +1,299 @@
-import { useAggregation, theme, formatCurrency, formatCompact, formatPercent, PBI_PALETTE } from "@pbix/runtime"
+import { useMemo, useCallback } from 'react'
+import { useAggregation, useDistinctValues, useFilter, useFilters } from '@pbix/runtime'
+import type { QueryEngine } from '@pbix/runtime'
+import type { UseBoundStore, StoreApi } from 'zustand'
+import type { DashboardStore } from '@pbix/runtime'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from 'recharts'
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  ScatterChart, Scatter, ZAxis, PieChart, Pie, Cell,
-} from "recharts"
-import type { QueryEngine } from "@pbix/runtime"
-import type { UseBoundStore, StoreApi } from "zustand"
-import type { DashboardStore } from "@pbix/runtime"
+  colors, cardClass, kpiValueClass, kpiLabelClass, sectionLabelClass,
+  tableHeaderClass, tableCellClass, filterChipClass, CHART_HEIGHT,
+  axisStyle, gridStyle, currencyTick, CustomTooltip, fmtCurrency, fmtNum, fmtPct,
+} from '@/lib/designTokens'
 
-interface Props {
-  engine: QueryEngine | null
-  store: UseBoundStore<StoreApi<DashboardStore>>
-}
+interface Props { engine: QueryEngine | null; store: UseBoundStore<StoreApi<DashboardStore>> }
 
-const TABLE = "v_opportunities"
+export default function IndustriesOverview({ engine, store }: Props) {
+  const [industryFilter, setIndustryFilter] = useFilter(store, 'Industry')
+  const [lobFilter, setLobFilter] = useFilter(store, 'Product LOB')
+  const allFilters = useFilters(store)
+  const filterArr = useMemo(() => Object.values(allFilters).flat(), [allFilters])
 
-const wonFilter = [{ column: "Status", op: "eq" as const, values: ["Won"] }]
+  const lobValues = useDistinctValues(engine, 'v_opportunities', 'Product LOB')
 
-// ── Inline KPI card ──────────────────────────────────────
-function KpiCard({
-  label,
-  value,
-  subtitle,
-  color,
-  loading,
-}: {
-  label: string
-  value: string
-  subtitle?: string
-  color: string
-  loading: boolean
-}) {
-  return (
-    <div
-      style={{
-        background: "#fff",
-        borderRadius: theme.radius.card,
-        padding: theme.spacing.card,
-        border: "1px solid #e5e7eb",
-        display: "flex",
-        flexDirection: "column",
-        gap: "0.25rem",
-      }}
-    >
-      <span style={{ fontSize: "0.75rem", fontWeight: 600, color: theme.semantic.muted, textTransform: "uppercase", letterSpacing: "0.05em" }}>
-        {label}
-      </span>
-      <span style={{ fontSize: "1.75rem", fontWeight: 700, color }}>
-        {loading ? "—" : value}
-      </span>
-      {subtitle && (
-        <span style={{ fontSize: "0.75rem", color: theme.semantic.muted }}>{subtitle}</span>
-      )}
-    </div>
-  )
-}
-
-// ── Reusable chart wrapper ───────────────────────────────
-function ChartCard({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div
-      style={{
-        background: "#fff",
-        borderRadius: theme.radius.card,
-        padding: theme.spacing.card,
-        border: "1px solid #e5e7eb",
-        display: "flex",
-        flexDirection: "column",
-        gap: "0.75rem",
-      }}
-    >
-      <span style={{ fontSize: "0.875rem", fontWeight: 600 }}>{title}</span>
-      {children}
-    </div>
-  )
-}
-
-// ── Custom tooltip (shared) ──────────────────────────────
-function ChartTooltip({
-  active,
-  payload,
-  label,
-  formatter,
-}: {
-  active?: boolean
-  payload?: any[]
-  label?: string
-  formatter?: (v: number) => string
-}) {
-  if (!active || !payload?.length) return null
-  const fmt = formatter ?? formatCurrency
-  return (
-    <div
-      style={{
-        background: "#fff",
-        border: "1px solid #d1d5db",
-        borderRadius: "0.375rem",
-        padding: "0.5rem 0.75rem",
-        fontSize: "0.8rem",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.12)",
-      }}
-    >
-      <div style={{ fontWeight: 600, marginBottom: "0.25rem" }}>{label}</div>
-      {payload.map((entry: any, i: number) => (
-        <div key={i} style={{ color: entry.color }}>
-          {entry.name}: {typeof entry.value === "number" ? fmt(entry.value) : entry.value}
-        </div>
-      ))}
-    </div>
-  )
-}
-
-// ── Main page ────────────────────────────────────────────
-export default function IndustriesOverview({ engine }: Props) {
-  // ── KPI queries ──────────────────────────────────────
-  const totalRevenue = useAggregation(engine, {
-    table: TABLE,
-    measures: [{ column: "Value", fn: "sum", alias: "revenue" }],
-    filters: wonFilter,
+  // Top 8 industries by value (for chips)
+  const topIndustries = useAggregation(engine, {
+    table: 'v_opportunities',
+    groupBy: ['Industry'],
+    measures: [{ column: 'Value', fn: 'sum', alias: 'val' }],
+    orderBy: [{ column: 'val', dir: 'desc' }],
+    limit: 8,
   })
-  const avgDealSize = useAggregation(engine, {
-    table: TABLE,
-    measures: [{ column: "Value", fn: "avg", alias: "avg" }],
-    filters: wonFilter,
-  })
-  const wonDeals = useAggregation(engine, {
-    table: TABLE,
-    measures: [{ column: "Value", fn: "count", alias: "count" }],
-    filters: wonFilter,
-  })
-  const industryCount = useAggregation(engine, {
-    table: TABLE,
-    groupBy: ["Industry"],
-    measures: [{ column: "Industry", fn: "distinctCount", alias: "count" }],
-    filters: wonFilter,
+  const topIndustryNames = useMemo(() => new Set((topIndustries.data ?? []).map(r => r.Industry)), [topIndustries.data])
+
+  const wonFilters = useMemo(() => [...filterArr, { column: 'Status', op: 'eq' as const, values: ['Won'] }], [filterArr])
+  const openFilters = useMemo(() => [...filterArr, { column: 'Status', op: 'eq' as const, values: ['Open'] }], [filterArr])
+
+  const selectedIndustries: string[] = (industryFilter as any)?.values ?? []
+
+  // ── KPI ──
+  const totalPipeline = useAggregation(engine, {
+    table: 'v_opportunities',
+    measures: [{ column: 'Value', fn: 'sum', alias: 'val' }],
+    filters: openFilters,
   })
 
-  // ── Revenue by Industry (bar chart) ───────────────────
-  const revenueByIndustry = useAggregation(engine, {
-    table: TABLE,
-    groupBy: ["Industry"],
-    measures: [{ column: "Value", fn: "sum", alias: "revenue" }],
-    filters: wonFilter,
-    orderBy: [{ column: "revenue", dir: "desc" }],
+  // ── Industry Table: Industry × Revenue Won × Close % × Avg Deal Size ──
+  const indWon = useAggregation(engine, {
+    table: 'v_opportunities', groupBy: ['Industry'],
+    measures: [{ column: 'Value', fn: 'sum', alias: 'val' }],
+    filters: wonFilters,
+    orderBy: [{ column: 'val', dir: 'desc' }],
+  })
+  const indAvg = useAggregation(engine, {
+    table: 'v_opportunities', groupBy: ['Industry'],
+    measures: [{ column: 'Value', fn: 'avg', alias: 'val' }],
+    filters: wonFilters,
+  })
+  const indWonCnt = useAggregation(engine, {
+    table: 'v_opportunities', groupBy: ['Industry'],
+    measures: [{ column: 'OpportunitySeq', fn: 'count', alias: 'val' }],
+    filters: wonFilters,
+  })
+  const indClosed = useAggregation(engine, {
+    table: 'v_opportunities', groupBy: ['Industry'],
+    measures: [{ column: 'OpportunitySeq', fn: 'count', alias: 'val' }],
+    filters: [...filterArr, { column: 'Status', op: 'in' as const, values: ['Won', 'Lost'] }],
+  })
+
+  const indRows = useMemo(() => {
+    const revMap = new Map((indWon.data ?? []).map(r => [r.Industry, r.val]))
+    const avgMap = new Map((indAvg.data ?? []).map(r => [r.Industry, r.val]))
+    const wcMap = new Map((indWonCnt.data ?? []).map(r => [r.Industry, r.val]))
+    const ccMap = new Map((indClosed.data ?? []).map(r => [r.Industry, r.val]))
+    const keys = new Set([...revMap.keys(), ...avgMap.keys(), ...wcMap.keys(), ...ccMap.keys()])
+    return Array.from(keys)
+      .map(k => ({
+        industry: k,
+        revenueWon: revMap.get(k) ?? 0,
+        closePct: (() => { const wc = wcMap.get(k) ?? 0; const cc = ccMap.get(k) ?? 0; return cc > 0 ? (wc / cc) * 100 : 0 })(),
+        avgDeal: avgMap.get(k) ?? 0,
+      }))
+      .sort((a, b) => b.revenueWon - a.revenueWon)
+  }, [indWon.data, indAvg.data, indWonCnt.data, indClosed.data])
+
+  // ── Product LOB Table: Product LOB × Revenue Won × Close % × Avg Deal Size ──
+  const lobWon = useAggregation(engine, {
+    table: 'v_opportunities', groupBy: ['Product LOB'],
+    measures: [{ column: 'Value', fn: 'sum', alias: 'val' }],
+    filters: wonFilters,
+    orderBy: [{ column: 'val', dir: 'desc' }],
+  })
+  const lobAvg = useAggregation(engine, {
+    table: 'v_opportunities', groupBy: ['Product LOB'],
+    measures: [{ column: 'Value', fn: 'avg', alias: 'val' }],
+    filters: wonFilters,
+  })
+  const lobWonCnt = useAggregation(engine, {
+    table: 'v_opportunities', groupBy: ['Product LOB'],
+    measures: [{ column: 'OpportunitySeq', fn: 'count', alias: 'val' }],
+    filters: wonFilters,
+  })
+  const lobClosed = useAggregation(engine, {
+    table: 'v_opportunities', groupBy: ['Product LOB'],
+    measures: [{ column: 'OpportunitySeq', fn: 'count', alias: 'val' }],
+    filters: [...filterArr, { column: 'Status', op: 'in' as const, values: ['Won', 'Lost'] }],
+  })
+
+  const lobRows = useMemo(() => {
+    const revMap = new Map((lobWon.data ?? []).map(r => [r['Product LOB'], r.val]))
+    const avgMap = new Map((lobAvg.data ?? []).map(r => [r['Product LOB'], r.val]))
+    const wcMap = new Map((lobWonCnt.data ?? []).map(r => [r['Product LOB'], r.val]))
+    const ccMap = new Map((lobClosed.data ?? []).map(r => [r['Product LOB'], r.val]))
+    const keys = new Set([...revMap.keys(), ...avgMap.keys(), ...wcMap.keys(), ...ccMap.keys()])
+    return Array.from(keys)
+      .map(k => ({
+        lob: k,
+        revenueWon: revMap.get(k) ?? 0,
+        closePct: (() => { const wc = wcMap.get(k) ?? 0; const cc = ccMap.get(k) ?? 0; return cc > 0 ? (wc / cc) * 100 : 0 })(),
+        avgDeal: avgMap.get(k) ?? 0,
+      }))
+      .sort((a, b) => b.revenueWon - a.revenueWon)
+  }, [lobWon.data, lobAvg.data, lobWonCnt.data, lobClosed.data])
+
+  // ── Bar: Revenue Won by Industry Top 10 ──
+  const indBar = useAggregation(engine, {
+    table: 'v_opportunities', groupBy: ['Industry'],
+    measures: [{ column: 'Value', fn: 'sum', alias: 'val' }],
+    filters: wonFilters,
+    orderBy: [{ column: 'val', dir: 'desc' }],
     limit: 10,
   })
 
-  // ── Scatter data: revenue vs deals by Industry ────────
-  const scatterData = useAggregation(engine, {
-    table: TABLE,
-    groupBy: ["Industry"],
-    measures: [
-      { column: "Value", fn: "sum", alias: "revenue" },
-      { column: "Value", fn: "count", alias: "deals" },
-      { column: "Value", fn: "avg", alias: "avgDeal" },
-    ],
-    filters: wonFilter,
-    orderBy: [{ column: "revenue", dir: "desc" }],
+  // ── Bar: Revenue Won by Product LOB ──
+  const lobBar = useAggregation(engine, {
+    table: 'v_opportunities', groupBy: ['Product LOB'],
+    measures: [{ column: 'Value', fn: 'sum', alias: 'val' }],
+    filters: wonFilters,
+    orderBy: [{ column: 'val', dir: 'desc' }],
   })
 
-  // ── Total deals by Industry (for win rate) ────────────
-  const totalByIndustry = useAggregation(engine, {
-    table: TABLE,
-    groupBy: ["Industry"],
-    measures: [{ column: "Value", fn: "count", alias: "totalDeals" }],
-    orderBy: [{ column: "totalDeals", dir: "desc" }],
-  })
-
-  // ── Revenue distribution by Region ────────────────────
-  const revenueByRegion = useAggregation(engine, {
-    table: TABLE,
-    groupBy: ["Region"],
-    measures: [{ column: "Value", fn: "sum", alias: "revenue" }],
-    filters: wonFilter,
-    orderBy: [{ column: "revenue", dir: "desc" }],
-  })
-
-  // ── Derived values ────────────────────────────────────
-  const rev = totalRevenue.data?.[0]?.revenue ?? 0
-  const avg = avgDealSize.data?.[0]?.avg ?? 0
-  const deals = wonDeals.data?.[0]?.count ?? 0
-  const industries = industryCount.data?.length ?? 0
-  const kpiLoading = totalRevenue.loading || avgDealSize.loading || wonDeals.loading || industryCount.loading
-
-  // ── Merge win rate into scatter data ──────────────────
-  const industryPerformance = (scatterData.data ?? []).map((row) => {
-    const totalRow = (totalByIndustry.data ?? []).find((t) => t.Industry === row.Industry)
-    const totalDealsCount = totalRow?.totalDeals ?? 0
-    return {
-      ...row,
-      totalDeals: totalDealsCount,
-      winRate: totalDealsCount > 0 ? Number(row.deals) / totalDealsCount : 0,
+  // ── Filter handlers ──
+  const toggleIndustry = useCallback((ind: string) => {
+    const current = selectedIndustries
+    const next = current.includes(ind) ? current.filter(v => v !== ind) : [...current, ind]
+    if (next.length === 0) {
+      setIndustryFilter(null)
+    } else {
+      setIndustryFilter({ column: 'Industry', op: 'in' as const, values: next })
     }
-  })
+  }, [selectedIndustries, setIndustryFilter])
 
-  const topIndustries = (revenueByIndustry.data ?? []).slice(0, 10)
-
-  const sectionStyle: React.CSSProperties = {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-    gap: theme.spacing.gap,
-  }
+  const handleLobChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    const v = e.target.value
+    if (v) setLobFilter({ column: 'Product LOB', op: 'eq' as const, values: [v] })
+    else setLobFilter(null)
+  }, [setLobFilter])
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: theme.spacing.gap,
-        padding: theme.spacing.page,
-        fontFamily: theme.fontFamily.sans,
-      }}
-    >
-      {/* ── Row 1: KPI Cards ───────────────────────────────── */}
-      <div style={sectionStyle}>
-        <KpiCard
-          label="Won Revenue"
-          value={formatCurrency(rev)}
-          subtitle={`${formatCompact(deals)} deals closed`}
-          color={PBI_PALETTE[0]}
-          loading={kpiLoading}
-        />
-        <KpiCard
-          label="Avg Deal Size"
-          value={formatCurrency(avg)}
-          color={PBI_PALETTE[1]}
-          loading={kpiLoading}
-        />
-        <KpiCard
-          label="Deals Closed"
-          value={formatCompact(deals)}
-          color={PBI_PALETTE[2]}
-          loading={kpiLoading}
-        />
-        <KpiCard
-          label="Industries Active"
-          value={String(industries)}
-          color={PBI_PALETTE[3]}
-          loading={kpiLoading}
-        />
-      </div>
-
-      {/* ── Row 2: Revenue by Industry + Revenue by Region ── */}
-      <div style={sectionStyle}>
-        <ChartCard title="Revenue by Industry (Top 10)">
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={topIndustries} margin={{ left: 8, right: 8, top: 4, bottom: 4 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-              <XAxis dataKey="Industry" tick={{ fontSize: 11 }} angle={-25} textAnchor="end" height={60} />
-              <YAxis tickFormatter={(v: number) => formatCompact(v)} tick={{ fontSize: 11 }} />
-              <Tooltip content={<ChartTooltip />} />
-              <Bar dataKey="revenue" fill={PBI_PALETTE[0]} radius={[4, 4, 0, 0]} name="Revenue" />
-            </BarChart>
-          </ResponsiveContainer>
-        </ChartCard>
-
-        <ChartCard title="Revenue by Region">
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={revenueByRegion.data ?? []} layout="vertical" margin={{ left: 20, right: 20, top: 4, bottom: 4 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-              <XAxis type="number" tickFormatter={(v: number) => formatCompact(v)} fontSize={11} />
-              <YAxis type="category" dataKey="Region" width={90} fontSize={11} />
-              <Tooltip content={<ChartTooltip />} />
-              <Bar dataKey="revenue" fill={PBI_PALETTE[2]} radius={[0, 4, 4, 0]} name="Revenue" />
-            </BarChart>
-          </ResponsiveContainer>
-        </ChartCard>
-      </div>
-
-      {/* ── Row 3: Scatter + Donut ───────────────────────── */}
-      <div style={sectionStyle}>
-        <ChartCard title="Revenue vs Deal Count by Industry">
-          <ResponsiveContainer width="100%" height={340}>
-            <ScatterChart margin={{ left: 8, right: 16, top: 4, bottom: 4 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-              <XAxis
-                dataKey="deals"
-                name="Deal Count"
-                tickFormatter={(v: number) => formatCompact(v)}
-                tick={{ fontSize: 11 }}
-                label={{ value: "Deal Count", position: "bottom", offset: -4, fontSize: 11 }}
-              />
-              <YAxis
-                dataKey="revenue"
-                name="Revenue Won"
-                tickFormatter={(v: number) => formatCompact(v)}
-                tick={{ fontSize: 11 }}
-                label={{ value: "Revenue", angle: -90, position: "left", offset: 0, fontSize: 11 }}
-              />
-              <ZAxis dataKey="winRate" range={[60, 400]} />
-              <Tooltip
-                cursor={{ strokeDasharray: "3 3" }}
-                content={({ active, payload }) => {
-                  if (!active || !payload?.[0]) return null
-                  const d = payload[0].payload
-                  return (
-                    <div
-                      style={{
-                        background: "#fff",
-                        border: "1px solid #d1d5db",
-                        borderRadius: "0.375rem",
-                        padding: "0.5rem 0.75rem",
-                        fontSize: "0.8rem",
-                        boxShadow: "0 2px 8px rgba(0,0,0,0.12)",
-                      }}
-                    >
-                      <div style={{ fontWeight: 600, marginBottom: "0.25rem" }}>{d.Industry}</div>
-                      <div style={{ color: PBI_PALETTE[0] }}>Revenue: {formatCurrency(d.revenue)}</div>
-                      <div style={{ color: PBI_PALETTE[2] }}>Deals: {formatCompact(d.deals)}</div>
-                      <div>Win Rate: {formatPercent(d.winRate)}</div>
-                      <div>Avg Deal: {formatCurrency(d.avgDeal)}</div>
-                    </div>
-                  )
-                }}
-              />
-              <Scatter data={industryPerformance} fill={PBI_PALETTE[0]} fillOpacity={0.7} />
-            </ScatterChart>
-          </ResponsiveContainer>
-        </ChartCard>
-
-        <ChartCard title="Revenue Distribution by Industry">
-          <ResponsiveContainer width="100%" height={340}>
-            <PieChart>
-              <Pie
-                data={topIndustries}
-                cx="50%"
-                cy="50%"
-                outerRadius={110}
-                innerRadius={45}
-                dataKey="revenue"
-                nameKey="Industry"
-                label={({ Industry, percent }) => `${Industry} ${(percent * 100).toFixed(0)}%`}
-                labelLine
-              >
-                {topIndustries.map((_, i) => (
-                  <Cell key={i} fill={PBI_PALETTE[i % PBI_PALETTE.length]} />
-                ))}
-              </Pie>
-              <Tooltip formatter={(v: number) => formatCurrency(v)} />
-            </PieChart>
-          </ResponsiveContainer>
-        </ChartCard>
-      </div>
-
-      {/* ── Row 4: Industry Performance Table ─────────────── */}
-      <ChartCard title="Industry Performance Details">
-        <div style={{ fontSize: "0.8rem", overflowX: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
-            <thead>
-              <tr style={{ borderBottom: "2px solid #e5e7eb" }}>
-                <th style={{ textAlign: "left", padding: "0.5rem 0.75rem", fontWeight: 600, color: theme.semantic.muted, textTransform: "uppercase", fontSize: "0.7rem", letterSpacing: "0.05em" }}>Industry</th>
-                <th style={{ textAlign: "right", padding: "0.5rem 0.75rem", fontWeight: 600, color: theme.semantic.muted, textTransform: "uppercase", fontSize: "0.7rem", letterSpacing: "0.05em" }}>Revenue Won</th>
-                <th style={{ textAlign: "right", padding: "0.5rem 0.75rem", fontWeight: 600, color: theme.semantic.muted, textTransform: "uppercase", fontSize: "0.7rem", letterSpacing: "0.05em" }}>Deal Count</th>
-                <th style={{ textAlign: "right", padding: "0.5rem 0.75rem", fontWeight: 600, color: theme.semantic.muted, textTransform: "uppercase", fontSize: "0.7rem", letterSpacing: "0.05em" }}>Avg Deal</th>
-                <th style={{ textAlign: "right", padding: "0.5rem 0.75rem", fontWeight: 600, color: theme.semantic.muted, textTransform: "uppercase", fontSize: "0.7rem", letterSpacing: "0.05em" }}>Total Deals</th>
-                <th style={{ textAlign: "right", padding: "0.5rem 0.75rem", fontWeight: 600, color: theme.semantic.muted, textTransform: "uppercase", fontSize: "0.7rem", letterSpacing: "0.05em" }}>Win Rate</th>
-              </tr>
-            </thead>
-            <tbody>
-              {industryPerformance.map((row, i) => (
-                <tr
-                  key={row.Industry ?? i}
-                  style={{ borderBottom: "1px solid #f3f4f6", transition: "background 0.15s" }}
-                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "#f9fafb" }}
-                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "" }}
-                >
-                  <td style={{ padding: "0.5rem 0.75rem", fontWeight: 500 }}>{row.Industry}</td>
-                  <td style={{ padding: "0.5rem 0.75rem", textAlign: "right", fontWeight: 500, fontVariantNumeric: "tabular-nums" }}>{formatCurrency(row.revenue)}</td>
-                  <td style={{ padding: "0.5rem 0.75rem", textAlign: "right", fontVariantNumeric: "tabular-nums" }}>{formatCompact(row.deals)}</td>
-                  <td style={{ padding: "0.5rem 0.75rem", textAlign: "right", fontVariantNumeric: "tabular-nums" }}>{formatCurrency(row.avgDeal)}</td>
-                  <td style={{ padding: "0.5rem 0.75rem", textAlign: "right", fontVariantNumeric: "tabular-nums" }}>{formatCompact(row.totalDeals)}</td>
-                  <td style={{ padding: "0.5rem 0.75rem", textAlign: "right", fontVariantNumeric: "tabular-nums" }}>{formatPercent(row.winRate)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+    <div className="grid grid-cols-12 gap-5">
+      {/* ── KPI ── */}
+      <div className="col-span-12">
+        <div className={cardClass}>
+          <div className={kpiLabelClass}>Total Pipeline</div>
+          <div className={kpiValueClass} style={{ color: colors.brand }}>{fmtCurrency(totalPipeline.data?.[0]?.val)}</div>
         </div>
-      </ChartCard>
+      </div>
+
+      {/* ── Filters ── */}
+      <div className="col-span-7">
+        <div className={sectionLabelClass}>Industry (Top 8)</div>
+        <div className="flex flex-wrap gap-2">
+          {(topIndustries.data ?? []).map(r => (
+            <button
+              key={r.Industry}
+              onClick={() => toggleIndustry(r.Industry)}
+              className={filterChipClass(selectedIndustries.includes(r.Industry))}
+            >
+              {r.Industry}
+            </button>
+          ))}
+          {selectedIndustries.length > 0 && (
+            <button
+              onClick={() => setIndustryFilter(null)}
+              className="px-3 py-1 rounded-full text-xs font-medium border border-[#B91C1C] text-[#B91C1C] hover:bg-[#B91C1C1A] transition-all"
+            >
+              Clear
+            </button>
+          )}
+        </div>
+      </div>
+      <div className="col-span-5">
+        <div className={sectionLabelClass}>Product LOB</div>
+        <select
+          value={(lobFilter as any)?.values?.[0] ?? ''}
+          onChange={handleLobChange}
+          className="w-full rounded-lg border border-[#E2E8F0] px-3 py-2 text-sm bg-white text-[#1F2937]"
+        >
+          <option value="">All Product LOBs</option>
+          {(lobValues.data ?? []).map(l => <option key={l} value={l}>{l}</option>)}
+        </select>
+      </div>
+
+      {/* ── Industry Table ── */}
+      <div className="col-span-6">
+        <div className={cardClass}>
+          <div className={sectionLabelClass}>Industry Performance</div>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr>
+                  <th className={tableHeaderClass}>Industry</th>
+                  <th className={tableHeaderClass}>Revenue Won</th>
+                  <th className={tableHeaderClass}>Close %</th>
+                  <th className={tableHeaderClass}>Avg Deal Size</th>
+                </tr>
+              </thead>
+              <tbody>
+                {indRows.map(r => (
+                  <tr key={r.industry}>
+                    <td className={tableCellClass}>{r.industry}</td>
+                    <td className={tableCellClass}>{fmtCurrency(r.revenueWon)}</td>
+                    <td className={tableCellClass}>{fmtPct(r.closePct)}</td>
+                    <td className={tableCellClass}>{fmtCurrency(r.avgDeal)}</td>
+                  </tr>
+                ))}
+                {indRows.length === 0 && (
+                  <tr><td colSpan={4} className="text-center py-6 text-[#6B7280] text-sm">No data</td></tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Product LOB Table ── */}
+      <div className="col-span-6">
+        <div className={cardClass}>
+          <div className={sectionLabelClass}>Product LOB Performance</div>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr>
+                  <th className={tableHeaderClass}>Product LOB</th>
+                  <th className={tableHeaderClass}>Revenue Won</th>
+                  <th className={tableHeaderClass}>Close %</th>
+                  <th className={tableHeaderClass}>Avg Deal Size</th>
+                </tr>
+              </thead>
+              <tbody>
+                {lobRows.map(r => (
+                  <tr key={r.lob}>
+                    <td className={tableCellClass}>{r.lob}</td>
+                    <td className={tableCellClass}>{fmtCurrency(r.revenueWon)}</td>
+                    <td className={tableCellClass}>{fmtPct(r.closePct)}</td>
+                    <td className={tableCellClass}>{fmtCurrency(r.avgDeal)}</td>
+                  </tr>
+                ))}
+                {lobRows.length === 0 && (
+                  <tr><td colSpan={4} className="text-center py-6 text-[#6B7280] text-sm">No data</td></tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Bar: Revenue Won by Industry Top 10 ── */}
+      <div className="col-span-6">
+        <div className={cardClass}>
+          <div className={sectionLabelClass}>Revenue Won by Industry — Top 10</div>
+          <ResponsiveContainer width="100%" height={CHART_HEIGHT.large}>
+            <BarChart data={indBar.data ?? []} layout="vertical" margin={{ left: 100, right: 20, top: 4, bottom: 4 }}>
+              <CartesianGrid {...gridStyle} />
+              <XAxis type="number" tick={currencyTick} {...axisStyle} />
+              <YAxis type="category" dataKey="Industry" width={90} {...axisStyle} />
+              <Tooltip content={<CustomTooltip formatter={fmtCurrency} />} />
+              <Bar dataKey="val" fill={colors.chart[0]} radius={[0, 4, 4, 0]} maxBarSize={20} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* ── Bar: Revenue Won by Product LOB ── */}
+      <div className="col-span-6">
+        <div className={cardClass}>
+          <div className={sectionLabelClass}>Revenue Won by Product LOB</div>
+          <ResponsiveContainer width="100%" height={CHART_HEIGHT.large}>
+            <BarChart data={lobBar.data ?? []} layout="vertical" margin={{ left: 100, right: 20, top: 4, bottom: 4 }}>
+              <CartesianGrid {...gridStyle} />
+              <XAxis type="number" tick={currencyTick} {...axisStyle} />
+              <YAxis type="category" dataKey="Product LOB" width={100} {...axisStyle} />
+              <Tooltip content={<CustomTooltip formatter={fmtCurrency} />} />
+              <Bar dataKey="val" fill={colors.chart[1]} radius={[0, 4, 4, 0]} maxBarSize={20} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
     </div>
   )
 }

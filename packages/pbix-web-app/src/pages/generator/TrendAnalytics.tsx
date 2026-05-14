@@ -1,407 +1,330 @@
-import { useAggregation, theme, formatCurrency, formatCompact, autoFormat, currencyTooltipFormatter, dateAxisFormatter } from "@pbix/runtime"
+import { useState, useMemo } from "react"
+import { useAggregation, useDistinctValues, useFilter, useFilters } from "@pbix/runtime"
 import type { QueryEngine } from "@pbix/runtime"
 import type { UseBoundStore, StoreApi } from "zustand"
 import type { DashboardStore } from "@pbix/runtime"
-
 import {
-  ComposedChart,
-  Bar,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Legend,
+  BarChart, Bar, LineChart, Line, ComposedChart,
+  XAxis, YAxis, CartesianGrid, ResponsiveContainer,
+  Tooltip, Legend, ScatterChart, Scatter, Cell,
 } from "recharts"
-import React from "react"
+import {
+  cardClass, kpiValueClass, kpiLabelClass, sectionLabelClass,
+  tableCellClass, filterChipClass, colors,
+  fmtCurrency, fmtNum, fmtPct, fmtDate, CustomTooltip,
+  CHART_HEIGHT, axisStyle, gridStyle, currencyTick, numTick, pctTick,
+} from "@/lib/designTokens"
+
+const CHART_COLORS = ["#0F52BA", "#1A7A4A", "#C17D00", "#7C3AED", "#0891B2", "#BE185D"]
 
 interface Props {
   engine: QueryEngine | null
   store: UseBoundStore<StoreApi<DashboardStore>>
 }
 
-/* ── helpers ── */
-const C = theme.colors
-
-/* ── KPI card ── */
-function KpiCard({
-  label, value, loading, error, color = C[0],
-}: {
-  label: string
-  value: string
-  loading?: boolean
-  error?: boolean
-  color?: string
-}) {
-  return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4">
-      <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1 truncate">
-        {label}
-      </div>
-      <div className="text-2xl font-bold" style={{ color }}>
-        {loading ? (
-          <div className="h-8 w-28 bg-gray-200 animate-pulse rounded" />
-        ) : error ? (
-          <span className="text-red-400 text-sm">Error</span>
-        ) : (
-          value
-        )}
-      </div>
-    </div>
-  )
-}
-
-/* ── Section wrapper ── */
-function Section({ title, subtitle, children }: { title: string; subtitle?: string; children: React.ReactNode }) {
-  return (
-    <div className="bg-white rounded-lg border border-gray-200 p-5">
-      <div className="mb-4">
-        <h3 className="text-base font-semibold text-gray-800">{title}</h3>
-        {subtitle && <p className="text-xs text-gray-500 mt-0.5">{subtitle}</p>}
-      </div>
-      {children}
-    </div>
-  )
-}
-
-/* ── Dollar formatter for chart ticks ── */
-function dollarTick(value: number) {
-  if (value >= 1_000_000) return `$${(value / 1_000_000).toFixed(0)}M`
-  if (value >= 1_000) return `$${(value / 1_000).toFixed(0)}K`
-  return `$${value}`
-}
-
-/** Parse a CloseDate value to YYYY-MM label (handles SQL date and string forms). */
-function monthLabel(d: unknown): string {
-  if (!d) return ""
-  const s = String(d)
-  const date = s.length >= 10 ? new Date(s.slice(0, 10)) : new Date(s)
-  if (isNaN(date.getTime())) return s.slice(0, 7) // fallback raw substring
-  return date.toLocaleDateString("en-US", { month: "short", year: "2-digit" })
-}
-
-/* ── Page ── */
 export default function TrendAnalytics({ engine, store }: Props) {
-  /* ────────── KPI queries ────────── */
-  const totalRevenue = useAggregation(engine, {
+  const [period, setPeriod] = useState<"Monthly" | "Quarterly">("Monthly")
+  const allFilters = useFilters(store)
+  const filterArr = useMemo(() => Object.values(allFilters).flat(), [allFilters])
+  const [territory, setTerritoryFilter] = useFilter(store, "Territory")
+  const storeFilter = useMemo(() => filterArr, [filterArr])
+
+  const wonFilter = useMemo<{ column: string; op: "eq"; values: string[] }[]>(
+    () => [{ column: "Status", op: "eq", values: ["Won"] }],
+    [],
+  )
+  const decidedFilter = useMemo<{ column: string; op: "in"; values: string[] }[]>(
+    () => [{ column: "Status", op: "in", values: ["Won", "Lost"] }],
+    [],
+  )
+
+  const baseWon = useMemo(() => [...wonFilter, ...storeFilter], [wonFilter, storeFilter])
+  const baseDecided = useMemo(() => [...decidedFilter, ...storeFilter], [decidedFilter, storeFilter])
+
+  // ── KPI: Count Won ──────────────────────────
+  const countWon = useAggregation(engine, {
+    table: "v_opportunities",
+    measures: [{ column: "OpportunitySeq", fn: "count", alias: "cnt" }],
+    filters: baseWon,
+  })
+
+  // ── KPI: Close % ──────────────────────────────
+  const countWonForPct = useAggregation(engine, {
+    table: "v_opportunities",
+    measures: [{ column: "OpportunitySeq", fn: "count", alias: "cnt" }],
+    filters: baseDecided,
+  })
+  const countLost = useAggregation(engine, {
+    table: "v_opportunities",
+    measures: [{ column: "OpportunitySeq", fn: "count", alias: "cnt" }],
+    filters: [...baseDecided, { column: "Status", op: "eq", values: ["Lost"] }],
+  })
+
+  const closePct = useMemo(() => {
+    const won = Number(countWonForPct.data?.[0]?.cnt ?? 0)
+    const lost = Number(countLost.data?.[0]?.cnt ?? 0)
+    return won + lost > 0 ? (won / (won + lost)) * 100 : 0
+  }, [countWonForPct.data, countLost.data])
+
+  // ── KPI: Avg Discount ─────────────────────────
+  const avgDiscount = useAggregation(engine, {
+    table: "v_opportunities",
+    measures: [{ column: "Discount", fn: "avg", alias: "avg" }],
+    filters: baseWon,
+  })
+
+  // ── KPI: Revenue Won ──────────────────────────
+  const revenueWon = useAggregation(engine, {
     table: "v_opportunities",
     measures: [{ column: "Value", fn: "sum", alias: "val" }],
-  })
-  const avgDeal = useAggregation(engine, {
-    table: "v_opportunities",
-    measures: [{ column: "Value", fn: "avg", alias: "val" }],
-  })
-  const openPipeline = useAggregation(engine, {
-    table: "v_opportunities",
-    measures: [{ column: "Value", fn: "sum", alias: "val" }],
-    filters: [{ column: "Status", op: "ne", values: ["Closed"] }],
-  })
-  const totalCount = useAggregation(engine, {
-    table: "v_opportunities",
-    measures: [{ column: "Value", fn: "count", alias: "val" }],
+    filters: baseWon,
   })
 
-  const kpiLoad = totalRevenue.loading || avgDeal.loading || openPipeline.loading || totalCount.loading
-  const kpiErr = totalRevenue.error || avgDeal.error || openPipeline.error || totalCount.error
-
-  const totalRev = totalRevenue.data?.[0]?.val as number | undefined
-  const avgVal = avgDeal.data?.[0]?.val as number | undefined
-  const pipeVal = openPipeline.data?.[0]?.val as number | undefined
-  const oppsCount = totalCount.data?.[0]?.val as number | undefined
-
-  /* ────────── Monthly revenue trend (ComposedChart: bars + line) ────────── */
-  const monthlyTrend = useAggregation(engine, {
+  // ── Combo: Monthly Revenue (bars) + Deal Count (line) ───
+  const monthlyData = useAggregation(engine, {
     table: "v_opportunities",
     groupBy: ["CloseDate"],
     measures: [
       { column: "Value", fn: "sum", alias: "revenue" },
-      { column: "Value", fn: "count", alias: "deals" },
+      { column: "OpportunitySeq", fn: "count", alias: "cnt" },
     ],
-    orderBy: [{ column: "CloseDate", dir: "asc" }],
+    filters: baseWon,
   })
 
-  // Aggregate monthly from daily data
-  const trendBuckets: Record<string, { month: string; revenue: number; deals: number }> = {}
-  for (const row of monthlyTrend.data ?? []) {
-    const key = monthLabel(row.CloseDate)
-    if (!key) continue
-    if (!trendBuckets[key]) trendBuckets[key] = { month: key, revenue: 0, deals: 0 }
-    trendBuckets[key].revenue += Number(row.revenue) || 0
-    trendBuckets[key].deals += Number(row.deals) || 0
-  }
-  const trendChart = Object.values(trendBuckets).sort((a, b) => {
-    // Parse months like "Jan 24" → sortable key
-    const da = new Date(a.month)
-    const db = new Date(b.month)
-    return da.getTime() - db.getTime()
-  })
+  const comboChartData = useMemo(() => {
+    if (!monthlyData.data) return []
+    const byPeriod: Record<string, { revenue: number; cnt: number }> = {}
+    monthlyData.data.forEach((r: any) => {
+      const d = new Date(r.CloseDate)
+      const key =
+        period === "Monthly"
+          ? d.toLocaleDateString("en-US", { month: "short", year: "2-digit" })
+          : `Q${Math.ceil((d.getMonth() + 1) / 3)} ${d.getFullYear().toString().slice(-2)}`
+      if (!byPeriod[key]) byPeriod[key] = { revenue: 0, cnt: 0 }
+      byPeriod[key].revenue += Number(r.revenue ?? 0)
+      byPeriod[key].cnt += Number(r.cnt ?? 0)
+    })
+    return Object.entries(byPeriod).map(([period, v]) => ({
+      period,
+      revenue: v.revenue,
+      cnt: v.cnt,
+    }))
+  }, [monthlyData.data, period])
 
-  /* ────────── Revenue by Product LOB ────────── */
-  const byLob = useAggregation(engine, {
+  // ── Line: Revenue by Product LOB over time ───
+  const lobOverTime = useAggregation(engine, {
     table: "v_opportunities",
-    groupBy: ["Product LOB"],
-    measures: [
-      { column: "Value", fn: "sum", alias: "revenue" },
-      { column: "Value", fn: "count", alias: "deals" },
-    ],
-    orderBy: [{ column: "revenue", dir: "desc" }],
+    groupBy: ["Product LOB", "CloseDate"],
+    measures: [{ column: "Value", fn: "sum", alias: "val" }],
+    filters: baseWon,
   })
 
-  /* ────────── Revenue by Territory ────────── */
-  const byTerritory = useAggregation(engine, {
+  const lobLineData = useMemo(() => {
+    if (!lobOverTime.data) return []
+    const byPeriod: Record<string, Record<string, number>> = {}
+    const lobs = new Set<string>()
+    lobOverTime.data.forEach((r: any) => {
+      const lob = r["Product LOB"] ?? "Unknown"
+      lobs.add(lob)
+      const d = new Date(r.CloseDate)
+      const key =
+        period === "Monthly"
+          ? d.toLocaleDateString("en-US", { month: "short", year: "2-digit" })
+          : `Q${Math.ceil((d.getMonth() + 1) / 3)} ${d.getFullYear().toString().slice(-2)}`
+      if (!byPeriod[key]) byPeriod[key] = {}
+      byPeriod[key][lob] = (byPeriod[key][lob] || 0) + Number(r.val ?? 0)
+    })
+    return Object.entries(byPeriod)
+      .map(([period, vals]) => ({ period, ...vals }))
+      .sort((a, b) => {
+        const da = new Date(a.period)
+        const db = new Date(b.period)
+        return da.getTime() - db.getTime()
+      })
+  }, [lobOverTime.data, period])
+
+  const lobKeys = useMemo(() => {
+    if (lobLineData.length === 0) return []
+    return Object.keys(lobLineData[0]).filter((k) => k !== "period")
+  }, [lobLineData])
+
+  // ── Scatter: Revenue vs Close % by Territory ──
+  const scatterWon = useAggregation(engine, {
     table: "v_opportunities",
     groupBy: ["Territory"],
-    measures: [{ column: "Value", fn: "sum", alias: "revenue" }],
-    orderBy: [{ column: "revenue", dir: "desc" }],
-  })
-
-  /* ────────── Revenue by Sales Stage ────────── */
-  const byStage = useAggregation(engine, {
-    table: "v_opportunities",
-    groupBy: ["Sales Stage"],
     measures: [
       { column: "Value", fn: "sum", alias: "revenue" },
-      { column: "Value", fn: "count", alias: "deals" },
+      { column: "OpportunitySeq", fn: "count", alias: "won" },
     ],
-    orderBy: [{ column: "revenue", dir: "desc" }],
+    filters: baseWon,
   })
-
-  /* ────────── Revenue by Region ────────── */
-  const byRegion = useAggregation(engine, {
+  const scatterTotal = useAggregation(engine, {
     table: "v_opportunities",
-    groupBy: ["Region"],
-    measures: [{ column: "Value", fn: "sum", alias: "revenue" }],
-    orderBy: [{ column: "revenue", dir: "desc" }],
+    groupBy: ["Territory"],
+    measures: [{ column: "OpportunitySeq", fn: "count", alias: "total" }],
+    filters: baseDecided,
   })
 
-  /* ────────── Top deals detail ────────── */
-  const topDeals = useAggregation(engine, {
-    table: "v_opportunities",
-    groupBy: ["Account Name", "Product", "Status", "Sales Stage", "CloseDate", "Owner"],
-    measures: [{ column: "Value", fn: "sum", alias: "revenue" }],
-    orderBy: [{ column: "revenue", dir: "desc" }],
-    limit: 20,
-  })
+  const scatterData = useMemo(() => {
+    if (!scatterWon.data || !scatterTotal.data) return []
+    const totalMap: Record<string, number> = {}
+    scatterTotal.data.forEach((r: any) => {
+      totalMap[r.Territory] = Number(r.total ?? 0)
+    })
+    return scatterWon.data.map((r: any) => {
+      const total = totalMap[r.Territory] ?? 0
+      const won = Number(r.won ?? 0)
+      return {
+        territory: r.Territory,
+        revenue: Number(r.revenue ?? 0),
+        closePct: total > 0 ? (won / total) * 100 : 0,
+      }
+    })
+  }, [scatterWon.data, scatterTotal.data])
 
-  /* ══════════════ RENDER ══════════════ */
+  // ── Distinct for territory select ───────────
+  const territories = useDistinctValues(engine, "v_opportunities", "Territory")
+
+  const handleTerritory = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const v = e.target.value
+    setTerritoryFilter(v ? { column: "Territory", op: "eq", values: [v] } : null)
+  }
+
   return (
-    <div className="flex flex-col gap-5 p-5 max-w-[1400px] mx-auto">
-      {/* ───── KPI row ───── */}
-      <div className="grid grid-cols-4 gap-4">
-        <KpiCard
-          label="Total Revenue"
-          value={totalRev !== undefined ? formatCurrency(totalRev) : "—"}
-          loading={kpiLoad}
-          error={kpiErr}
-          color={C[0]}
-        />
-        <KpiCard
-          label="Avg Deal Size"
-          value={avgVal !== undefined ? formatCurrency(avgVal) : "—"}
-          loading={kpiLoad}
-          error={kpiErr}
-          color={C[1]}
-        />
-        <KpiCard
-          label="Open Pipeline"
-          value={pipeVal !== undefined ? formatCompact(pipeVal) : "—"}
-          loading={kpiLoad}
-          error={kpiErr}
-          color={C[2]}
-        />
-        <KpiCard
-          label="Total Opportunities"
-          value={oppsCount !== undefined ? formatCompact(oppsCount) : "—"}
-          loading={kpiLoad}
-          error={kpiErr}
-          color={C[3]}
-        />
+    <div className="grid grid-cols-12 gap-4">
+      {/* ─── Filters ─── */}
+      <div className="col-span-12 flex items-center gap-4 flex-wrap">
+        <span className={sectionLabelClass}>Period</span>
+        {["Monthly", "Quarterly"].map((p) => (
+          <button
+            key={p}
+            onClick={() => setPeriod(p as "Monthly" | "Quarterly")}
+            className={filterChipClass(period === p)}
+          >
+            {p}
+          </button>
+        ))}
+        <span className={`${sectionLabelClass} ml-4`}>Territory</span>
+        <select
+          value={territory?.values?.[0] ?? ""}
+          onChange={handleTerritory}
+          className="px-3 py-1.5 rounded-lg border border-[#E2E8F0] text-sm bg-white text-[#1F2937]"
+        >
+          <option value="">All Territories</option>
+          {territories.data?.map((t: string) => (
+            <option key={t} value={t}>{t}</option>
+          ))}
+        </select>
       </div>
 
-      {/* ───── Monthly Revenue Trend (ComposedChart) ───── */}
-      <Section title="Revenue Trend" subtitle="Monthly revenue (bars) and deal count (line) over time">
-        {monthlyTrend.loading ? (
-          <div className="h-72 bg-gray-100 animate-pulse rounded-lg" />
-        ) : monthlyTrend.error || !trendChart.length ? (
-          <div className="h-72 flex items-center justify-center text-gray-400 text-sm">—</div>
-        ) : (
-          <div className="h-72">
-            <ResponsiveContainer width="100%" height="100%">
-              <ComposedChart data={trendChart} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                <XAxis dataKey="month" tick={{ fontSize: 11 }} />
-                <YAxis yAxisId="left" tick={{ fontSize: 11 }} tickFormatter={dollarTick} />
-                <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11 }} />
-                <Tooltip
-                  formatter={(v: number, name: string) =>
-                    name === "Revenue" ? formatCurrency(v) : formatCompact(v)
-                  }
-                />
-                <Legend />
-                <Bar yAxisId="left" dataKey="revenue" name="Revenue" fill={C[0]} radius={[3, 3, 0, 0]} />
+      {/* ─── KPIs ─── */}
+      <div className="col-span-3">
+        <div className={cardClass}>
+          <div className={kpiLabelClass}>Count Won</div>
+          <div className={kpiValueClass}>{fmtNum(countWon.data?.[0]?.cnt ?? 0)}</div>
+        </div>
+      </div>
+      <div className="col-span-3">
+        <div className={cardClass}>
+          <div className={kpiLabelClass}>Close %</div>
+          <div className={kpiValueClass}>{fmtPct(closePct)}</div>
+        </div>
+      </div>
+      <div className="col-span-3">
+        <div className={cardClass}>
+          <div className={kpiLabelClass}>Avg Discount</div>
+          <div className={kpiValueClass}>{fmtPct(avgDiscount.data?.[0]?.avg ?? 0)}</div>
+        </div>
+      </div>
+      <div className="col-span-3">
+        <div className={cardClass}>
+          <div className={kpiLabelClass}>Revenue Won</div>
+          <div className={kpiValueClass}>{fmtCurrency(revenueWon.data?.[0]?.val ?? 0)}</div>
+        </div>
+      </div>
+
+      {/* ─── Combo: Revenue + Deal Count ─── */}
+      <div className="col-span-6">
+        <div className={cardClass}>
+          <div className={sectionLabelClass}>Revenue & Deal Count ({period.toLowerCase()})</div>
+          <ResponsiveContainer width="100%" height={CHART_HEIGHT.large}>
+            <ComposedChart data={comboChartData} margin={{ left: 8 }}>
+              <CartesianGrid {...gridStyle} />
+              <XAxis dataKey="period" {...axisStyle} />
+              <YAxis yAxisId="left" tickFormatter={currencyTick} {...axisStyle} />
+              <YAxis yAxisId="right" orientation="right" tickFormatter={numTick} {...axisStyle} />
+              <Tooltip content={<CustomTooltip formatter={fmtCurrency} />} />
+              <Legend wrapperStyle={{ fontSize: 11 }} />
+              <Bar yAxisId="left" dataKey="revenue" fill="#0F52BA" radius={[3, 3, 0, 0]} name="Revenue" />
+              <Line yAxisId="right" type="monotone" dataKey="cnt" stroke="#1A7A4A" strokeWidth={2} dot name="Deal Count" />
+            </ComposedChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* ─── Line: Revenue by Product LOB ─── */}
+      <div className="col-span-6">
+        <div className={cardClass}>
+          <div className={sectionLabelClass}>Revenue by Product LOB ({period.toLowerCase()})</div>
+          <ResponsiveContainer width="100%" height={CHART_HEIGHT.large}>
+            <LineChart data={lobLineData} margin={{ left: 8 }}>
+              <CartesianGrid {...gridStyle} />
+              <XAxis dataKey="period" {...axisStyle} />
+              <YAxis tickFormatter={currencyTick} {...axisStyle} />
+              <Tooltip content={<CustomTooltip formatter={fmtCurrency} />} />
+              <Legend wrapperStyle={{ fontSize: 11 }} />
+              {lobKeys.map((lob, i) => (
                 <Line
-                  yAxisId="right"
+                  key={lob}
                   type="monotone"
-                  dataKey="deals"
-                  name="Deals"
-                  stroke={C[2]}
+                  dataKey={lob}
+                  stroke={CHART_COLORS[i % CHART_COLORS.length]}
                   strokeWidth={2}
-                  dot={{ r: 3, fill: C[2] }}
-                  activeDot={{ r: 5 }}
+                  dot={false}
+                  name={lob}
                 />
-              </ComposedChart>
-            </ResponsiveContainer>
-          </div>
-        )}
-      </Section>
-
-      {/* ───── Revenue by Product LOB (combo chart) ───── */}
-      <Section title="Revenue by Product LOB" subtitle="Revenue (bars) vs deal count (line)">
-        {byLob.loading ? (
-          <div className="h-72 bg-gray-100 animate-pulse rounded-lg" />
-        ) : byLob.error || !byLob.data?.length ? (
-          <div className="h-72 flex items-center justify-center text-gray-400 text-sm">—</div>
-        ) : (
-          <div className="h-72">
-            <ResponsiveContainer width="100%" height="100%">
-              <ComposedChart data={byLob.data} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                <XAxis dataKey="Product LOB" tick={{ fontSize: 11 }} />
-                <YAxis yAxisId="left" tick={{ fontSize: 11 }} tickFormatter={dollarTick} />
-                <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11 }} />
-                <Tooltip formatter={(v: number, name: string) =>
-                  name === "revenue" ? formatCurrency(v) : formatCompact(v)
-                } />
-                <Legend />
-                <Bar yAxisId="left" dataKey="revenue" name="Revenue" fill={C[0]} radius={[3, 3, 0, 0]} />
-                <Line yAxisId="right" type="monotone" dataKey="deals" name="Deals" stroke={C[2]} strokeWidth={2} dot={{ r: 3 }} />
-              </ComposedChart>
-            </ResponsiveContainer>
-          </div>
-        )}
-      </Section>
-
-      {/* ───── Revenue by Territory + Region side-by-side ───── */}
-      <div className="grid grid-cols-2 gap-5">
-        <Section title="Revenue by Territory">
-          {byTerritory.loading ? (
-            <div className="h-64 bg-gray-100 animate-pulse rounded-lg" />
-          ) : byTerritory.error || !byTerritory.data?.length ? (
-            <div className="h-64 flex items-center justify-center text-gray-400 text-sm">—</div>
-          ) : (
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <ComposedChart data={byTerritory.data} layout="vertical" margin={{ left: 80 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" horizontal={false} />
-                  <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={dollarTick} />
-                  <YAxis type="category" dataKey="Territory" tick={{ fontSize: 11 }} width={100} />
-                  <Tooltip formatter={(v: number) => formatCurrency(v)} />
-                  <Bar dataKey="revenue" name="Revenue" fill={C[1]} radius={[0, 3, 3, 0]} />
-                </ComposedChart>
-              </ResponsiveContainer>
-            </div>
-          )}
-        </Section>
-
-        <Section title="Revenue by Region">
-          {byRegion.loading ? (
-            <div className="h-64 bg-gray-100 animate-pulse rounded-lg" />
-          ) : byRegion.error || !byRegion.data?.length ? (
-            <div className="h-64 flex items-center justify-center text-gray-400 text-sm">—</div>
-          ) : (
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <ComposedChart data={byRegion.data} layout="vertical" margin={{ left: 60 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" horizontal={false} />
-                  <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={dollarTick} />
-                  <YAxis type="category" dataKey="Region" tick={{ fontSize: 11 }} width={80} />
-                  <Tooltip formatter={(v: number) => formatCurrency(v)} />
-                  <Bar dataKey="revenue" name="Revenue" fill={C[3]} radius={[0, 3, 3, 0]} />
-                </ComposedChart>
-              </ResponsiveContainer>
-            </div>
-          )}
-        </Section>
+              ))}
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
       </div>
 
-      {/* ───── Revenue by Sales Stage ───── */}
-      <Section title="Revenue by Sales Stage" subtitle="Revenue value and deal count by sales stage">
-        {byStage.loading ? (
-          <div className="h-64 bg-gray-100 animate-pulse rounded-lg" />
-        ) : byStage.error || !byStage.data?.length ? (
-          <div className="h-64 flex items-center justify-center text-gray-400 text-sm">—</div>
-        ) : (
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <ComposedChart data={byStage.data} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                <XAxis dataKey="Sales Stage" tick={{ fontSize: 11 }} />
-                <YAxis yAxisId="left" tick={{ fontSize: 11 }} tickFormatter={dollarTick} />
-                <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11 }} />
-                <Tooltip formatter={(v: number, name: string) =>
-                  name === "revenue" ? formatCurrency(v) : formatCompact(v)
-                } />
-                <Legend />
-                <Bar yAxisId="left" dataKey="revenue" name="Revenue" fill={C[1]} radius={[3, 3, 0, 0]} />
-                <Line yAxisId="right" type="monotone" dataKey="deals" name="Deals" stroke={C[3]} strokeWidth={2} dot={{ r: 3 }} />
-              </ComposedChart>
-            </ResponsiveContainer>
-          </div>
-        )}
-      </Section>
-
-      {/* ───── Top Deals Detail Table ───── */}
-      <Section title="Top Opportunities" subtitle="Largest 20 opportunities by value">
-        {topDeals.loading ? (
-          <div className="h-48 bg-gray-100 animate-pulse rounded-lg" />
-        ) : topDeals.error ? (
-          <div className="h-24 flex items-center justify-center text-red-400 text-sm">Error loading data</div>
-        ) : !topDeals.data?.length ? (
-          <div className="h-24 flex items-center justify-center text-gray-400 text-sm">—</div>
-        ) : (
-          <div className="overflow-auto max-h-96 border border-gray-200 rounded-lg">
-            <table className="w-full text-sm">
-              <thead className="bg-gray-50 sticky top-0">
-                <tr>
-                  {["Account Name", "Value", "Product", "Status", "Sales Stage", "Owner", "Close Date"].map((h) => (
-                    <th key={h} className="px-3 py-2 text-left font-medium text-gray-600 text-xs uppercase tracking-wider border-b whitespace-nowrap">
-                      {h}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {topDeals.data.map((row, i) => (
-                  <tr key={i} className="hover:bg-gray-50 border-b border-gray-100 last:border-b-0">
-                    <td className="px-3 py-2 text-gray-700 font-medium">{row["Account Name"] ?? "—"}</td>
-                    <td className="px-3 py-2 text-gray-700 whitespace-nowrap">
-                      {row.revenue != null ? formatCurrency(Number(row.revenue)) : "—"}
-                    </td>
-                    <td className="px-3 py-2 text-gray-600">{row.Product ?? "—"}</td>
-                    <td className="px-3 py-2">
-                      <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${
-                        String(row.Status ?? "").toLowerCase() === "won"
-                          ? "bg-green-100 text-green-700"
-                          : String(row.Status ?? "").toLowerCase() === "lost"
-                          ? "bg-red-100 text-red-700"
-                          : "bg-blue-100 text-blue-700"
-                      }`}>
-                        {row.Status ?? "—"}
-                      </span>
-                    </td>
-                    <td className="px-3 py-2 text-gray-600">{row["Sales Stage"] ?? "—"}</td>
-                    <td className="px-3 py-2 text-gray-600">{row.Owner ?? "—"}</td>
-                    <td className="px-3 py-2 text-gray-500 whitespace-nowrap">
-                      {row.CloseDate ? autoFormat(row.CloseDate, "CloseDate") : "—"}
-                    </td>
-                  </tr>
+      {/* ─── Scatter: Revenue vs Close % by Territory ─── */}
+      <div className="col-span-12">
+        <div className={cardClass}>
+          <div className={sectionLabelClass}>Revenue vs Close % by Territory</div>
+          <ResponsiveContainer width="100%" height={CHART_HEIGHT.scatter}>
+            <ScatterChart margin={{ left: 8 }}>
+              <CartesianGrid {...gridStyle} />
+              <XAxis
+                type="number"
+                dataKey="closePct"
+                tickFormatter={pctTick}
+                domain={[0, 100]}
+                label={{ value: "Close %", position: "bottom", style: { fill: "#9CA3AF", fontSize: 11 } }}
+                {...axisStyle}
+              />
+              <YAxis
+                type="number"
+                dataKey="revenue"
+                tickFormatter={currencyTick}
+                label={{ value: "Revenue", angle: -90, position: "insideLeft", style: { fill: "#9CA3AF", fontSize: 11 } }}
+                {...axisStyle}
+              />
+              <Tooltip
+                cursor={{ strokeDasharray: "3 3" }}
+                content={<CustomTooltip formatter={(v: number, name: string) => (name === "closePct" ? fmtPct(v) : fmtCurrency(v))} />}
+              />
+              <Legend wrapperStyle={{ fontSize: 11 }} />
+              <Scatter data={scatterData} dataKey="revenue" name="Territory">
+                {scatterData.map((_: any, i: number) => (
+                  <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />
                 ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </Section>
+              </Scatter>
+            </ScatterChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
     </div>
   )
 }

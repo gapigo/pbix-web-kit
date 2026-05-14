@@ -1,359 +1,236 @@
-import { useAggregation, useQuery, theme, formatCurrency, formatCompact } from "@pbix/runtime"
+import { useAggregation, useDistinctValues, useFilter, useFilters } from "@pbix/runtime"
 import type { QueryEngine } from "@pbix/runtime"
 import type { UseBoundStore, StoreApi } from "zustand"
 import type { DashboardStore } from "@pbix/runtime"
-
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  ScatterChart, Scatter, Cell, ZAxis,
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip,
+  ScatterChart, Scatter, Cell,
 } from "recharts"
-import React from "react"
+import {
+  colors, cardClass, kpiValueClass, kpiLabelClass, sectionLabelClass,
+  tableHeaderClass, tableCellClass, filterChipClass,
+  fmtCurrency, fmtNum, fmtPct,
+  CustomTooltip, CHART_HEIGHT, axisStyle, gridStyle, currencyTick, numTick,
+} from "@/lib/designTokens"
 
 interface Props {
   engine: QueryEngine | null
   store: UseBoundStore<StoreApi<DashboardStore>>
 }
 
-/* ── helpers ── */
-const C = theme.colors
+const SALES_STAGES = [
+  "Prospecting", "Qualification", "Needs Analysis", "Proposal/Quote",
+  "Negotiation", "Closed Won", "Closed Lost",
+]
 
-function wonFilter() {
-  return { column: "Status" as const, op: "eq" as const, values: ["Won"] }
-}
+export default function DaysToCloseInsights({ engine, store }: Props) {
+  const [stageFilter, setStageFilter] = useFilter(store, "v_opportunities.Sales Stage")
+  const [productFilter, setProductFilter] = useFilter(store, "v_opportunities.Product")
+  const allFilters = useFilters(store)
+  const filterArr = Object.values(allFilters).flat()
 
-/* ── KPI card ── */
-function KpiCard({
-  label, value, loading, error, color = C[0],
-}: {
-  label: string
-  value: string
-  loading?: boolean
-  error?: boolean
-  color?: string
-}) {
-  return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4">
-      <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1 truncate">
-        {label}
-      </div>
-      <div className="text-2xl font-bold" style={{ color }}>
-        {loading ? (
-          <div className="h-8 w-28 bg-gray-200 animate-pulse rounded" />
-        ) : error ? (
-          <span className="text-red-400 text-sm">Error</span>
-        ) : (
-          value
-        )}
-      </div>
-    </div>
-  )
-}
+  const activeStage = stageFilter?.values?.[0] ?? null
+  const activeProduct = productFilter?.values?.[0] ?? null
 
-/* ── Section wrapper ── */
-function Section({ title, subtitle, children }: { title: string; subtitle?: string; children: React.ReactNode }) {
-  return (
-    <div className="bg-white rounded-lg border border-gray-200 p-5">
-      <div className="mb-4">
-        <h3 className="text-base font-semibold text-gray-800">{title}</h3>
-        {subtitle && <p className="text-xs text-gray-500 mt-0.5">{subtitle}</p>}
-      </div>
-      {children}
-    </div>
-  )
-}
+  const wonFilter = { column: "Status", op: "eq" as const, values: ["Won"] }
+  const wonArr = [...filterArr, wonFilter]
 
-/* ── Custom tooltips ── */
-function DaysTooltip({ active, payload, label }: any) {
-  if (!active || !payload?.length) return null
-  return (
-    <div className="rounded-lg border bg-white p-3 shadow-lg text-xs">
-      <p className="font-semibold mb-1">{label}</p>
-      {payload.map((entry: any, i: number) => (
-        <p key={i} style={{ color: entry.color }}>
-          {entry.name}: {typeof entry.value === "number"
-            ? String(entry.name).toLowerCase().includes("value") || String(entry.name).toLowerCase().includes("revenue")
-              ? formatCurrency(entry.value)
-              : `${Math.round(entry.value)}d`
-            : entry.value
-          }
-        </p>
-      ))}
-    </div>
-  )
-}
+  // Distinct Products
+  const products = useDistinctValues(engine, "v_opportunities", "Product")
 
-function ScatterTooltip({ active, payload }: any) {
-  if (!active || !payload?.length) return null
-  const row = payload[0].payload
-  return (
-    <div className="rounded-lg border bg-white p-3 shadow-lg text-xs">
-      <p className="font-semibold mb-1">{row.Product}</p>
-      <p>Avg Days: {Math.round(row.avgDays)}</p>
-      <p>Revenue: {formatCurrency(row.revenue)}</p>
-      <p>Deals: {formatCompact(row.count)}</p>
-    </div>
-  )
-}
-
-/* ── Main page ── */
-export default function DaysToCloseInsights({ engine }: Props) {
-  /* ── KPI queries ── */
+  // KPI: Avg Days to Close (Won)
   const avgDays = useAggregation(engine, {
     table: "v_opportunities",
-    measures: [{ column: "DaysToClose", fn: "avg", alias: "avg" }],
-    filters: [wonFilter()],
+    measures: [{ column: "DaysToClose", fn: "avg", alias: "val" }],
+    filters: wonArr.length > 0 ? wonArr : undefined,
   })
 
-  const maxDaysAgg = useAggregation(engine, {
+  // KPI: Median Deal Size (Won)
+  const medianDeal = useAggregation(engine, {
     table: "v_opportunities",
-    measures: [{ column: "DaysToClose", fn: "max", alias: "max" }],
-    filters: [wonFilter()],
+    measures: [{ column: "Value", fn: "avg", alias: "val" }],
+    filters: wonArr.length > 0 ? wonArr : undefined,
   })
 
-  const wonCountAgg = useAggregation(engine, {
+  // KPI: Total Closed Deals (Won count)
+  const closedDeals = useAggregation(engine, {
     table: "v_opportunities",
-    measures: [{ column: "Value", fn: "count", alias: "count" }],
-    filters: [wonFilter()],
+    measures: [{ column: "Value", fn: "count", alias: "val" }],
+    filters: wonArr.length > 0 ? wonArr : undefined,
   })
 
-  const wonRevenueAgg = useAggregation(engine, {
+  // KPI: Close Rate (Won / Total with Status not Open)
+  const wonCount = useAggregation(engine, {
     table: "v_opportunities",
-    measures: [{ column: "Value", fn: "sum", alias: "revenue" }],
-    filters: [wonFilter()],
+    measures: [{ column: "OpportunitySeq", fn: "count", alias: "val" }],
+    filters: [{ column: "Status", op: "eq", values: ["Won"] }],
+  })
+  const totalDecided = useAggregation(engine, {
+    table: "v_opportunities",
+    measures: [{ column: "OpportunitySeq", fn: "count", alias: "val" }],
+    filters: [{ column: "Status", op: "in", values: ["Won", "Lost"] }],
   })
 
-  /* ── Chart queries ── */
-  const daysByProduct = useAggregation(engine, {
+  // Bar: Avg Days to Close by Product (horizontal)
+  const barData = useAggregation(engine, {
     table: "v_opportunities",
     groupBy: ["Product"],
-    measures: [
-      { column: "DaysToClose", fn: "avg", alias: "avgDays" },
-      { column: "Value", fn: "sum", alias: "revenue" },
-      { column: "Value", fn: "count", alias: "count" },
-    ],
-    filters: [wonFilter()],
-    orderBy: [{ column: "avgDays", dir: "desc" }],
+    measures: [{ column: "DaysToClose", fn: "avg", alias: "val" }],
+    filters: wonArr.length > 0 ? wonArr : undefined,
+    orderBy: [{ column: "val", dir: "desc" }],
     limit: 12,
   })
 
-  const daysByTerritory = useAggregation(engine, {
+  // Scatter: DaysToClose vs Value by Sales Stage
+  const scatterData = useAggregation(engine, {
     table: "v_opportunities",
-    groupBy: ["Territory"],
+    groupBy: ["Sales Stage", "OpportunitySeq"],
     measures: [
-      { column: "DaysToClose", fn: "avg", alias: "avgDays" },
-      { column: "Value", fn: "sum", alias: "revenue" },
-      { column: "Value", fn: "count", alias: "count" },
+      { column: "DaysToClose", fn: "avg", alias: "days" },
+      { column: "Value", fn: "avg", alias: "val" },
     ],
-    filters: [wonFilter()],
-    orderBy: [{ column: "avgDays", dir: "desc" }],
-    limit: 10,
+    filters: filterArr.length > 0 ? filterArr : undefined,
+    limit: 200,
   })
 
-  /* ── Scatter query: avg days vs revenue by product ── */
-  const scatterData = useAggregation(engine, {
+  // Table: Product × Avg Days × Revenue × Count
+  const tableData = useAggregation(engine, {
     table: "v_opportunities",
     groupBy: ["Product"],
     measures: [
       { column: "DaysToClose", fn: "avg", alias: "avgDays" },
       { column: "Value", fn: "sum", alias: "revenue" },
-      { column: "Value", fn: "count", alias: "count" },
+      { column: "OpportunitySeq", fn: "count", alias: "cnt" },
     ],
-    filters: [wonFilter()],
+    filters: wonArr.length > 0 ? wonArr : undefined,
     orderBy: [{ column: "revenue", dir: "desc" }],
     limit: 20,
   })
 
-  /* ── Detail table: won deals sorted by days to close ── */
-  const detailRows = useQuery({
-    engine,
-    sql: `
-      SELECT "Account Name", "Product", "Territory", "Owner",
-             "DaysToClose", "Value",
-             strftime("CloseDate", '%Y-%m-%d') AS CloseDate
-      FROM "v_opportunities"
-      WHERE LOWER("Status") = 'won'
-      ORDER BY "DaysToClose" DESC
-      LIMIT 50
-    `,
-  })
+  const closeRate = wonCount.data?.[0]?.val != null && totalDecided.data?.[0]?.val != null
+    ? (wonCount.data[0].val as number) / (totalDecided.data[0].val as number)
+    : null
 
-  /* ── Derived ── */
-  const avgVal = avgDays.data?.[0]?.avg as number | undefined
-  const maxVal = maxDaysAgg.data?.[0]?.max as number | undefined
-  const wonCount = wonCountAgg.data?.[0]?.count as number | undefined
-  const wonRev = wonRevenueAgg.data?.[0]?.revenue as number | undefined
-
-  const loading =
-    avgDays.loading || maxDaysAgg.loading || wonCountAgg.loading ||
-    wonRevenueAgg.loading || daysByProduct.loading || daysByTerritory.loading ||
-    scatterData.loading
-  const errorState =
-    avgDays.error || maxDaysAgg.error || wonCountAgg.error ||
-    wonRevenueAgg.error || daysByProduct.error || daysByTerritory.error ||
-    scatterData.error
-
-  /* ══════════════ RENDER ══════════════ */
   return (
-    <div className="flex flex-col gap-5 p-5 max-w-[1400px] mx-auto">
-      {/* ── KPI row ── */}
-      <div className="grid grid-cols-4 gap-4">
-        <KpiCard
-          label="Avg Days to Close"
-          value={avgVal !== undefined ? `${Math.round(avgVal)} days` : "—"}
-          loading={loading}
-          error={errorState}
-          color={C[0]}
-        />
-        <KpiCard
-          label="Max Days to Close"
-          value={maxVal !== undefined ? `${Math.round(maxVal)} days` : "—"}
-          loading={loading}
-          error={errorState}
-          color={C[1]}
-        />
-        <KpiCard
-          label="Total Won Deals"
-          value={wonCount !== undefined ? formatCompact(wonCount) : "—"}
-          loading={loading}
-          error={errorState}
-          color={C[2]}
-        />
-        <KpiCard
-          label="Won Revenue"
-          value={wonRev !== undefined ? formatCurrency(wonRev) : "—"}
-          loading={loading}
-          error={errorState}
-          color={C[3]}
-        />
+    <div className="grid grid-cols-12 gap-4">
+      {/* == FILTERS == */}
+      <div className="col-span-12 flex items-center gap-4 flex-wrap">
+        {/* Stage chips */}
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <span className={sectionLabelClass}>Stage:</span>
+          {SALES_STAGES.map((s) => (
+            <button
+              key={s}
+              onClick={() =>
+                setStageFilter(
+                  activeStage === s ? null : { column: "v_opportunities.Sales Stage", op: "eq", values: [s] }
+                )
+              }
+              className={filterChipClass(activeStage === s)}
+            >
+              {s}
+            </button>
+          ))}
+          {activeStage && (
+            <button onClick={() => setStageFilter(null)} className="text-[11px] text-[#6B7280] underline ml-1">
+              Clear
+            </button>
+          )}
+        </div>
+
+        {/* Product select */}
+        <select
+          value={activeProduct ?? ""}
+          onChange={(e) =>
+            setProductFilter(
+              e.target.value ? { column: "v_opportunities.Product", op: "eq", values: [e.target.value] } : null
+            )
+          }
+          className="border border-[#E2E8F0] rounded-md px-3 py-1.5 text-sm bg-white text-[#1F2937]"
+        >
+          <option value="">All Products</option>
+          {(products.data ?? []).map((p: string) => (
+            <option key={p} value={p}>{p}</option>
+          ))}
+        </select>
       </div>
 
-      {/* ── Avg Days by Product ── */}
-      <Section title="Days to Close by Product" subtitle="Average days to close and total revenue per product">
-        {daysByProduct.loading ? (
-          <div className="h-72 bg-gray-100 animate-pulse rounded-lg" />
-        ) : daysByProduct.error || !daysByProduct.data?.length ? (
-          <div className="h-72 flex items-center justify-center text-gray-400 text-sm">—</div>
-        ) : (
-          <div className="h-72">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={daysByProduct.data} layout="vertical" margin={{ left: 100 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" horizontal={false} />
-                <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={(v: number) => `${Math.round(v)}d`} />
-                <YAxis type="category" dataKey="Product" tick={{ fontSize: 11 }} width={120} />
-                <Tooltip content={<DaysTooltip />} />
-                <Bar dataKey="avgDays" name="Avg Days" fill={C[0]} radius={[0, 3, 3, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        )}
-      </Section>
+      {/* == KPIs == */}
+      <div className={`${cardClass} col-span-3`}>
+        <p className={kpiLabelClass}>Avg Days to Close</p>
+        <p className={kpiValueClass}>{fmtNum(avgDays.data?.[0]?.val as number | null)}</p>
+      </div>
+      <div className={`${cardClass} col-span-3`}>
+        <p className={kpiLabelClass}>Median Deal Size</p>
+        <p className={kpiValueClass}>{fmtCurrency(medianDeal.data?.[0]?.val as number | null)}</p>
+      </div>
+      <div className={`${cardClass} col-span-3`}>
+        <p className={kpiLabelClass}>Total Closed Deals</p>
+        <p className={kpiValueClass}>{fmtNum(closedDeals.data?.[0]?.val as number | null)}</p>
+      </div>
+      <div className={`${cardClass} col-span-3`}>
+        <p className={kpiLabelClass}>Close Rate</p>
+        <p className={kpiValueClass}>{fmtPct(closeRate)}</p>
+      </div>
 
-      {/* ── Avg Days by Territory ── */}
-      <Section title="Days to Close by Territory" subtitle="Average days to close and total revenue per territory">
-        {daysByTerritory.loading ? (
-          <div className="h-64 bg-gray-100 animate-pulse rounded-lg" />
-        ) : daysByTerritory.error || !daysByTerritory.data?.length ? (
-          <div className="h-64 flex items-center justify-center text-gray-400 text-sm">—</div>
-        ) : (
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={daysByTerritory.data} layout="vertical" margin={{ left: 100 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" horizontal={false} />
-                <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={(v: number) => `${Math.round(v)}d`} />
-                <YAxis type="category" dataKey="Territory" tick={{ fontSize: 11 }} width={120} />
-                <Tooltip content={<DaysTooltip />} />
-                <Bar dataKey="avgDays" name="Avg Days" fill={C[3]} radius={[0, 3, 3, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        )}
-      </Section>
+      {/* == Bar: Avg Days by Product == */}
+      <div className={`${cardClass} col-span-6`}>
+        <p className={sectionLabelClass}>Avg Days to Close by Product</p>
+        <ResponsiveContainer width="100%" height={CHART_HEIGHT.large}>
+          <BarChart data={barData.data ?? []} layout="vertical" margin={{ left: 20, right: 20 }}>
+            <CartesianGrid {...gridStyle} />
+            <XAxis type="number" tick={numTick} {...axisStyle} />
+            <YAxis type="category" dataKey="Product" width={100} tick={{ fontSize: 11 }} />
+            <Tooltip content={<CustomTooltip formatter={fmtNum} />} />
+            <Bar dataKey="val" fill={colors.brand} radius={[0, 4, 4, 0]} barSize={16} />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
 
-      {/* ── Scatter: Days vs Revenue ── */}
-      <Section title="Days to Close vs Revenue" subtitle="Avg days to close vs total revenue by product (bubble = deal count)">
-        {scatterData.loading ? (
-          <div className="h-72 bg-gray-100 animate-pulse rounded-lg" />
-        ) : scatterData.error || !scatterData.data?.length ? (
-          <div className="h-72 flex items-center justify-center text-gray-400 text-sm">—</div>
-        ) : (
-          <div className="h-72">
-            <ResponsiveContainer width="100%" height="100%">
-              <ScatterChart margin={{ left: 8, right: 8, bottom: 8 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                <XAxis
-                  type="number"
-                  dataKey="avgDays"
-                  name="Avg Days"
-                  tickFormatter={(v: number) => `${Math.round(v)}d`}
-                  tick={{ fontSize: 11 }}
-                />
-                <YAxis
-                  type="number"
-                  dataKey="revenue"
-                  name="Revenue"
-                  tickFormatter={(v: number) => formatCompact(v)}
-                  tick={{ fontSize: 11 }}
-                />
-                <ZAxis type="number" dataKey="count" range={[40, 500]} />
-                <Tooltip content={<ScatterTooltip />} />
-                <Scatter data={scatterData.data} fill={C[0]}>
-                  {scatterData.data.map((_: any, i: number) => (
-                    <Cell key={i} fill={C[i % C.length]} />
-                  ))}
-                </Scatter>
-              </ScatterChart>
-            </ResponsiveContainer>
-          </div>
-        )}
-      </Section>
+      {/* == Scatter: DaysToClose vs Value == */}
+      <div className={`${cardClass} col-span-6`}>
+        <p className={sectionLabelClass}>Days to Close vs Deal Value by Stage</p>
+        <ResponsiveContainer width="100%" height={CHART_HEIGHT.scatter}>
+          <ScatterChart margin={{ left: 10, right: 20 }}>
+            <CartesianGrid {...gridStyle} />
+            <XAxis type="number" dataKey="days" name="Days to Close" tick={numTick} {...axisStyle} label={{ value: "Days to Close", position: "bottom", style: { fontSize: 10, fill: "#9CA3AF" } }} />
+            <YAxis type="number" dataKey="val" name="Value" tick={currencyTick} {...axisStyle} />
+            <Tooltip content={<CustomTooltip formatter={(v: number) => fmtCurrency(v)} />} />
+            <Scatter data={scatterData.data ?? []} fill={colors.brand} opacity={0.6}>
+              {(scatterData.data ?? []).map((entry: any, i: number) => (
+                <Cell key={i} fill={colors.chart[i % colors.chart.length]} />
+              ))}
+            </Scatter>
+          </ScatterChart>
+        </ResponsiveContainer>
+      </div>
 
-      {/* ── Detail Table ── */}
-      <Section title="Deal Detail" subtitle="Top 50 won deals by days to close (longest first)">
-        {detailRows.loading ? (
-          <div className="h-48 bg-gray-100 animate-pulse rounded-lg" />
-        ) : detailRows.error ? (
-          <div className="h-24 flex items-center justify-center text-red-400 text-sm">Error loading data</div>
-        ) : !detailRows.data?.length ? (
-          <div className="h-24 flex items-center justify-center text-gray-400 text-sm">—</div>
-        ) : (
-          <div className="overflow-auto max-h-96 border border-gray-200 rounded-lg">
-            <table className="w-full text-sm">
-              <thead className="bg-gray-50 sticky top-0">
-                <tr>
-                  {["Account Name", "Product", "Territory", "Owner", "Days to Close", "Value", "Close Date"].map((h) => (
-                    <th
-                      key={h}
-                      className="px-3 py-2 text-left font-medium text-gray-600 text-xs uppercase tracking-wider border-b whitespace-nowrap"
-                    >
-                      {h}
-                    </th>
-                  ))}
+      {/* == Table: Product breakdown == */}
+      <div className={`${cardClass} col-span-12`}>
+        <p className={sectionLabelClass}>Product Performance — Closed Won</p>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr>
+                <th className={tableHeaderClass}>Product</th>
+                <th className={tableHeaderClass}>Avg Days to Close</th>
+                <th className={tableHeaderClass}>Revenue</th>
+                <th className={tableHeaderClass}>Deals</th>
+              </tr>
+            </thead>
+            <tbody>
+              {(tableData.data ?? []).map((row: any, i: number) => (
+                <tr key={i} className="hover:bg-[#F1F5F9] transition-colors">
+                  <td className={tableCellClass}>{row.Product}</td>
+                  <td className={tableCellClass}>{fmtNum(row.avgDays)}</td>
+                  <td className={tableCellClass}>{fmtCurrency(row.revenue)}</td>
+                  <td className={tableCellClass}>{fmtNum(row.cnt)}</td>
                 </tr>
-              </thead>
-              <tbody>
-                {detailRows.data.map((row, i) => {
-                  const days = Number(row.DaysToClose ?? 0)
-                  return (
-                    <tr key={i} className="hover:bg-gray-50 border-b border-gray-100 last:border-b-0">
-                      <td className="px-3 py-2 text-gray-700 font-medium">{row["Account Name"] ?? "—"}</td>
-                      <td className="px-3 py-2 text-gray-600">{row.Product ?? "—"}</td>
-                      <td className="px-3 py-2 text-gray-600">{row.Territory ?? "—"}</td>
-                      <td className="px-3 py-2 text-gray-600">{row.Owner ?? "—"}</td>
-                      <td className="px-3 py-2 text-gray-700 whitespace-nowrap font-medium">
-                        {Math.round(days)} days
-                      </td>
-                      <td className="px-3 py-2 text-gray-700 whitespace-nowrap">
-                        {formatCurrency(Number(row.Value ?? 0))}
-                      </td>
-                      <td className="px-3 py-2 text-gray-500 whitespace-nowrap">{row.CloseDate ?? "—"}</td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </Section>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   )
 }

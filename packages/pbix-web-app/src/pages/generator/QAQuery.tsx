@@ -1,382 +1,267 @@
-import { useAggregation, useQuery, theme, formatCurrency, formatCompact, formatPercent } from "@pbix/runtime"
+import { useState, useMemo } from "react"
+import { useAggregation, useDistinctValues } from "@pbix/runtime"
 import type { QueryEngine } from "@pbix/runtime"
 import type { UseBoundStore, StoreApi } from "zustand"
 import type { DashboardStore } from "@pbix/runtime"
-
+import type { Filter } from "@pbix/runtime"
 import {
-  BarChart, Bar, LineChart, Line, PieChart, Pie, Cell,
-  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
-} from "recharts"
-import React, { useState } from "react"
+  cardClass, kpiValueClass, kpiLabelClass, sectionLabelClass,
+  tableHeaderClass, tableCellClass,
+  fmtCurrency, fmtNum, fmtPct,
+  colors,
+} from "@/lib/designTokens"
 
 interface Props {
   engine: QueryEngine | null
   store: UseBoundStore<StoreApi<DashboardStore>>
 }
 
-/* ── helpers ── */
-const C = theme.colors
-type ChartDim = "Product" | "Territory" | "Industry" | "Region" | "Product LOB"
+/** Build a store-style Filter from column + value, or null to clear. */
+function makeFilter(column: string, value: string | null): Filter | null {
+  return value ? { column, op: "eq" as const, values: [value] } : null
+}
 
-const DIMENSIONS: { key: ChartDim; label: string }[] = [
-  { key: "Product", label: "Product" },
-  { key: "Territory", label: "Territory" },
-  { key: "Industry", label: "Industry" },
-  { key: "Region", label: "Region" },
-  { key: "Product LOB", label: "Product LOB" },
-]
+export default function QAQuery({ engine }: Props) {
+  // Local cascading filter state — NOT from zustand store
+  const [territory, setTerritory] = useState<string | null>(null)
+  const [industry, setIndustry] = useState<string | null>(null)
+  const [product, setProduct] = useState<string | null>(null)
+  const [stage, setStage] = useState<string | null>(null)
 
-const CHART_TYPES = ["bar", "pie", "line"] as const
-type ChartType = (typeof CHART_TYPES)[number]
+  // Build filter array from local state
+  const localFilters = useMemo<Filter[]>(() => {
+    const f: Filter[] = []
+    const t = makeFilter("Territory", territory)
+    const ind = makeFilter("Industry", industry)
+    const p = makeFilter("Product", product)
+    const s = makeFilter("Sales Stage", stage)
+    if (t) f.push(t)
+    if (ind) f.push(ind)
+    if (p) f.push(p)
+    if (s) f.push(s)
+    return f
+  }, [territory, industry, product, stage])
 
-/* ── KPI card ── */
-function KpiCard({
-  label, value, loading, error, color = C[0],
-}: {
-  label: string
-  value: string
-  loading?: boolean
-  error?: boolean
-  color?: string
-}) {
-  return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4">
-      <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1 truncate">
-        {label}
-      </div>
-      <div className="text-2xl font-bold" style={{ color }}>
-        {loading ? (
-          <div className="h-8 w-28 bg-gray-200 animate-pulse rounded" />
-        ) : error ? (
-          <span className="text-red-400 text-sm">Error</span>
-        ) : (
-          value
-        )}
-      </div>
-    </div>
+  const filterArr = localFilters.length > 0 ? localFilters : undefined
+
+  // Cascade: Territory (root)
+  const territories = useDistinctValues(engine, "v_opportunities", "Territory")
+
+  // Cascade: Industry filtered by Territory
+  const industries = useDistinctValues(
+    engine, "v_opportunities", "Industry",
+    territory ? [{ column: "Territory", op: "eq", values: [territory] }] : undefined,
   )
-}
 
-/* ── Chart wrapper ── */
-function Section({ title, subtitle, children }: { title: string; subtitle?: string; children: React.ReactNode }) {
-  return (
-    <div className="bg-white rounded-lg border border-gray-200 p-5">
-      <div className="mb-4">
-        <h3 className="text-base font-semibold text-gray-800">{title}</h3>
-        {subtitle && <p className="text-xs text-gray-500 mt-0.5">{subtitle}</p>}
-      </div>
-      {children}
-    </div>
+  // Cascade: Product filtered by Territory + Industry
+  const products = useDistinctValues(
+    engine, "v_opportunities", "Product",
+    localFilters.filter((f) => f.column !== "Product" && f.column !== "Sales Stage").length > 0
+      ? localFilters.filter((f) => f.column !== "Product" && f.column !== "Sales Stage")
+      : undefined,
   )
-}
 
-/* ── Dollar tick formatter ── */
-function dollarTick(value: number) {
-  if (value >= 1_000_000) return `$${(value / 1_000_000).toFixed(0)}M`
-  if (value >= 1_000) return `$${(value / 1_000).toFixed(0)}K`
-  return `$${value}`
-}
+  // Cascade: Sales Stage filtered by Territory + Industry + Product
+  const stages = useDistinctValues(
+    engine, "v_opportunities", "Sales Stage",
+    localFilters.filter((f) => f.column !== "Sales Stage").length > 0
+      ? localFilters.filter((f) => f.column !== "Sales Stage")
+      : undefined,
+  )
 
-/* ══════════════ PAGE ══════════════ */
-export default function QAQuery({ engine, store }: Props) {
-  // ── Chart dimension & type toggles ──
-  const [dim, setDim] = useState<ChartDim>("Product")
-  const [chartType, setChartType] = useState<ChartType>("bar")
-
-  /* ────────── KPI queries ────────── */
+  // Dynamic KPIs
   const totalRevenue = useAggregation(engine, {
     table: "v_opportunities",
     measures: [{ column: "Value", fn: "sum", alias: "val" }],
+    filters: filterArr,
   })
-  const avgDeal = useAggregation(engine, {
+
+  const totalDeals = useAggregation(engine, {
+    table: "v_opportunities",
+    measures: [{ column: "OpportunitySeq", fn: "count", alias: "val" }],
+    filters: filterArr,
+  })
+
+  const avgDealSize = useAggregation(engine, {
     table: "v_opportunities",
     measures: [{ column: "Value", fn: "avg", alias: "val" }],
+    filters: filterArr,
   })
-  const dealCount = useAggregation(engine, {
+
+  const avgDiscount = useAggregation(engine, {
     table: "v_opportunities",
-    measures: [{ column: "Value", fn: "count", alias: "val" }],
-  })
-  const winRateData = useQuery({
-    engine,
-    sql: `
-      SELECT
-        COUNT(*) AS total,
-        COUNT(CASE WHEN LOWER(Status) = 'won' THEN 1 END) AS won
-      FROM v_opportunities
-    `,
+    measures: [{ column: "Discount", fn: "avg", alias: "val" }],
+    filters: filterArr,
   })
 
-  const kpiLoad = totalRevenue.loading || avgDeal.loading || dealCount.loading || winRateData.loading
-  const kpiErr = totalRevenue.error || avgDeal.error || dealCount.error || winRateData.error
-
-  const totalRev = totalRevenue.data?.[0]?.val as number | undefined
-  const avgVal = avgDeal.data?.[0]?.val as number | undefined
-  const totalDeals = dealCount.data?.[0]?.val as number | undefined
-  const totalOpps = winRateData.data?.[0]?.total as number | undefined
-  const wonOpps = winRateData.data?.[0]?.won as number | undefined
-  const winRate = totalOpps && wonOpps != null ? wonOpps / totalOpps : undefined
-
-  /* ────────── Exploratory chart query ────────── */
-  const chartQuery = useAggregation(engine, {
+  const maxDiscount = useAggregation(engine, {
     table: "v_opportunities",
-    groupBy: [dim],
+    measures: [{ column: "Discount", fn: "max", alias: "val" }],
+    filters: filterArr,
+  })
+
+  // Table data — real-time filtered
+  const tableData = useAggregation(engine, {
+    table: "v_opportunities",
+    groupBy: ["Product", "Sales Stage", "Territory"],
     measures: [
       { column: "Value", fn: "sum", alias: "revenue" },
-      { column: "Value", fn: "count", alias: "deals" },
+      { column: "OpportunitySeq", fn: "count", alias: "cnt" },
     ],
+    filters: filterArr,
     orderBy: [{ column: "revenue", dir: "desc" }],
-    limit: 15,
+    limit: 100,
   })
 
-  /* ────────── Large detail table ────────── */
-  const detailData = useQuery({
-    engine,
-    sql: `
-      SELECT
-        "Account Name", "Value", "Status", "Product", "Product LOB",
-        "Territory", "Region", "Owner", "Manager", "Industry",
-        strftime("CloseDate", '%Y-%m-%d') AS CloseDate,
-        "Sales Stage", "Discount", "DaysToClose"
-      FROM v_opportunities
-      ORDER BY "Value" DESC
-      LIMIT 100
-    `,
-  })
-
-  const DETAIL_COLS = [
-    { key: "Account Name", label: "Account" },
-    { key: "Value", label: "Value", fmt: (v: any) => formatCurrency(Number(v)) },
-    { key: "Status", label: "Status" },
-    { key: "Product", label: "Product" },
-    { key: "Territory", label: "Territory" },
-    { key: "Region", label: "Region" },
-    { key: "Industry", label: "Industry" },
-    { key: "Sales Stage", label: "Sales Stage" },
-    { key: "Owner", label: "Owner" },
-    { key: "Discount", label: "Discount", fmt: (v: any) => formatPercent(v) },
-    { key: "DaysToClose", label: "Days to Close" },
-    { key: "CloseDate", label: "Close Date" },
-  ]
-
-  /* ────────── Render chart by type ────────── */
-  function renderChart() {
-    if (chartQuery.loading) {
-      return <div className="h-72 bg-gray-100 animate-pulse rounded-lg" />
-    }
-    if (chartQuery.error || !chartQuery.data?.length) {
-      return <div className="h-72 flex items-center justify-center text-gray-400 text-sm">—</div>
-    }
-
-    const data = chartQuery.data
-    const labelKey = dim
-
-    if (chartType === "pie") {
-      return (
-        <div className="h-72 flex items-center justify-center">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={data}
-                dataKey="revenue"
-                nameKey={labelKey}
-                cx="50%"
-                cy="50%"
-                outerRadius={100}
-                label={({ [labelKey]: name, revenue }: any) => `${name}`}
-                labelLine
-              >
-                {data.map((_: any, i: number) => (
-                  <Cell key={i} fill={C[i % C.length]} />
-                ))}
-              </Pie>
-              <Tooltip formatter={(v: number) => formatCurrency(v)} />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-      )
-    }
-
-    if (chartType === "line") {
-      return (
-        <div className="h-72">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={data} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-              <XAxis dataKey={labelKey} tick={{ fontSize: 11 }} />
-              <YAxis tick={{ fontSize: 11 }} tickFormatter={dollarTick} />
-              <Tooltip formatter={(v: number) => formatCurrency(v)} labelStyle={{ fontWeight: 600 }} />
-              <Legend />
-              <Line
-                type="monotone"
-                dataKey="revenue"
-                name="Revenue"
-                stroke={C[0]}
-                strokeWidth={2.5}
-                dot={{ r: 3, fill: C[0] }}
-                activeDot={{ r: 6 }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      )
-    }
-
-    // default: bar chart (horizontal)
-    return (
-      <div className="h-72">
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} layout="vertical" margin={{ left: 80, right: 16, top: 4, bottom: 4 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" horizontal={false} />
-            <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={dollarTick} />
-            <YAxis type="category" dataKey={labelKey} tick={{ fontSize: 11 }} width={120} />
-            <Tooltip formatter={(v: number) => formatCurrency(v)} />
-            <Bar dataKey="revenue" name="Revenue" fill={C[0]} radius={[0, 3, 3, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-    )
-  }
-
-  /* ══════════════ RENDER ══════════════ */
   return (
-    <div className="flex flex-col gap-5 p-5 max-w-[1400px] mx-auto">
-      {/* ───── KPI row ───── */}
-      <div className="grid grid-cols-4 gap-4">
-        <KpiCard
-          label="Total Revenue"
-          value={totalRev !== undefined ? formatCurrency(totalRev) : "—"}
-          loading={kpiLoad}
-          error={kpiErr}
-          color={C[0]}
-        />
-        <KpiCard
-          label="Avg Deal Size"
-          value={avgVal !== undefined ? formatCurrency(avgVal) : "—"}
-          loading={kpiLoad}
-          error={kpiErr}
-          color={C[1]}
-        />
-        <KpiCard
-          label="Total Deals"
-          value={totalDeals !== undefined ? formatCompact(totalDeals) : "—"}
-          loading={kpiLoad}
-          error={kpiErr}
-          color={C[2]}
-        />
-        <KpiCard
-          label="Win Rate"
-          value={winRate !== undefined ? `${(winRate * 100).toFixed(1)}%` : "—"}
-          loading={kpiLoad}
-          error={kpiErr}
-          color={C[3]}
-        />
+    <div className="grid grid-cols-12 gap-4">
+      {/* == Cascading Filter Row == */}
+      <div className="col-span-12 flex items-center gap-4 flex-wrap bg-white rounded-lg border border-[#E2E8F0] p-4 shadow-sm">
+        <div>
+          <label className="text-[11px] font-semibold uppercase tracking-[0.06em] text-[#6B7280] block mb-1">
+            Territory
+          </label>
+          <select
+            value={territory ?? ""}
+            onChange={(e) => {
+              setTerritory(e.target.value || null)
+              setIndustry(null)
+              setProduct(null)
+              setStage(null)
+            }}
+            className="border border-[#E2E8F0] rounded-md px-3 py-1.5 text-sm bg-white text-[#1F2937] w-40"
+          >
+            <option value="">All Territories</option>
+            {(territories.data ?? []).map((t: string) => (
+              <option key={t} value={t}>{t}</option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="text-[11px] font-semibold uppercase tracking-[0.06em] text-[#6B7280] block mb-1">
+            Industry
+          </label>
+          <select
+            value={industry ?? ""}
+            onChange={(e) => {
+              setIndustry(e.target.value || null)
+              setProduct(null)
+              setStage(null)
+            }}
+            className="border border-[#E2E8F0] rounded-md px-3 py-1.5 text-sm bg-white text-[#1F2937] w-40"
+          >
+            <option value="">All Industries</option>
+            {(industries.data ?? []).map((ind: string) => (
+              <option key={ind} value={ind}>{ind}</option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="text-[11px] font-semibold uppercase tracking-[0.06em] text-[#6B7280] block mb-1">
+            Product
+          </label>
+          <select
+            value={product ?? ""}
+            onChange={(e) => {
+              setProduct(e.target.value || null)
+              setStage(null)
+            }}
+            className="border border-[#E2E8F0] rounded-md px-3 py-1.5 text-sm bg-white text-[#1F2937] w-40"
+          >
+            <option value="">All Products</option>
+            {(products.data ?? []).map((p: string) => (
+              <option key={p} value={p}>{p}</option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="text-[11px] font-semibold uppercase tracking-[0.06em] text-[#6B7280] block mb-1">
+            Sales Stage
+          </label>
+          <select
+            value={stage ?? ""}
+            onChange={(e) => setStage(e.target.value || null)}
+            className="border border-[#E2E8F0] rounded-md px-3 py-1.5 text-sm bg-white text-[#1F2937] w-40"
+          >
+            <option value="">All Stages</option>
+            {(stages.data ?? []).map((s: string) => (
+              <option key={s} value={s}>{s}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Clear all */}
+        {(territory || industry || product || stage) && (
+          <button
+            onClick={() => { setTerritory(null); setIndustry(null); setProduct(null); setStage(null) }}
+            className="self-end text-[11px] text-[#B91C1C] underline hover:no-underline pb-1.5"
+          >
+            Clear all
+          </button>
+        )}
       </div>
 
-      {/* ───── Exploratory chart with toggles ───── */}
-      <Section title="Explore Data" subtitle={`Revenue by ${dim}`}>
-        {/* Dimension toggle */}
-        <div className="flex flex-wrap gap-2 mb-4">
-          <span className="text-xs font-medium text-gray-500 self-center mr-1">Group by:</span>
-          {DIMENSIONS.map((d) => (
-            <button
-              key={d.key}
-              onClick={() => setDim(d.key)}
-              className={`px-3 py-1 text-xs font-medium rounded-full border transition-colors ${
-                dim === d.key
-                  ? "bg-blue-600 text-white border-blue-600"
-                  : "bg-white text-gray-600 border-gray-300 hover:bg-gray-50"
-              }`}
-            >
-              {d.label}
-            </button>
-          ))}
-        </div>
+      {/* == Dynamic KPIs == */}
+      <div className={`${cardClass} col-span-4`}>
+        <p className={kpiLabelClass}>Revenue</p>
+        <p className={kpiValueClass}>{fmtCurrency(totalRevenue.data?.[0]?.val as number | null)}</p>
+      </div>
+      <div className={`${cardClass} col-span-4`}>
+        <p className={kpiLabelClass}>Total Deals</p>
+        <p className={kpiValueClass}>{fmtNum(totalDeals.data?.[0]?.val as number | null)}</p>
+      </div>
+      <div className={`${cardClass} col-span-4`}>
+        <p className={kpiLabelClass}>Avg Deal Size</p>
+        <p className={kpiValueClass}>{fmtCurrency(avgDealSize.data?.[0]?.val as number | null)}</p>
+      </div>
+      <div className={`${cardClass} col-span-4`}>
+        <p className={kpiLabelClass}>Avg Discount</p>
+        <p className={kpiValueClass}>{fmtPct(avgDiscount.data?.[0]?.val as number | null)}</p>
+      </div>
+      <div className={`${cardClass} col-span-4`}>
+        <p className={kpiLabelClass}>Max Discount</p>
+        <p className={kpiValueClass}>{fmtPct(maxDiscount.data?.[0]?.val as number | null)}</p>
+      </div>
+      <div className={`${cardClass} col-span-4`}>
+        <p className={kpiLabelClass}>Filter Level</p>
+        <p className={`${kpiValueClass} text-[#1F2937] text-[1.2rem]`}>
+          {filterArr?.length ?? 0 > 0
+            ? `${(filterArr?.length ?? 0)} filter${(filterArr?.length ?? 0) !== 1 ? "s" : ""} active`
+            : "No filters"}
+        </p>
+      </div>
 
-        {/* Chart type toggle */}
-        <div className="flex gap-2 mb-4">
-          <span className="text-xs font-medium text-gray-500 self-center mr-1">Chart:</span>
-          {CHART_TYPES.map((t) => (
-            <button
-              key={t}
-              onClick={() => setChartType(t)}
-              className={`px-3 py-1 text-xs font-medium rounded border transition-colors capitalize ${
-                chartType === t
-                  ? "bg-gray-800 text-white border-gray-800"
-                  : "bg-white text-gray-600 border-gray-300 hover:bg-gray-50"
-              }`}
-            >
-              {t}
-            </button>
-          ))}
-        </div>
-
-        {/* Chart */}
-        {renderChart()}
-      </Section>
-
-      {/* ───── Detail table ───── */}
-      <Section title="Opportunity Details" subtitle="Top 100 opportunities with all key fields">
-        {detailData.loading ? (
-          <div className="h-48 bg-gray-100 animate-pulse rounded-lg" />
-        ) : detailData.error ? (
-          <div className="h-24 flex items-center justify-center text-red-400 text-sm">Error loading data</div>
-        ) : !detailData.data?.length ? (
-          <div className="h-24 flex items-center justify-center text-gray-400 text-sm">—</div>
-        ) : (
-          <div className="overflow-auto max-h-[600px] border border-gray-200 rounded-lg">
-            <table className="w-full text-sm">
-              <thead className="bg-gray-50 sticky top-0">
-                <tr>
-                  {DETAIL_COLS.map((col) => (
-                    <th
-                      key={col.key}
-                      className="px-3 py-2 text-left font-medium text-gray-600 text-xs uppercase tracking-wider border-b whitespace-nowrap"
-                    >
-                      {col.label}
-                    </th>
-                  ))}
+      {/* == Real-time Table == */}
+      <div className={`${cardClass} col-span-12`}>
+        <p className={sectionLabelClass}>Opportunity Data</p>
+        <div className="overflow-x-auto max-h-[400px] overflow-y-auto">
+          <table className="w-full">
+            <thead className="sticky top-0 bg-white">
+              <tr>
+                <th className={tableHeaderClass}>Product</th>
+                <th className={tableHeaderClass}>Sales Stage</th>
+                <th className={tableHeaderClass}>Territory</th>
+                <th className={tableHeaderClass}>Revenue</th>
+                <th className={tableHeaderClass}>Deals</th>
+              </tr>
+            </thead>
+            <tbody>
+              {(tableData.data ?? []).map((row: any, i: number) => (
+                <tr key={i} className="hover:bg-[#F1F5F9] transition-colors">
+                  <td className={tableCellClass}>{row.Product}</td>
+                  <td className={tableCellClass}>{row["Sales Stage"]}</td>
+                  <td className={tableCellClass}>{row.Territory}</td>
+                  <td className={tableCellClass}>{fmtCurrency(row.revenue)}</td>
+                  <td className={tableCellClass}>{fmtNum(row.cnt)}</td>
                 </tr>
-              </thead>
-              <tbody>
-                {detailData.data.map((row: any, i: number) => (
-                  <tr key={i} className="hover:bg-gray-50 border-b border-gray-100 last:border-b-0">
-                    {DETAIL_COLS.map((col) => {
-                      const raw = row[col.key]
-                      const display = col.fmt ? col.fmt(raw) : raw ?? "—"
-                      // Status badge styling
-                      if (col.key === "Status") {
-                        const status = String(raw ?? "").toLowerCase()
-                        const badgeClass =
-                          status === "won"
-                            ? "bg-green-100 text-green-700"
-                            : status === "lost"
-                              ? "bg-red-100 text-red-700"
-                              : "bg-blue-100 text-blue-700"
-                        return (
-                          <td key={col.key} className="px-3 py-2">
-                            <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${badgeClass}`}>
-                              {display}
-                            </span>
-                          </td>
-                        )
-                      }
-                      const isCurrency = col.key === "Value"
-                      return (
-                        <td
-                          key={col.key}
-                          className={`px-3 py-2 text-gray-700 whitespace-nowrap ${isCurrency ? "font-medium tabular-nums" : ""}`}
-                        >
-                          {display}
-                        </td>
-                      )
-                    })}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </Section>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   )
 }
