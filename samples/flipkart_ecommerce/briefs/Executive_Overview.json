@@ -1,0 +1,1 @@
+{"page": "executive-overview", "title": "Executive Overview", "metrics": ["Total Sales", "Total Profit", "Orders", "Profit Margin %"], "filters": ["Category", "Region", "Segment"], "charts": ["Bar: Sales by Category", "Line: Sales Trend (monthly)", "Bar: Sales by Region"]}

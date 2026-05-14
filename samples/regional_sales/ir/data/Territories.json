@@ -1,0 +1,359 @@
+[
+ {
+  "Region": "North America",
+  "Territory": "US-WEST",
+  "Country": "United States",
+  "TerritorySeq": "1",
+  "State Or Province": "CA"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-SOUTH",
+  "Country": "United States",
+  "TerritorySeq": "2",
+  "State Or Province": "TX"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-SOUTH",
+  "Country": "United States",
+  "TerritorySeq": "3",
+  "State Or Province": "FL"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-NORTHEAST",
+  "Country": "United States",
+  "TerritorySeq": "4",
+  "State Or Province": "NY"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-NORTHEAST",
+  "Country": "United States",
+  "TerritorySeq": "5",
+  "State Or Province": "PA"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-MIDWEST",
+  "Country": "United States",
+  "TerritorySeq": "6",
+  "State Or Province": "IL"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-MIDWEST",
+  "Country": "United States",
+  "TerritorySeq": "7",
+  "State Or Province": "OH"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-SOUTH",
+  "Country": "United States",
+  "TerritorySeq": "8",
+  "State Or Province": "GA"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-SOUTH",
+  "Country": "United States",
+  "TerritorySeq": "9",
+  "State Or Province": "NC"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-MIDWEST",
+  "Country": "United States",
+  "TerritorySeq": "10",
+  "State Or Province": "MI"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-NORTHEAST",
+  "Country": "United States",
+  "TerritorySeq": "11",
+  "State Or Province": "NJ"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-SOUTH",
+  "Country": "United States",
+  "TerritorySeq": "12",
+  "State Or Province": "VA"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-WEST",
+  "Country": "United States",
+  "TerritorySeq": "13",
+  "State Or Province": "WA"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-WEST",
+  "Country": "United States",
+  "TerritorySeq": "14",
+  "State Or Province": "AZ"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-NORTHEAST",
+  "Country": "United States",
+  "TerritorySeq": "15",
+  "State Or Province": "MA"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-SOUTH",
+  "Country": "United States",
+  "TerritorySeq": "16",
+  "State Or Province": "TN"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-MIDWEST",
+  "Country": "United States",
+  "TerritorySeq": "17",
+  "State Or Province": "IN"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-SOUTH",
+  "Country": "United States",
+  "TerritorySeq": "18",
+  "State Or Province": "MD"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-MIDWEST",
+  "Country": "United States",
+  "TerritorySeq": "19",
+  "State Or Province": "MO"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-MIDWEST",
+  "Country": "United States",
+  "TerritorySeq": "20",
+  "State Or Province": "WI"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-WEST",
+  "Country": "United States",
+  "TerritorySeq": "21",
+  "State Or Province": "CO"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-MIDWEST",
+  "Country": "United States",
+  "TerritorySeq": "22",
+  "State Or Province": "MN"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-SOUTH",
+  "Country": "United States",
+  "TerritorySeq": "23",
+  "State Or Province": "SC"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-SOUTH",
+  "Country": "United States",
+  "TerritorySeq": "24",
+  "State Or Province": "AL"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-SOUTH",
+  "Country": "United States",
+  "TerritorySeq": "25",
+  "State Or Province": "LA"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-SOUTH",
+  "Country": "United States",
+  "TerritorySeq": "26",
+  "State Or Province": "KY"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-WEST",
+  "Country": "United States",
+  "TerritorySeq": "27",
+  "State Or Province": "OR"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-SOUTH",
+  "Country": "United States",
+  "TerritorySeq": "28",
+  "State Or Province": "OK"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-NORTHEAST",
+  "Country": "United States",
+  "TerritorySeq": "29",
+  "State Or Province": "CT"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-WEST",
+  "Country": "United States",
+  "TerritorySeq": "30",
+  "State Or Province": "UT"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-MIDWEST",
+  "Country": "United States",
+  "TerritorySeq": "31",
+  "State Or Province": "IA"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-WEST",
+  "Country": "United States",
+  "TerritorySeq": "32",
+  "State Or Province": "NV"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-SOUTH",
+  "Country": "United States",
+  "TerritorySeq": "33",
+  "State Or Province": "AR"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-SOUTH",
+  "Country": "United States",
+  "TerritorySeq": "34",
+  "State Or Province": "MS"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-MIDWEST",
+  "Country": "United States",
+  "TerritorySeq": "35",
+  "State Or Province": "KS"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-WEST",
+  "Country": "United States",
+  "TerritorySeq": "36",
+  "State Or Province": "NM"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-MIDWEST",
+  "Country": "United States",
+  "TerritorySeq": "37",
+  "State Or Province": "NE"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-WEST",
+  "Country": "United States",
+  "TerritorySeq": "38",
+  "State Or Province": "ID"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-SOUTH",
+  "Country": "United States",
+  "TerritorySeq": "39",
+  "State Or Province": "WV"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-WEST",
+  "Country": "United States",
+  "TerritorySeq": "40",
+  "State Or Province": "HI"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-NORTHEAST",
+  "Country": "United States",
+  "TerritorySeq": "41",
+  "State Or Province": "NH"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-NORTHEAST",
+  "Country": "United States",
+  "TerritorySeq": "42",
+  "State Or Province": "ME"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-NORTHEAST",
+  "Country": "United States",
+  "TerritorySeq": "43",
+  "State Or Province": "RI"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-WEST",
+  "Country": "United States",
+  "TerritorySeq": "44",
+  "State Or Province": "MT"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-SOUTH",
+  "Country": "United States",
+  "TerritorySeq": "45",
+  "State Or Province": "DE"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-MIDWEST",
+  "Country": "United States",
+  "TerritorySeq": "46",
+  "State Or Province": "SD"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-MIDWEST",
+  "Country": "United States",
+  "TerritorySeq": "47",
+  "State Or Province": "ND"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-WEST",
+  "Country": "United States",
+  "TerritorySeq": "48",
+  "State Or Province": "AK"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-SOUTH",
+  "Country": "United States",
+  "TerritorySeq": "49",
+  "State Or Province": "DC"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-NORTHEAST",
+  "Country": "United States",
+  "TerritorySeq": "50",
+  "State Or Province": "VT"
+ },
+ {
+  "Region": "North America",
+  "Territory": "US-WEST",
+  "Country": "United States",
+  "TerritorySeq": "51",
+  "State Or Province": "WY"
+ }
+]

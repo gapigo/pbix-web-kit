@@ -1,0 +1,138 @@
+import { useState, useMemo } from "react"
+import type { Visual } from "./types"
+import { evaluateField, buildMeasureMap } from "@/lib/measureEvaluator"
+import irData from "@/data/ir.json"
+import { useFilteredData } from "@/components/layout/FilterContext"
+
+interface DataTableVisualProps {
+  visual: Visual
+  data: Record<string, any[]>
+}
+
+export function DataTableVisual({ visual, data }: DataTableVisualProps) {
+  const rowFields = visual.fields.filter(f => f.role === "Rows")
+  const valueFields = visual.fields.filter(f => f.role === "Values")
+
+  // Try to find data table
+  const allTables = [...new Set(visual.fields.map(f => f.table))]
+  const firstTable = allTables[0]
+  const tableData = data[firstTable]
+  const filteredData = useFilteredData(tableData)
+
+
+  if (!tableData || tableData.length === 0) {
+    return <div className="text-muted-foreground text-xs p-4">No data available</div>
+  }
+
+  // Build columns from fields
+  const displayCols = [...rowFields.map(f => f.column), ...valueFields.map(f => f.column)]
+
+  // Build measure map for evaluation
+  const measureMap = useMemo(() => buildMeasureMap((irData as any).measures || []), [])
+
+  // Aggregate values group by row fields
+  const aggregated = useMemo(() => {
+    const groups: Record<string, Record<string, number>> = {}
+    for (const row of filteredData) {
+      const key = rowFields.map(f => String(row[f.column] ?? "")).join("|")
+      if (!groups[key]) {
+        groups[key] = {}
+      }
+      for (const vf of valueFields) {
+        const measureKey = `${vf.table}.${vf.column}`
+        const isMeasure = measureMap.has(measureKey)
+        if (isMeasure) {
+          // Skip if already computed for this group
+          if (groups[key] && groups[key][vf.column] !== undefined) continue
+          // Build row context filter from row fields
+          const rowFilters: Record<string, string[]> = {}
+          for (const rf of rowFields) {
+            const val = String(row[rf.column] ?? "")
+            if (val) rowFilters[rf.column] = [val]
+          }
+          const evalVal = evaluateField(vf, data, rowFilters, measureMap)
+          if (evalVal !== null) {
+            groups[key][vf.column] = evalVal
+          } else {
+            // Fallback: sum raw column
+            const val = Number(row[vf.column] ?? 0)
+            groups[key][vf.column] = (groups[key][vf.column] ?? 0) + val
+          }
+        } else {
+          // Raw column: simple sum
+          const val = Number(row[vf.column] ?? 0)
+          groups[key][vf.column] = (groups[key][vf.column] ?? 0) + val
+        }
+      }
+    }
+    return Object.entries(groups).map(([key, vals]) => {
+      const parts = key.split("|")
+      const result: Record<string, any> = {}
+      rowFields.forEach((f, i) => { result[f.column] = parts[i] || "" })
+      Object.entries(vals).forEach(([col, val]) => { result[col] = formatNum(val) })
+      return result
+    })
+  }, [filteredData, rowFields, valueFields, data, measureMap])
+
+  const [sortCol, setSortCol] = useState<string | null>(null)
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc")
+
+  const sorted = useMemo(() => {
+    if (!sortCol) return aggregated
+    return [...aggregated].sort((a, b) => {
+      const va = a[sortCol]
+      const vb = b[sortCol]
+      if (typeof va === "number" && typeof vb === "number") {
+        return sortDir === "asc" ? va - vb : vb - va
+      }
+      return sortDir === "asc"
+        ? String(va).localeCompare(String(vb))
+        : String(vb).localeCompare(String(va))
+    })
+  }, [aggregated, sortCol, sortDir])
+
+  const handleSort = (col: string) => {
+    if (sortCol === col) {
+      setSortDir(d => d === "asc" ? "desc" : "asc")
+    } else {
+      setSortCol(col)
+      setSortDir("asc")
+    }
+  }
+
+  return (
+    <div className="w-full h-full overflow-auto p-1">
+      <table className="w-full text-xs border-collapse">
+        <thead>
+          <tr className="border-b">
+            {displayCols.map(col => (
+              <th
+                key={col}
+                className="text-left p-1 font-medium cursor-pointer hover:bg-muted sticky top-0 bg-background"
+                onClick={() => handleSort(col)}
+              >
+                {col}
+                {sortCol === col && (sortDir === "asc" ? " ▲" : " ▼")}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {sorted.slice(0, 100).map((row, i) => (
+            <tr key={i} className="border-b hover:bg-muted/50">
+              {displayCols.map(col => (
+                <td key={col} className="p-1 whitespace-nowrap">
+                  {row[col] ?? ""}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+function formatNum(n: number): string {
+  return n.toLocaleString("en-US", { maximumFractionDigits: 0 })
+}

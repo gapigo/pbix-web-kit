@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pbix-parser"
+version = "0.1.0"
+description = "Extract Power BI .pbix files to canonical PbixIR intermediate representation"
+requires-python = ">=3.11"
+dependencies = [
+    "pbixray>=0.5.0",
+    "pydantic>=2",
+    "pandas>=2",
+    "typer[all]>=0.9",
+    "rich>=13",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project.scripts]
+pbix-parser = "pbix_parser.cli:app"

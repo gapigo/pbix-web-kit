@@ -1,0 +1,23 @@
+[project]
+name = "pbix-storyboard"
+version = "0.1.0"
+description = "Transform PBI IR into Storyboard narratives with Parquet data export"
+requires-python = ">=3.11"
+dependencies = [
+    "pbixray>=0.7.0",
+    "pydantic>=2",
+    "pandas>=2",
+    "pyarrow>=14",
+    "typer[all]>=0.9",
+    "rich>=13",
+]
+
+[project.scripts]
+pbix-storyboard = "pbix_storyboard.cli:app"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]

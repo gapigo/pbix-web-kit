@@ -1,0 +1,2179 @@
+{
+  "source_file": "samples\\regional_sales\\Regional Sales Sample.pbix",
+  "dashboard_name": "Regional Sales Sample",
+  "overall_narrative": "Dashboard Regional Sales Sample contains 11 pages covering: Sales Overview, Win/Loss Ratio Overview, Industries Overview, Pipeline Trends, Trend Analytics, Win/Loss Ratio Insights, Days to Close Insights, Sales Discounting Insights, Revenue Source Breakdown, Q&A Query, Template. The primary metric tracked is Opportunities.Revenue Won.",
+  "pages": [
+    {
+      "name": "ReportSectionb621f12070647be09138",
+      "display_name": "Sales Overview",
+      "narrative": "This page (Sales Overview) presents Opportunities.Revenue Won, broken down by Owner Goal, State or Province, Forecast Adjustment. It features 11 main visuals including KPIs, charts, and tables.",
+      "hero_metric": "Opportunities.Revenue Won",
+      "visuals": [
+        {
+          "id": "1556019845",
+          "purpose": "Show key metric: Revenue Won",
+          "canonical_type": "kpi",
+          "raw_type": "kpi",
+          "measures": [
+            {
+              "name": "Opportunities.Revenue Won",
+              "expression": "\n CALCULATE(\n     SUMX(Opportunities, Opportunities[Value]),\n     FILTER(Opportunities, Opportunities[Status] = \"Won\")\n )",
+              "plain_english": "Categorized total of (SUMX(Opportunities)"
+            }
+          ],
+          "dimensions": [
+            "Opportunities.Blank"
+          ],
+          "importance": 1,
+          "chrome": false
+        },
+        {
+          "id": "1556019847",
+          "purpose": "Show key metric: Rev Goal",
+          "canonical_type": "kpi",
+          "raw_type": "kpi",
+          "measures": [
+            {
+              "name": "Owners.Rev Goal",
+              "expression": "\nVAR RevenueInPipeline =\n    CALCULATE (\n        SUMX ( Opportunities, Opportunities[Value] ),\n        FILTER (\n            Opportunities,\n            Opportunities[Status] = \"Open\"\n            && VALUE(LEFT(Opportunities[Sales Stage],1)) >=2\n        )\n    )\nVAR BaseGoal =  \nMROUND(([Revenue Won]+ (RevenueInPipeline*.60)),1000000)    \nRETURN\nIF(BaseGoal > 0, BaseGoal, MROUND(([Revenue Won]+ (RevenueInPipeline*.60)),100000))",
+              "plain_english": "Categorized total of (VAR RevenueInPipeline =\n    CALCULATE (\n        SUMX ( Opportunities)"
+            }
+          ],
+          "dimensions": [
+            "Opportunities.Blank"
+          ],
+          "importance": 1,
+          "chrome": false
+        },
+        {
+          "id": "1556019849",
+          "purpose": "Show key metric: Revenue In Pipeline",
+          "canonical_type": "kpi",
+          "raw_type": "kpi",
+          "measures": [
+            {
+              "name": "Opportunities.Revenue In Pipeline",
+              "expression": "\nVAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities, Opportunities[Value] ),\n        FILTER (\n            Opportunities,\n            Opportunities[Status] = \"Open\"\n            && VALUE(LEFT(Opportunities[Sales Stage],1)) >=2\n        )\n    )\nRETURN\n    Revenue + ( Revenue * ( 'Opportunity Forecast Adjustment'[Forecast Adjustment Value] / 100 ) )\n",
+              "plain_english": "Categorized total of (VAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities)"
+            }
+          ],
+          "dimensions": [
+            "Opportunities.Blank"
+          ],
+          "importance": 1,
+          "chrome": false
+        },
+        {
+          "id": "1556019851",
+          "purpose": "Show key metric: Forecast %",
+          "canonical_type": "kpi",
+          "raw_type": "kpi",
+          "measures": [
+            {
+              "name": "Opportunities.Forecast %",
+              "expression": "(([Revenue Won]+[Revenue In Pipeline]))/ [Rev Goal]",
+              "plain_english": "Measure: Forecast %"
+            }
+          ],
+          "dimensions": [
+            "Opportunities.Blank"
+          ],
+          "importance": 1,
+          "chrome": false
+        },
+        {
+          "id": "1556019769",
+          "purpose": "Compare Blank across Forecast Adjustment",
+          "canonical_type": "bar",
+          "raw_type": "columnChart",
+          "measures": [
+            {
+              "name": "Opportunity Forecast Adjustment.Blank",
+              "expression": "Sum(Opportunity Forecast Adjustment[Blank])",
+              "plain_english": "Sum of Blank"
+            }
+          ],
+          "dimensions": [
+            "Opportunity Forecast Adjustment.Forecast Adjustment"
+          ],
+          "importance": 2,
+          "chrome": false
+        },
+        {
+          "id": "1556019858",
+          "purpose": "Compare Revenue Won across Product LOB",
+          "canonical_type": "bar",
+          "raw_type": "barChart",
+          "measures": [
+            {
+              "name": "Opportunities.Revenue Won",
+              "expression": "\n CALCULATE(\n     SUMX(Opportunities, Opportunities[Value]),\n     FILTER(Opportunities, Opportunities[Status] = \"Won\")\n )",
+              "plain_english": "Categorized total of (SUMX(Opportunities)"
+            },
+            {
+              "name": "Opportunities.Revenue In Pipeline",
+              "expression": "\nVAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities, Opportunities[Value] ),\n        FILTER (\n            Opportunities,\n            Opportunities[Status] = \"Open\"\n            && VALUE(LEFT(Opportunities[Sales Stage],1)) >=2\n        )\n    )\nRETURN\n    Revenue + ( Revenue * ( 'Opportunity Forecast Adjustment'[Forecast Adjustment Value] / 100 ) )\n",
+              "plain_english": "Categorized total of (VAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities)"
+            },
+            {
+              "name": "Opportunities.Revenue In Pipeline",
+              "expression": "\nVAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities, Opportunities[Value] ),\n        FILTER (\n            Opportunities,\n            Opportunities[Status] = \"Open\"\n            && VALUE(LEFT(Opportunities[Sales Stage],1)) >=2\n        )\n    )\nRETURN\n    Revenue + ( Revenue * ( 'Opportunity Forecast Adjustment'[Forecast Adjustment Value] / 100 ) )\n",
+              "plain_english": "Categorized total of (VAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities)"
+            }
+          ],
+          "dimensions": [
+            "Products.Product LOB",
+            "Products.Product"
+          ],
+          "importance": 2,
+          "chrome": false
+        },
+        {
+          "id": "1556019852",
+          "purpose": "Geographic map",
+          "canonical_type": "map",
+          "raw_type": "shapeMap",
+          "measures": [
+            {
+              "name": "Accounts.Street Hierarchy.State or Province",
+              "expression": "Min(Accounts.Street Hierarchy[State or Province])",
+              "plain_english": "Min of State or Province"
+            },
+            {
+              "name": "Opportunities.Revenue Won",
+              "expression": "\n CALCULATE(\n     SUMX(Opportunities, Opportunities[Value]),\n     FILTER(Opportunities, Opportunities[Status] = \"Won\")\n )",
+              "plain_english": "Categorized total of (SUMX(Opportunities)"
+            },
+            {
+              "name": "Opportunities.Revenue In Pipeline",
+              "expression": "\nVAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities, Opportunities[Value] ),\n        FILTER (\n            Opportunities,\n            Opportunities[Status] = \"Open\"\n            && VALUE(LEFT(Opportunities[Sales Stage],1)) >=2\n        )\n    )\nRETURN\n    Revenue + ( Revenue * ( 'Opportunity Forecast Adjustment'[Forecast Adjustment Value] / 100 ) )\n",
+              "plain_english": "Categorized total of (VAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities)"
+            },
+            {
+              "name": "Owners.Rev Goal",
+              "expression": "\nVAR RevenueInPipeline =\n    CALCULATE (\n        SUMX ( Opportunities, Opportunities[Value] ),\n        FILTER (\n            Opportunities,\n            Opportunities[Status] = \"Open\"\n            && VALUE(LEFT(Opportunities[Sales Stage],1)) >=2\n        )\n    )\nVAR BaseGoal =  \nMROUND(([Revenue Won]+ (RevenueInPipeline*.60)),1000000)    \nRETURN\nIF(BaseGoal > 0, BaseGoal, MROUND(([Revenue Won]+ (RevenueInPipeline*.60)),100000))",
+              "plain_english": "Categorized total of (VAR RevenueInPipeline =\n    CALCULATE (\n        SUMX ( Opportunities)"
+            },
+            {
+              "name": "Opportunities.Revenue In Pipeline",
+              "expression": "\nVAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities, Opportunities[Value] ),\n        FILTER (\n            Opportunities,\n            Opportunities[Status] = \"Open\"\n            && VALUE(LEFT(Opportunities[Sales Stage],1)) >=2\n        )\n    )\nRETURN\n    Revenue + ( Revenue * ( 'Opportunity Forecast Adjustment'[Forecast Adjustment Value] / 100 ) )\n",
+              "plain_english": "Categorized total of (VAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities)"
+            }
+          ],
+          "dimensions": [
+            "Accounts.Street Hierarchy.State or Province"
+          ],
+          "importance": 3,
+          "chrome": false
+        },
+        {
+          "id": "1556019853",
+          "purpose": "Tabular breakdown by Territory",
+          "canonical_type": "table",
+          "raw_type": "pivotTable",
+          "measures": [
+            {
+              "name": "Opportunities.Revenue Won",
+              "expression": "\n CALCULATE(\n     SUMX(Opportunities, Opportunities[Value]),\n     FILTER(Opportunities, Opportunities[Status] = \"Won\")\n )",
+              "plain_english": "Categorized total of (SUMX(Opportunities)"
+            },
+            {
+              "name": "Opportunities.Revenue In Pipeline",
+              "expression": "\nVAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities, Opportunities[Value] ),\n        FILTER (\n            Opportunities,\n            Opportunities[Status] = \"Open\"\n            && VALUE(LEFT(Opportunities[Sales Stage],1)) >=2\n        )\n    )\nRETURN\n    Revenue + ( Revenue * ( 'Opportunity Forecast Adjustment'[Forecast Adjustment Value] / 100 ) )\n",
+              "plain_english": "Categorized total of (VAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities)"
+            },
+            {
+              "name": "Opportunities.Forecast %",
+              "expression": "(([Revenue Won]+[Revenue In Pipeline]))/ [Rev Goal]",
+              "plain_english": "Measure: Forecast %"
+            }
+          ],
+          "dimensions": [
+            "Accounts.State or Province",
+            "Territories.Territory"
+          ],
+          "importance": 3,
+          "chrome": false
+        },
+        {
+          "id": "1556019856",
+          "purpose": "Tabular breakdown by Product LOB",
+          "canonical_type": "table",
+          "raw_type": "pivotTable",
+          "measures": [
+            {
+              "name": "Opportunities.Revenue Won",
+              "expression": "\n CALCULATE(\n     SUMX(Opportunities, Opportunities[Value]),\n     FILTER(Opportunities, Opportunities[Status] = \"Won\")\n )",
+              "plain_english": "Categorized total of (SUMX(Opportunities)"
+            },
+            {
+              "name": "Opportunities.Revenue In Pipeline",
+              "expression": "\nVAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities, Opportunities[Value] ),\n        FILTER (\n            Opportunities,\n            Opportunities[Status] = \"Open\"\n            && VALUE(LEFT(Opportunities[Sales Stage],1)) >=2\n        )\n    )\nRETURN\n    Revenue + ( Revenue * ( 'Opportunity Forecast Adjustment'[Forecast Adjustment Value] / 100 ) )\n",
+              "plain_english": "Categorized total of (VAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities)"
+            },
+            {
+              "name": "Opportunities.Forecast %",
+              "expression": "(([Revenue Won]+[Revenue In Pipeline]))/ [Rev Goal]",
+              "plain_english": "Measure: Forecast %"
+            }
+          ],
+          "dimensions": [
+            "Products.Product LOB",
+            "Products.Product"
+          ],
+          "importance": 3,
+          "chrome": false
+        },
+        {
+          "id": "1556019857",
+          "purpose": "Trend of values over Manager",
+          "canonical_type": "combo",
+          "raw_type": "lineStackedColumnComboChart",
+          "measures": [
+            {
+              "name": "Opportunities.Revenue Won",
+              "expression": "\n CALCULATE(\n     SUMX(Opportunities, Opportunities[Value]),\n     FILTER(Opportunities, Opportunities[Status] = \"Won\")\n )",
+              "plain_english": "Categorized total of (SUMX(Opportunities)"
+            },
+            {
+              "name": "Opportunities.Revenue In Pipeline",
+              "expression": "\nVAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities, Opportunities[Value] ),\n        FILTER (\n            Opportunities,\n            Opportunities[Status] = \"Open\"\n            && VALUE(LEFT(Opportunities[Sales Stage],1)) >=2\n        )\n    )\nRETURN\n    Revenue + ( Revenue * ( 'Opportunity Forecast Adjustment'[Forecast Adjustment Value] / 100 ) )\n",
+              "plain_english": "Categorized total of (VAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities)"
+            },
+            {
+              "name": "Opportunities.Revenue In Pipeline",
+              "expression": "\nVAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities, Opportunities[Value] ),\n        FILTER (\n            Opportunities,\n            Opportunities[Status] = \"Open\"\n            && VALUE(LEFT(Opportunities[Sales Stage],1)) >=2\n        )\n    )\nRETURN\n    Revenue + ( Revenue * ( 'Opportunity Forecast Adjustment'[Forecast Adjustment Value] / 100 ) )\n",
+              "plain_english": "Categorized total of (VAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities)"
+            },
+            {
+              "name": "Opportunities.Revenue Won",
+              "expression": "\n CALCULATE(\n     SUMX(Opportunities, Opportunities[Value]),\n     FILTER(Opportunities, Opportunities[Status] = \"Won\")\n )",
+              "plain_english": "Categorized total of (SUMX(Opportunities)"
+            }
+          ],
+          "dimensions": [
+            "Owners.Owner Goal",
+            "Owners.Owner",
+            "Owners.Manager"
+          ],
+          "importance": 3,
+          "chrome": false
+        },
+        {
+          "id": "1556019859",
+          "purpose": "Funnel chart showing progression",
+          "canonical_type": "funnel",
+          "raw_type": "funnel",
+          "measures": [
+            {
+              "name": "Opportunities.Revenue Open",
+              "expression": "\nVAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities, Opportunities[Value] ),\n        FILTER (\n            Opportunities,\n            Opportunities[Status] = \"Open\"\n        )\n    )\nRETURN\n    Revenue + ( Revenue * ( 'Opportunity Forecast Adjustment'[Forecast Adjustment Value] / 100 ) )",
+              "plain_english": "Categorized total of (VAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities)"
+            }
+          ],
+          "dimensions": [
+            "Opportunities.PipelineStep"
+          ],
+          "importance": 3,
+          "chrome": false
+        },
+        {
+          "id": "1556019768",
+          "purpose": "Interactive slicer / filter",
+          "canonical_type": "slicer",
+          "raw_type": "slicer",
+          "measures": [],
+          "dimensions": [
+            "Forecast Adjustment.Forecast Adjustment"
+          ],
+          "importance": 4,
+          "chrome": false
+        }
+      ],
+      "page_filters": [
+        {
+          "visual_id": "1556019768",
+          "table": "Forecast Adjustment",
+          "column": "Forecast Adjustment",
+          "type": "slicer"
+        }
+      ],
+      "cross_filters": [
+        {
+          "source": "1556019769",
+          "target": "1556019768",
+          "type": "cross-filter"
+        },
+        {
+          "source": "1556019845",
+          "target": "1556019768",
+          "type": "cross-filter"
+        },
+        {
+          "source": "1556019847",
+          "target": "1556019768",
+          "type": "cross-filter"
+        },
+        {
+          "source": "1556019849",
+          "target": "1556019768",
+          "type": "cross-filter"
+        },
+        {
+          "source": "1556019851",
+          "target": "1556019768",
+          "type": "cross-filter"
+        }
+      ]
+    },
+    {
+      "name": "ReportSection3685d80df8fded83ed3c",
+      "display_name": "Win/Loss Ratio Overview",
+      "narrative": "This page (Win/Loss Ratio Overview) presents Opportunities.Revenue Open, broken down by YEAR MONTH, Blank, Product. It features 9 main visuals including KPIs, charts, and tables.",
+      "hero_metric": "Opportunities.Revenue Open",
+      "visuals": [
+        {
+          "id": "1556019943",
+          "purpose": "Show key metric: Revenue Open",
+          "canonical_type": "kpi",
+          "raw_type": "kpi",
+          "measures": [
+            {
+              "name": "Opportunities.Revenue Open",
+              "expression": "\nVAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities, Opportunities[Value] ),\n        FILTER (\n            Opportunities,\n            Opportunities[Status] = \"Open\"\n        )\n    )\nRETURN\n    Revenue + ( Revenue * ( 'Opportunity Forecast Adjustment'[Forecast Adjustment Value] / 100 ) )",
+              "plain_english": "Categorized total of (VAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities)"
+            }
+          ],
+          "dimensions": [
+            "Opportunities.Blank"
+          ],
+          "importance": 1,
+          "chrome": false
+        },
+        {
+          "id": "1556019945",
+          "purpose": "Show key metric: Forecast by Win/Loss Ratio",
+          "canonical_type": "kpi",
+          "raw_type": "kpi",
+          "measures": [
+            {
+              "name": "Opportunities.Forecast by Win/Loss Ratio",
+              "expression": "[Revenue Open] * [Close %]",
+              "plain_english": "Measure: Forecast by Win/Loss Ratio"
+            }
+          ],
+          "dimensions": [
+            "Opportunities.Blank"
+          ],
+          "importance": 1,
+          "chrome": false
+        },
+        {
+          "id": "1556019956",
+          "purpose": "Show key metric: Revenue Won",
+          "canonical_type": "kpi",
+          "raw_type": "kpi",
+          "measures": [
+            {
+              "name": "Opportunities.Revenue Won",
+              "expression": "\n CALCULATE(\n     SUMX(Opportunities, Opportunities[Value]),\n     FILTER(Opportunities, Opportunities[Status] = \"Won\")\n )",
+              "plain_english": "Categorized total of (SUMX(Opportunities)"
+            }
+          ],
+          "dimensions": [
+            "Opportunities.Blank"
+          ],
+          "importance": 1,
+          "chrome": false
+        },
+        {
+          "id": "1556019957",
+          "purpose": "Show key metric: Close %",
+          "canonical_type": "kpi",
+          "raw_type": "kpi",
+          "measures": [
+            {
+              "name": "Opportunities.Close %",
+              "expression": "[Count of Won]/([Count of Won]+[Count of Lost])",
+              "plain_english": "Measure: Close %"
+            }
+          ],
+          "dimensions": [
+            "Opportunities.Blank"
+          ],
+          "importance": 1,
+          "chrome": false
+        },
+        {
+          "id": "1556019950",
+          "purpose": "Compare Close % across Product LOB",
+          "canonical_type": "bar",
+          "raw_type": "barChart",
+          "measures": [
+            {
+              "name": "Opportunities.Close %",
+              "expression": "[Count of Won]/([Count of Won]+[Count of Lost])",
+              "plain_english": "Measure: Close %"
+            },
+            {
+              "name": "Opportunities.Revenue In Pipeline",
+              "expression": "\nVAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities, Opportunities[Value] ),\n        FILTER (\n            Opportunities,\n            Opportunities[Status] = \"Open\"\n            && VALUE(LEFT(Opportunities[Sales Stage],1)) >=2\n        )\n    )\nRETURN\n    Revenue + ( Revenue * ( 'Opportunity Forecast Adjustment'[Forecast Adjustment Value] / 100 ) )\n",
+              "plain_english": "Categorized total of (VAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities)"
+            }
+          ],
+          "dimensions": [
+            "Products.Product LOB",
+            "Products.Product"
+          ],
+          "importance": 2,
+          "chrome": false
+        },
+        {
+          "id": "1556019952",
+          "purpose": "Compare Close % across Manager",
+          "canonical_type": "bar",
+          "raw_type": "clusteredColumnChart",
+          "measures": [
+            {
+              "name": "Opportunities.Close %",
+              "expression": "[Count of Won]/([Count of Won]+[Count of Lost])",
+              "plain_english": "Measure: Close %"
+            }
+          ],
+          "dimensions": [
+            "Owners.Owner",
+            "Owners.Manager"
+          ],
+          "importance": 2,
+          "chrome": false
+        },
+        {
+          "id": "1556019946",
+          "purpose": "Data table with detailed values",
+          "canonical_type": "table",
+          "raw_type": "tableEx",
+          "measures": [
+            {
+              "name": "Opportunities.Revenue Open",
+              "expression": "\nVAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities, Opportunities[Value] ),\n        FILTER (\n            Opportunities,\n            Opportunities[Status] = \"Open\"\n        )\n    )\nRETURN\n    Revenue + ( Revenue * ( 'Opportunity Forecast Adjustment'[Forecast Adjustment Value] / 100 ) )",
+              "plain_english": "Categorized total of (VAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities)"
+            },
+            {
+              "name": "Opportunities.Close %",
+              "expression": "[Count of Won]/([Count of Won]+[Count of Lost])",
+              "plain_english": "Measure: Close %"
+            },
+            {
+              "name": "Opportunities.Forecast by Win/Loss Ratio",
+              "expression": "[Revenue Open] * [Close %]",
+              "plain_english": "Measure: Forecast by Win/Loss Ratio"
+            }
+          ],
+          "dimensions": [
+            "Owners.Owner",
+            "Owners.Manager"
+          ],
+          "importance": 3,
+          "chrome": false
+        },
+        {
+          "id": "1556019947",
+          "purpose": "Tabular breakdown by Product LOB",
+          "canonical_type": "table",
+          "raw_type": "pivotTable",
+          "measures": [
+            {
+              "name": "Opportunities.Revenue Won",
+              "expression": "\n CALCULATE(\n     SUMX(Opportunities, Opportunities[Value]),\n     FILTER(Opportunities, Opportunities[Status] = \"Won\")\n )",
+              "plain_english": "Categorized total of (SUMX(Opportunities)"
+            },
+            {
+              "name": "Opportunities.Revenue In Pipeline",
+              "expression": "\nVAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities, Opportunities[Value] ),\n        FILTER (\n            Opportunities,\n            Opportunities[Status] = \"Open\"\n            && VALUE(LEFT(Opportunities[Sales Stage],1)) >=2\n        )\n    )\nRETURN\n    Revenue + ( Revenue * ( 'Opportunity Forecast Adjustment'[Forecast Adjustment Value] / 100 ) )\n",
+              "plain_english": "Categorized total of (VAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities)"
+            },
+            {
+              "name": "Opportunities.Forecast %",
+              "expression": "(([Revenue Won]+[Revenue In Pipeline]))/ [Rev Goal]",
+              "plain_english": "Measure: Forecast %"
+            }
+          ],
+          "dimensions": [
+            "Products.Product LOB",
+            "Products.Product"
+          ],
+          "importance": 3,
+          "chrome": false
+        },
+        {
+          "id": "1556019949",
+          "purpose": "Trend of values over YEAR MONTH",
+          "canonical_type": "line",
+          "raw_type": "lineChart",
+          "measures": [
+            {
+              "name": "Opportunities.Close %",
+              "expression": "[Count of Won]/([Count of Won]+[Count of Lost])",
+              "plain_english": "Measure: Close %"
+            }
+          ],
+          "dimensions": [
+            "Opportunity Calendar.YEAR MONTH"
+          ],
+          "importance": 3,
+          "chrome": false
+        },
+        {
+          "id": "1556019951",
+          "purpose": "Flow / Sankey diagram",
+          "canonical_type": "unsupported",
+          "raw_type": "FlowVisual_C29F1DCC_81F5_4973_94AD_0517D44CC06A",
+          "measures": [],
+          "dimensions": [
+            "Owners.systemuserid"
+          ],
+          "importance": 5,
+          "chrome": false
+        }
+      ],
+      "page_filters": [],
+      "cross_filters": [
+        {
+          "source": "1556019943",
+          "target": "1556019945",
+          "type": "cross-filter"
+        },
+        {
+          "source": "1556019945",
+          "target": "1556019943",
+          "type": "cross-filter"
+        },
+        {
+          "source": "1556019949",
+          "target": "1556019943",
+          "type": "cross-filter"
+        },
+        {
+          "source": "1556019950",
+          "target": "1556019943",
+          "type": "cross-filter"
+        },
+        {
+          "source": "1556019952",
+          "target": "1556019943",
+          "type": "cross-filter"
+        }
+      ]
+    },
+    {
+      "name": "ReportSection0e05747ca87ed9d14526",
+      "display_name": "Industries Overview",
+      "narrative": "This page (Industries Overview) presents key metrics, broken down by Industry, YEAR MONTH, Product. It features 5 main visuals including KPIs, charts, and tables.",
+      "visuals": [
+        {
+          "id": "1556020037",
+          "purpose": "Tabular breakdown by Industry",
+          "canonical_type": "table",
+          "raw_type": "pivotTable",
+          "measures": [
+            {
+              "name": "Opportunities.Revenue Won",
+              "expression": "\n CALCULATE(\n     SUMX(Opportunities, Opportunities[Value]),\n     FILTER(Opportunities, Opportunities[Status] = \"Won\")\n )",
+              "plain_english": "Categorized total of (SUMX(Opportunities)"
+            },
+            {
+              "name": "Opportunities.Revenue In Pipeline",
+              "expression": "\nVAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities, Opportunities[Value] ),\n        FILTER (\n            Opportunities,\n            Opportunities[Status] = \"Open\"\n            && VALUE(LEFT(Opportunities[Sales Stage],1)) >=2\n        )\n    )\nRETURN\n    Revenue + ( Revenue * ( 'Opportunity Forecast Adjustment'[Forecast Adjustment Value] / 100 ) )\n",
+              "plain_english": "Categorized total of (VAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities)"
+            },
+            {
+              "name": "Opportunities.Close %",
+              "expression": "[Count of Won]/([Count of Won]+[Count of Lost])",
+              "plain_english": "Measure: Close %"
+            },
+            {
+              "name": "Opportunities.Revenue Won Average Deal Size",
+              "expression": "AVERAGEX(Opportunities,[Revenue Won])",
+              "plain_english": "Measure: Revenue Won Average Deal Size"
+            }
+          ],
+          "dimensions": [
+            "Industries.Industry"
+          ],
+          "importance": 2,
+          "chrome": false
+        },
+        {
+          "id": "1556020033",
+          "purpose": "Tabular breakdown by Product LOB",
+          "canonical_type": "table",
+          "raw_type": "pivotTable",
+          "measures": [
+            {
+              "name": "Opportunities.Revenue Won",
+              "expression": "\n CALCULATE(\n     SUMX(Opportunities, Opportunities[Value]),\n     FILTER(Opportunities, Opportunities[Status] = \"Won\")\n )",
+              "plain_english": "Categorized total of (SUMX(Opportunities)"
+            },
+            {
+              "name": "Opportunities.Revenue In Pipeline",
+              "expression": "\nVAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities, Opportunities[Value] ),\n        FILTER (\n            Opportunities,\n            Opportunities[Status] = \"Open\"\n            && VALUE(LEFT(Opportunities[Sales Stage],1)) >=2\n        )\n    )\nRETURN\n    Revenue + ( Revenue * ( 'Opportunity Forecast Adjustment'[Forecast Adjustment Value] / 100 ) )\n",
+              "plain_english": "Categorized total of (VAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities)"
+            },
+            {
+              "name": "Opportunities.Forecast %",
+              "expression": "(([Revenue Won]+[Revenue In Pipeline]))/ [Rev Goal]",
+              "plain_english": "Measure: Forecast %"
+            }
+          ],
+          "dimensions": [
+            "Products.Product LOB",
+            "Products.Product"
+          ],
+          "importance": 3,
+          "chrome": false
+        },
+        {
+          "id": "1556020038",
+          "purpose": "Data table with detailed values",
+          "canonical_type": "table",
+          "raw_type": "tableEx",
+          "measures": [
+            {
+              "name": "Opportunities.Revenue Won",
+              "expression": "\n CALCULATE(\n     SUMX(Opportunities, Opportunities[Value]),\n     FILTER(Opportunities, Opportunities[Status] = \"Won\")\n )",
+              "plain_english": "Categorized total of (SUMX(Opportunities)"
+            },
+            {
+              "name": "Opportunities.Revenue In Pipeline",
+              "expression": "\nVAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities, Opportunities[Value] ),\n        FILTER (\n            Opportunities,\n            Opportunities[Status] = \"Open\"\n            && VALUE(LEFT(Opportunities[Sales Stage],1)) >=2\n        )\n    )\nRETURN\n    Revenue + ( Revenue * ( 'Opportunity Forecast Adjustment'[Forecast Adjustment Value] / 100 ) )\n",
+              "plain_english": "Categorized total of (VAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities)"
+            }
+          ],
+          "dimensions": [
+            "Owners.Manager",
+            "Owners.Owner",
+            "Accounts.Account Name"
+          ],
+          "importance": 3,
+          "chrome": false
+        },
+        {
+          "id": "1556020039",
+          "purpose": "Scatter plot comparing two measures",
+          "canonical_type": "scatter",
+          "raw_type": "scatterChart",
+          "measures": [
+            {
+              "name": "Opportunities.Opportunity Count",
+              "expression": "\nCOUNTAX(Opportunities,TRUE())",
+              "plain_english": "Count of rows in Opportunity Count"
+            },
+            {
+              "name": "Opportunities.Revenue Won",
+              "expression": "\n CALCULATE(\n     SUMX(Opportunities, Opportunities[Value]),\n     FILTER(Opportunities, Opportunities[Status] = \"Won\")\n )",
+              "plain_english": "Categorized total of (SUMX(Opportunities)"
+            },
+            {
+              "name": "Opportunities.Revenue Won Average Deal Size",
+              "expression": "AVERAGEX(Opportunities,[Revenue Won])",
+              "plain_english": "Measure: Revenue Won Average Deal Size"
+            }
+          ],
+          "dimensions": [
+            "Industries.Industry",
+            "Opportunity Calendar.YEAR MONTH"
+          ],
+          "importance": 3,
+          "chrome": false
+        },
+        {
+          "id": "1556020041",
+          "purpose": "Trend of values over YEAR MONTH",
+          "canonical_type": "line",
+          "raw_type": "lineChart",
+          "measures": [
+            {
+              "name": "Opportunities.Revenue Won",
+              "expression": "\n CALCULATE(\n     SUMX(Opportunities, Opportunities[Value]),\n     FILTER(Opportunities, Opportunities[Status] = \"Won\")\n )",
+              "plain_english": "Categorized total of (SUMX(Opportunities)"
+            }
+          ],
+          "dimensions": [
+            "Opportunity Calendar.YEAR MONTH"
+          ],
+          "importance": 3,
+          "chrome": false
+        }
+      ],
+      "page_filters": [],
+      "cross_filters": [
+        {
+          "source": "1556020041",
+          "target": "1556020033",
+          "type": "cross-filter"
+        }
+      ]
+    },
+    {
+      "name": "ReportSection9cc1f1d2d4c5bad9d959",
+      "display_name": "Pipeline Trends",
+      "narrative": "This page (Pipeline Trends) presents Opportunities.Opportunity Count, broken down by Discount), Industry, YEAR MONTH. It features 6 main visuals including KPIs, charts, and tables.",
+      "hero_metric": "Opportunities.Opportunity Count",
+      "visuals": [
+        {
+          "id": "1556020051",
+          "purpose": "Show key metric: Opportunity Count",
+          "canonical_type": "kpi",
+          "raw_type": "kpi",
+          "measures": [
+            {
+              "name": "Opportunities.Opportunity Count",
+              "expression": "\nCOUNTAX(Opportunities,TRUE())",
+              "plain_english": "Count of rows in Opportunity Count"
+            }
+          ],
+          "dimensions": [
+            "Opportunities.Blank"
+          ],
+          "importance": 1,
+          "chrome": false
+        },
+        {
+          "id": "1556020053",
+          "purpose": "Show key metric: Days Remaining In Pipeline)",
+          "canonical_type": "kpi",
+          "raw_type": "kpi",
+          "measures": [],
+          "dimensions": [
+            "Avg(Opportunities.Days Remaining In Pipeline)",
+            "Opportunities.Blank"
+          ],
+          "importance": 1,
+          "chrome": false
+        },
+        {
+          "id": "1556020055",
+          "purpose": "Show key metric: Revenue Open",
+          "canonical_type": "kpi",
+          "raw_type": "kpi",
+          "measures": [
+            {
+              "name": "Opportunities.Revenue Open",
+              "expression": "\nVAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities, Opportunities[Value] ),\n        FILTER (\n            Opportunities,\n            Opportunities[Status] = \"Open\"\n        )\n    )\nRETURN\n    Revenue + ( Revenue * ( 'Opportunity Forecast Adjustment'[Forecast Adjustment Value] / 100 ) )",
+              "plain_english": "Categorized total of (VAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities)"
+            }
+          ],
+          "dimensions": [
+            "Opportunities.Blank"
+          ],
+          "importance": 1,
+          "chrome": false
+        },
+        {
+          "id": "1556020057",
+          "purpose": "Show key metric: Revenue In Pipeline",
+          "canonical_type": "kpi",
+          "raw_type": "kpi",
+          "measures": [
+            {
+              "name": "Opportunities.Revenue In Pipeline",
+              "expression": "\nVAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities, Opportunities[Value] ),\n        FILTER (\n            Opportunities,\n            Opportunities[Status] = \"Open\"\n            && VALUE(LEFT(Opportunities[Sales Stage],1)) >=2\n        )\n    )\nRETURN\n    Revenue + ( Revenue * ( 'Opportunity Forecast Adjustment'[Forecast Adjustment Value] / 100 ) )\n",
+              "plain_english": "Categorized total of (VAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities)"
+            }
+          ],
+          "dimensions": [
+            "Opportunities.Blank"
+          ],
+          "importance": 1,
+          "chrome": false
+        },
+        {
+          "id": "1556020043",
+          "purpose": "Compare Revenue Open across Product LOB",
+          "canonical_type": "bar",
+          "raw_type": "barChart",
+          "measures": [
+            {
+              "name": "Opportunities.Revenue Open",
+              "expression": "\nVAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities, Opportunities[Value] ),\n        FILTER (\n            Opportunities,\n            Opportunities[Status] = \"Open\"\n        )\n    )\nRETURN\n    Revenue + ( Revenue * ( 'Opportunity Forecast Adjustment'[Forecast Adjustment Value] / 100 ) )",
+              "plain_english": "Categorized total of (VAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities)"
+            },
+            {
+              "name": "Opportunities.Revenue In Pipeline",
+              "expression": "\nVAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities, Opportunities[Value] ),\n        FILTER (\n            Opportunities,\n            Opportunities[Status] = \"Open\"\n            && VALUE(LEFT(Opportunities[Sales Stage],1)) >=2\n        )\n    )\nRETURN\n    Revenue + ( Revenue * ( 'Opportunity Forecast Adjustment'[Forecast Adjustment Value] / 100 ) )\n",
+              "plain_english": "Categorized total of (VAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities)"
+            },
+            {
+              "name": "Opportunities.Opportunity Count In Pipeline",
+              "expression": "\n    CALCULATE (\n        COUNT( Opportunities[Value] ),\n        FILTER (\n            Opportunities,\n            Opportunities[Status] = \"Open\"\n              --  && Opportunities[PipelineStep] IN { \"3-Pipeline\", \"4-Mandate\", \"5-Close\" }\n        )\n    )\n",
+              "plain_english": "Categorized total of (CALCULATE (\n        COUNT( Opportunities[Value] ))"
+            }
+          ],
+          "dimensions": [
+            "Products.Product LOB",
+            "Products.Product",
+            "Territories.Territory"
+          ],
+          "importance": 2,
+          "chrome": false
+        },
+        {
+          "id": "1556020042",
+          "purpose": "Data table with detailed values",
+          "canonical_type": "table",
+          "raw_type": "tableEx",
+          "measures": [
+            {
+              "name": "Opportunities.Weeks Open",
+              "expression": "Sum(Opportunities[Weeks Open])",
+              "plain_english": "Sum of Weeks Open"
+            },
+            {
+              "name": "Opportunities.Value",
+              "expression": "Sum(Opportunities[Value])",
+              "plain_english": "Sum of Value"
+            }
+          ],
+          "dimensions": [
+            "Territories.Territory",
+            "Products.Product",
+            "Industries.Industry",
+            "Avg(Opportunities.Discount)",
+            "Avg(Opportunities.Days Remaining In Pipeline)",
+            "Accounts.Account Name",
+            "Opportunities.Rating",
+            "Opportunities.PipelineStep",
+            "Owners.Owner"
+          ],
+          "importance": 3,
+          "chrome": false
+        },
+        {
+          "id": "1556020128",
+          "purpose": "Combination chart with multiple measure types",
+          "canonical_type": "bar",
+          "raw_type": "ribbonChart",
+          "measures": [
+            {
+              "name": "Opportunities.Revenue Open",
+              "expression": "\nVAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities, Opportunities[Value] ),\n        FILTER (\n            Opportunities,\n            Opportunities[Status] = \"Open\"\n        )\n    )\nRETURN\n    Revenue + ( Revenue * ( 'Opportunity Forecast Adjustment'[Forecast Adjustment Value] / 100 ) )",
+              "plain_english": "Categorized total of (VAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities)"
+            }
+          ],
+          "dimensions": [
+            "Industries.Industry",
+            "Opportunity Calendar.YEAR MONTH"
+          ],
+          "importance": 5,
+          "chrome": false
+        }
+      ],
+      "page_filters": [],
+      "cross_filters": [
+        {
+          "source": "1556020043",
+          "target": "1556020042",
+          "type": "cross-filter"
+        },
+        {
+          "source": "1556020051",
+          "target": "1556020042",
+          "type": "cross-filter"
+        },
+        {
+          "source": "1556020053",
+          "target": "1556020042",
+          "type": "cross-filter"
+        },
+        {
+          "source": "1556020055",
+          "target": "1556020042",
+          "type": "cross-filter"
+        },
+        {
+          "source": "1556020057",
+          "target": "1556020042",
+          "type": "cross-filter"
+        }
+      ]
+    },
+    {
+      "name": "ReportSection08507840a0c5d0d26f29",
+      "display_name": "Trend Analytics",
+      "narrative": "This page (Trend Analytics) presents Opportunities.Count of Won, broken down by Discount), RELATIVE 30 DAY PERIOD, YEAR MONTH. It features 8 main visuals including KPIs, charts, and tables.",
+      "hero_metric": "Opportunities.Count of Won",
+      "visuals": [
+        {
+          "id": "1556020207",
+          "purpose": "Show key metric: Count of Won",
+          "canonical_type": "kpi",
+          "raw_type": "kpi",
+          "measures": [
+            {
+              "name": "Opportunities.Count of Won",
+              "expression": "\nCOUNTAX(\n    FILTER(\n        KEEPFILTERS(Opportunities),Opportunities[Status] = \"Won\"\n        ),\n    Opportunities[OpportunitySeq]\n    ) ",
+              "plain_english": "Count of rows in Count of Won"
+            }
+          ],
+          "dimensions": [
+            "Opportunity Calendar.RELATIVE 30 DAY PERIOD"
+          ],
+          "importance": 1,
+          "chrome": false
+        },
+        {
+          "id": "1556020208",
+          "purpose": "Show key metric: Close %",
+          "canonical_type": "kpi",
+          "raw_type": "kpi",
+          "measures": [
+            {
+              "name": "Opportunities.Close %",
+              "expression": "[Count of Won]/([Count of Won]+[Count of Lost])",
+              "plain_english": "Measure: Close %"
+            }
+          ],
+          "dimensions": [
+            "Opportunity Calendar.RELATIVE MONTH"
+          ],
+          "importance": 1,
+          "chrome": false
+        },
+        {
+          "id": "1556020209",
+          "purpose": "Show key metric: Discount)",
+          "canonical_type": "kpi",
+          "raw_type": "kpi",
+          "measures": [],
+          "dimensions": [
+            "Avg(Opportunities.Discount)",
+            "Opportunity Calendar.RELATIVE MONTH"
+          ],
+          "importance": 1,
+          "chrome": false
+        },
+        {
+          "id": "1556020210",
+          "purpose": "Show key metric: Revenue Won",
+          "canonical_type": "kpi",
+          "raw_type": "kpi",
+          "measures": [
+            {
+              "name": "Opportunities.Revenue Won",
+              "expression": "\n CALCULATE(\n     SUMX(Opportunities, Opportunities[Value]),\n     FILTER(Opportunities, Opportunities[Status] = \"Won\")\n )",
+              "plain_english": "Categorized total of (SUMX(Opportunities)"
+            }
+          ],
+          "dimensions": [
+            "Opportunity Calendar.RELATIVE MONTH"
+          ],
+          "importance": 1,
+          "chrome": false
+        },
+        {
+          "id": "1556020204",
+          "purpose": "Trend of values over Date",
+          "canonical_type": "line",
+          "raw_type": "lineChart",
+          "measures": [
+            {
+              "name": "Opportunities.Revenue Won",
+              "expression": "\n CALCULATE(\n     SUMX(Opportunities, Opportunities[Value]),\n     FILTER(Opportunities, Opportunities[Status] = \"Won\")\n )",
+              "plain_english": "Categorized total of (SUMX(Opportunities)"
+            }
+          ],
+          "dimensions": [
+            "Opportunity Calendar.Date"
+          ],
+          "importance": 2,
+          "chrome": false
+        },
+        {
+          "id": "1556020205",
+          "purpose": "Trend of values over YEAR MONTH",
+          "canonical_type": "line",
+          "raw_type": "lineChart",
+          "measures": [
+            {
+              "name": "Opportunities.Close %",
+              "expression": "[Count of Won]/([Count of Won]+[Count of Lost])",
+              "plain_english": "Measure: Close %"
+            }
+          ],
+          "dimensions": [
+            "Opportunity Calendar.YEAR MONTH"
+          ],
+          "importance": 2,
+          "chrome": false
+        },
+        {
+          "id": "1556020206",
+          "purpose": "Trend of values over Date",
+          "canonical_type": "line",
+          "raw_type": "lineChart",
+          "measures": [
+            {
+              "name": "Opportunities.Revenue Won",
+              "expression": "\n CALCULATE(\n     SUMX(Opportunities, Opportunities[Value]),\n     FILTER(Opportunities, Opportunities[Status] = \"Won\")\n )",
+              "plain_english": "Categorized total of (SUMX(Opportunities)"
+            }
+          ],
+          "dimensions": [
+            "Opportunity Calendar.Date"
+          ],
+          "importance": 3,
+          "chrome": false
+        },
+        {
+          "id": "1556020222",
+          "purpose": "Trend of values over YEAR MONTH",
+          "canonical_type": "line",
+          "raw_type": "lineChart",
+          "measures": [
+            {
+              "name": "Opportunities.Revenue Won",
+              "expression": "\n CALCULATE(\n     SUMX(Opportunities, Opportunities[Value]),\n     FILTER(Opportunities, Opportunities[Status] = \"Won\")\n )",
+              "plain_english": "Categorized total of (SUMX(Opportunities)"
+            }
+          ],
+          "dimensions": [
+            "Opportunity Calendar.YEAR MONTH"
+          ],
+          "importance": 3,
+          "chrome": false
+        }
+      ],
+      "page_filters": [],
+      "cross_filters": [
+        {
+          "source": "1556020204",
+          "target": "1556020205",
+          "type": "cross-filter"
+        },
+        {
+          "source": "1556020205",
+          "target": "1556020204",
+          "type": "cross-filter"
+        },
+        {
+          "source": "1556020206",
+          "target": "1556020204",
+          "type": "cross-filter"
+        },
+        {
+          "source": "1556020207",
+          "target": "1556020204",
+          "type": "cross-filter"
+        },
+        {
+          "source": "1556020208",
+          "target": "1556020204",
+          "type": "cross-filter"
+        }
+      ]
+    },
+    {
+      "name": "ReportSection76c409e0c333d60bb1e2",
+      "display_name": "Win/Loss Ratio Insights",
+      "narrative": "This page (Win/Loss Ratio Insights) presents key metrics, broken down by Discount), Industry, Status. It features 2 main visuals including KPIs, charts, and tables.",
+      "visuals": [
+        {
+          "id": "1556020305",
+          "purpose": "Compare Close % across Product Category",
+          "canonical_type": "bar",
+          "raw_type": "barChart",
+          "measures": [
+            {
+              "name": "Opportunities.Close %",
+              "expression": "[Count of Won]/([Count of Won]+[Count of Lost])",
+              "plain_english": "Measure: Close %"
+            }
+          ],
+          "dimensions": [
+            "Products.Product Category"
+          ],
+          "importance": 2,
+          "chrome": false
+        },
+        {
+          "id": "1556020226",
+          "purpose": "Trend of values over Product LOB",
+          "canonical_type": "combo",
+          "raw_type": "lineStackedColumnComboChart",
+          "measures": [
+            {
+              "name": "Opportunities.Revenue Won",
+              "expression": "\n CALCULATE(\n     SUMX(Opportunities, Opportunities[Value]),\n     FILTER(Opportunities, Opportunities[Status] = \"Won\")\n )",
+              "plain_english": "Categorized total of (SUMX(Opportunities)"
+            },
+            {
+              "name": "Opportunities.Close %",
+              "expression": "[Count of Won]/([Count of Won]+[Count of Lost])",
+              "plain_english": "Measure: Close %"
+            }
+          ],
+          "dimensions": [
+            "Products.Product LOB"
+          ],
+          "importance": 3,
+          "chrome": false
+        },
+        {
+          "id": "1556020227",
+          "purpose": "Visual: keyDriversVisual",
+          "canonical_type": "unsupported",
+          "raw_type": "keyDriversVisual",
+          "measures": [],
+          "dimensions": [
+            "Products.Product",
+            "Industries.Industry",
+            "Avg(Opportunities.Discount)",
+            "Opportunities.Status",
+            "Campaigns.Name",
+            "Opportunities.Purchase Process",
+            "Owners.Owner",
+            "Owners.Manager"
+          ],
+          "importance": 5,
+          "chrome": false
+        }
+      ],
+      "page_filters": [],
+      "cross_filters": [
+        {
+          "source": "1556020305",
+          "target": "1556020226",
+          "type": "cross-filter"
+        }
+      ]
+    },
+    {
+      "name": "ReportSectionf0c8ef19be5e8127c627",
+      "display_name": "Days to Close Insights",
+      "narrative": "This page (Days to Close Insights) presents key metrics, broken down by Region, Industry, DaysToClose. It features 2 main visuals including KPIs, charts, and tables.",
+      "visuals": [
+        {
+          "id": "1556020387",
+          "purpose": "Compare DaysToClose across Owner",
+          "canonical_type": "bar",
+          "raw_type": "barChart",
+          "measures": [
+            {
+              "name": "Opportunities.DaysToClose",
+              "expression": "Sum(Opportunities[DaysToClose])",
+              "plain_english": "Sum of DaysToClose"
+            }
+          ],
+          "dimensions": [
+            "Owners.Owner"
+          ],
+          "importance": 2,
+          "chrome": false
+        },
+        {
+          "id": "1556020388",
+          "purpose": "Compare DaysToClose across Industry",
+          "canonical_type": "bar",
+          "raw_type": "barChart",
+          "measures": [
+            {
+              "name": "Opportunities.DaysToClose",
+              "expression": "Sum(Opportunities[DaysToClose])",
+              "plain_english": "Sum of DaysToClose"
+            }
+          ],
+          "dimensions": [
+            "Industries.Industry"
+          ],
+          "importance": 3,
+          "chrome": false
+        },
+        {
+          "id": "1556020386",
+          "purpose": "Visual: keyDriversVisual",
+          "canonical_type": "unsupported",
+          "raw_type": "keyDriversVisual",
+          "measures": [
+            {
+              "name": "Opportunities.Value",
+              "expression": "Sum(Opportunities[Value])",
+              "plain_english": "Sum of Value"
+            }
+          ],
+          "dimensions": [
+            "Opportunities.Decision Maker Identified",
+            "Territories.Territory",
+            "Products.Product",
+            "Industries.Industry",
+            "Campaigns.Campaign",
+            "Owners.Owner",
+            "Territories.Region",
+            "Opportunities.Purchase Process",
+            "Opportunities.DaysToClose",
+            "Campaigns.Campaign Type",
+            "Owners.Manager"
+          ],
+          "importance": 5,
+          "chrome": false
+        }
+      ],
+      "page_filters": [],
+      "cross_filters": [
+        {
+          "source": "1556020387",
+          "target": "1556020386",
+          "type": "cross-filter"
+        },
+        {
+          "source": "1556020388",
+          "target": "1556020386",
+          "type": "cross-filter"
+        }
+      ]
+    },
+    {
+      "name": "ReportSection46edb4426e9aacd8d4b9",
+      "display_name": "Sales Discounting Insights",
+      "narrative": "This page (Sales Discounting Insights) presents key metrics, broken down by Region, Discount), Industry. It features 2 main visuals including KPIs, charts, and tables.",
+      "visuals": [
+        {
+          "id": "1556020389",
+          "purpose": "Compare Discount) across Territory",
+          "canonical_type": "bar",
+          "raw_type": "barChart",
+          "measures": [],
+          "dimensions": [
+            "Avg(Opportunities.Discount)",
+            "Territories.Territory"
+          ],
+          "importance": 2,
+          "chrome": false
+        },
+        {
+          "id": "1556020393",
+          "purpose": "Compare Discount) across Manager",
+          "canonical_type": "bar",
+          "raw_type": "barChart",
+          "measures": [],
+          "dimensions": [
+            "Avg(Opportunities.Discount)",
+            "Owners.Owner",
+            "Owners.Manager"
+          ],
+          "importance": 3,
+          "chrome": false
+        },
+        {
+          "id": "1556020394",
+          "purpose": "Visual: keyDriversVisual",
+          "canonical_type": "unsupported",
+          "raw_type": "keyDriversVisual",
+          "measures": [],
+          "dimensions": [
+            "Territories.Territory",
+            "Opportunities.Discount",
+            "Industries.Industry",
+            "Campaigns.Campaign",
+            "Owners.Owner",
+            "Territories.Region",
+            "Campaigns.Campaign Type",
+            "Products.Product LOB",
+            "Products.Product",
+            "Owners.Manager"
+          ],
+          "importance": 5,
+          "chrome": false
+        }
+      ],
+      "page_filters": [],
+      "cross_filters": [
+        {
+          "source": "1556020389",
+          "target": "1556020393",
+          "type": "cross-filter"
+        },
+        {
+          "source": "1556020393",
+          "target": "1556020389",
+          "type": "cross-filter"
+        }
+      ]
+    },
+    {
+      "name": "ReportSectionacd41c847407a998c130",
+      "display_name": "Revenue Source Breakdown",
+      "narrative": "This page (Revenue Source Breakdown) presents key metrics, broken down by Industry, Campaign, Product. It features 2 main visuals including KPIs, charts, and tables.",
+      "visuals": [
+        {
+          "id": "1556020473",
+          "purpose": "Compare Opportunity Count across Territory",
+          "canonical_type": "bar",
+          "raw_type": "barChart",
+          "measures": [
+            {
+              "name": "Opportunities.Opportunity Count",
+              "expression": "\nCOUNTAX(Opportunities,TRUE())",
+              "plain_english": "Count of rows in Opportunity Count"
+            }
+          ],
+          "dimensions": [
+            "Territories.Territory"
+          ],
+          "importance": 2,
+          "chrome": false
+        },
+        {
+          "id": "1556020472",
+          "purpose": "Compare Opportunity Count across Manager",
+          "canonical_type": "bar",
+          "raw_type": "barChart",
+          "measures": [
+            {
+              "name": "Opportunities.Opportunity Count",
+              "expression": "\nCOUNTAX(Opportunities,TRUE())",
+              "plain_english": "Count of rows in Opportunity Count"
+            }
+          ],
+          "dimensions": [
+            "Owners.Owner",
+            "Owners.Manager"
+          ],
+          "importance": 3,
+          "chrome": false
+        },
+        {
+          "id": "1556020474",
+          "purpose": "Visual: decompositionTreeVisual",
+          "canonical_type": "unsupported",
+          "raw_type": "decompositionTreeVisual",
+          "measures": [
+            {
+              "name": "Opportunities.Value",
+              "expression": "Sum(Opportunities[Value])",
+              "plain_english": "Sum of Value"
+            }
+          ],
+          "dimensions": [
+            "Products.Product",
+            "Territories.Territory",
+            "Industries.Industry",
+            "Campaigns.Campaign",
+            "Products.Product LOB",
+            "Owners.Owner"
+          ],
+          "importance": 5,
+          "chrome": false
+        }
+      ],
+      "page_filters": [],
+      "cross_filters": [
+        {
+          "source": "1556020472",
+          "target": "1556020473",
+          "type": "cross-filter"
+        },
+        {
+          "source": "1556020473",
+          "target": "1556020472",
+          "type": "cross-filter"
+        }
+      ]
+    },
+    {
+      "name": "ReportSectione4490b0fc1862a3c9b5a",
+      "display_name": "Q&A Query",
+      "narrative": "This page (Q&A Query) presents key metrics, broken down by Region, Industry, Discount. It features 0 main visuals including KPIs, charts, and tables.",
+      "visuals": [
+        {
+          "id": "1556020552",
+          "purpose": "Visual: qnaVisual",
+          "canonical_type": "unsupported",
+          "raw_type": "qnaVisual",
+          "measures": [],
+          "dimensions": [
+            "Accounts.Territory",
+            "Products.Product",
+            "Opportunities.Discount",
+            "Accounts.Region",
+            "Accounts.Industry",
+            "Products.Product LOB",
+            "Owners.Owner",
+            "Owners.Manager"
+          ],
+          "importance": 5,
+          "chrome": false
+        }
+      ],
+      "page_filters": [],
+      "cross_filters": []
+    },
+    {
+      "name": "ReportSection7813318f563ba25c9399",
+      "display_name": "Template",
+      "narrative": "This page (Template) presents key metrics. It features 0 main visuals including KPIs, charts, and tables.",
+      "visuals": [],
+      "page_filters": [],
+      "cross_filters": []
+    }
+  ],
+  "tables": [
+    {
+      "name": "Accounts",
+      "row_count": 300,
+      "columns": {
+        "Account Name": "string",
+        "State or Province": "string",
+        "Country": "string",
+        "AccountID": "string",
+        "AccountSeq": "Int64",
+        "IndustrySeq": "Int64",
+        "AccountOwnerSeq": "Int64",
+        "Account Number": "string",
+        "TerritorySeq": "Int64"
+      },
+      "sample_rows": [
+        {
+          "Account Name": "A. Datum Corporation  (U.S.)",
+          "State or Province": "NC",
+          "Country": "United States",
+          "AccountID": "1c6090f3-8f1c-eb11-a813-000d3a9c7ffa",
+          "AccountSeq": 1000,
+          "IndustrySeq": 20,
+          "AccountOwnerSeq": 11,
+          "Account Number": "AN-100001",
+          "TerritorySeq": 9
+        },
+        {
+          "Account Name": "Morar, Graham and Dickens",
+          "State or Province": "MD",
+          "Country": "United States",
+          "AccountID": "22c58905-de1e-eb11-a814-000d3a9c7ff2",
+          "AccountSeq": 1001,
+          "IndustrySeq": 22,
+          "AccountOwnerSeq": 10,
+          "Account Number": "AN-100002",
+          "TerritorySeq": 18
+        },
+        {
+          "Account Name": "Abbott Group  (Andorra)",
+          "State or Province": "GA",
+          "Country": "United States",
+          "AccountID": "113999f9-dd1e-eb11-a814-000d3a9c7ff2",
+          "AccountSeq": 1002,
+          "IndustrySeq": 37,
+          "AccountOwnerSeq": 9,
+          "Account Number": "AN-100003",
+          "TerritorySeq": 8
+        },
+        {
+          "Account Name": "Walsh-Pacocha",
+          "State or Province": "MI",
+          "Country": "United States",
+          "AccountID": "22dde512-f81e-eb11-a814-000d3a9c7ff2",
+          "AccountSeq": 1003,
+          "IndustrySeq": 19,
+          "AccountOwnerSeq": 2,
+          "Account Number": "AN-100004",
+          "TerritorySeq": 10
+        },
+        {
+          "Account Name": "Graham Inc",
+          "State or Province": "WA",
+          "Country": "United States",
+          "AccountID": "322492b1-e41e-eb11-a814-000d3a9c7ff2",
+          "AccountSeq": 1004,
+          "IndustrySeq": 4,
+          "AccountOwnerSeq": 20,
+          "Account Number": "AN-100005",
+          "TerritorySeq": 13
+        }
+      ],
+      "distinct_values": {
+        "Account Name": [
+          "A. Datum Corporation  (U.S.)",
+          "Abbott Group  (Andorra)",
+          "Abbott Group  (Florida)",
+          "Abbott LLC  (Hawaii)",
+          "Abbott-Ferry",
+          "Abernathy-Kulas",
+          "Altenwerth-Halvorson",
+          "Ankunding-Robel",
+          "Bartell, Harris and Bartell",
+          "Bartoletti Inc",
+          "Bashirian-Torp",
+          "Batz, Lesch and Wiza",
+          "Batz-Harvey",
+          "Baumbach Inc",
+          "Bayer, O'Connell and Auer",
+          "Beahan and Sons",
+          "Beahan, Predovic and Morar",
+          "Beer, Abernathy and Emard",
+          "Bergnaum-Langosh",
+          "Bergstrom Inc"
+        ],
+        "State or Province": [
+          "AL",
+          "AR",
+          "AZ",
+          "CA",
+          "CO",
+          "CT",
+          "DC",
+          "FL",
+          "GA",
+          "HI",
+          "IA",
+          "ID",
+          "IL",
+          "IN",
+          "KS",
+          "KY",
+          "LA",
+          "MA",
+          "MD",
+          "ME"
+        ],
+        "Country": [
+          "United States"
+        ],
+        "AccountID": [
+          "00c48905-de1e-eb11-a814-000d3a9c7ff2",
+          "0306a544-f41e-eb11-a814-000d3a9c7ff2",
+          "05306f9f-f51e-eb11-a814-000d3a9c7ff2",
+          "0706c90a-f51e-eb11-a814-000d3a9c7ff2",
+          "077e43ee-f11e-eb11-a814-000d3a9c7ff2",
+          "0b3bfc7c-f81e-eb11-a814-000d3a9c7ff2",
+          "0b4e2b07-dd1e-eb11-a814-000d3a9c7ff2",
+          "0ce46a1d-de1e-eb11-a814-000d3a9c7ff2",
+          "0df0e3a7-e51e-eb11-a814-000d3a9c7ff2",
+          "0e0a7940-f71e-eb11-a814-000d3a9c7ff2",
+          "0e6e868d-f51e-eb11-a814-000d3a9c7ff2",
+          "113999f9-dd1e-eb11-a814-000d3a9c7ff2",
+          "1329e80d-f11e-eb11-a814-000d3a9c7ff2",
+          "13c3da0b-f31e-eb11-a814-000d3a9c7ff2",
+          "13f89391-f11e-eb11-a814-000d3a9c7ff2",
+          "1502c136-f81e-eb11-a814-000d3a9c7ff2",
+          "15168e87-f51e-eb11-a814-000d3a9c7ff2",
+          "1540c9c5-e51e-eb11-a814-000d3a9c7ff2",
+          "15fec036-f81e-eb11-a814-000d3a9c7ff2",
+          "169a9d7b-f51e-eb11-a814-000d3a9c7ff2"
+        ],
+        "Account Number": [
+          "AN-100001",
+          "AN-100002",
+          "AN-100003",
+          "AN-100004",
+          "AN-100005",
+          "AN-100006",
+          "AN-100007",
+          "AN-100008",
+          "AN-100009",
+          "AN-100010",
+          "AN-100011",
+          "AN-100012",
+          "AN-100013",
+          "AN-100014",
+          "AN-100015",
+          "AN-100016",
+          "AN-100017",
+          "AN-100018",
+          "AN-100019",
+          "AN-100020"
+        ]
+      }
+    },
+    {
+      "name": "Campaigns",
+      "row_count": 12,
+      "columns": {
+        "CampaignSeq": "Int64",
+        "Campaign Type": "string",
+        "Campaign": "string"
+      },
+      "sample_rows": [
+        {
+          "CampaignSeq": 7000,
+          "Campaign Type": "Sales",
+          "Campaign": "Customer Reference Lead"
+        },
+        {
+          "CampaignSeq": 7001,
+          "Campaign Type": "Email",
+          "Campaign": "Market Trends Newsletter"
+        },
+        {
+          "CampaignSeq": 7002,
+          "Campaign Type": "Email",
+          "Campaign": "Monthly Newsletter"
+        },
+        {
+          "CampaignSeq": 7003,
+          "Campaign Type": "Email",
+          "Campaign": "New Product Releases"
+        },
+        {
+          "CampaignSeq": 7004,
+          "Campaign Type": "Online",
+          "Campaign": "Bing Ad Placement"
+        }
+      ],
+      "distinct_values": {
+        "Campaign Type": [
+          "Email",
+          "Online",
+          "Phone",
+          "Promotion",
+          "Sales",
+          "Tradeshow"
+        ],
+        "Campaign": [
+          "Bing Ad Placement",
+          "Commercial Tradeshow",
+          "Consumer Tradeshow",
+          "Customer Care Campaign",
+          "Customer Follow-up",
+          "Customer Reference Lead",
+          "Instagram",
+          "Market Trends Newsletter",
+          "Monthly Newsletter",
+          "New Product Releases",
+          "QuarterlySales Contest",
+          "Twitter"
+        ]
+      }
+    },
+    {
+      "name": "Contacts",
+      "row_count": 1,
+      "columns": {
+        "Contact": "string",
+        "Job Title": "string",
+        "ContactSeq": "Int64",
+        "AccountSeq": "Int64"
+      },
+      "sample_rows": [
+        {
+          "Contact": "ContactName",
+          "Job Title": "Sample",
+          "ContactSeq": 1,
+          "AccountSeq": 1000
+        }
+      ],
+      "distinct_values": {
+        "Contact": [
+          "ContactName"
+        ],
+        "Job Title": [
+          "Sample"
+        ]
+      }
+    },
+    {
+      "name": "Industries",
+      "row_count": 45,
+      "columns": {
+        "Industry": "string",
+        "IndustrySeq": "Int64"
+      },
+      "sample_rows": [
+        {
+          "Industry": "n/a",
+          "IndustrySeq": 0
+        },
+        {
+          "Industry": "Air Freight/Delivery Services",
+          "IndustrySeq": 1
+        },
+        {
+          "Industry": "Automotive Aftermarket",
+          "IndustrySeq": 2
+        },
+        {
+          "Industry": "Biotechnology: Commercial Physical & Biological Research",
+          "IndustrySeq": 3
+        },
+        {
+          "Industry": "Business Services",
+          "IndustrySeq": 4
+        }
+      ],
+      "distinct_values": {
+        "Industry": [
+          "Air Freight/Delivery Services",
+          "Automotive Aftermarket",
+          "Biotechnology: Commercial Physical & Biological Research",
+          "Business Services",
+          "Clothing/Shoe/Accessory Stores",
+          "Computer Manufacturing",
+          "Computer Software: Prepackaged Software",
+          "Computer Software: Programming, Data Processing",
+          "Diversified Commercial Services",
+          "EDP Services",
+          "Electric Utilities: Central",
+          "Food Distributors",
+          "Forest Products",
+          "Home Furnishings",
+          "Hospital/Nursing Management",
+          "Industrial Machinery/Components",
+          "Integrated oil Companies",
+          "Investment Managers",
+          "Life Insurance",
+          "Major Banks"
+        ]
+      }
+    },
+    {
+      "name": "Opportunities",
+      "row_count": 20000,
+      "columns": {
+        "Purchase Process": "string",
+        "Decision Maker Identified": "bool",
+        "Status": "string",
+        "Sales Stage": "string",
+        "Value": "Int64",
+        "Weeks Open": "object",
+        "DaysToClose": "Int64",
+        "Discount": "Float64",
+        "Probability": "Float64",
+        "Rating": "string",
+        "Days Remaining In Pipeline": "object",
+        "Probability (raw)": "Float64",
+        "AccountSeq": "Int64",
+        "OpportunitySeq": "Int64",
+        "ProductSeq": "Int64",
+        "SystemUserSeq": "Int64",
+        "CampaignSeq": "Int64",
+        "Blank": "object",
+        "DateDiff-Days": "Int64",
+        "Opportunity Created On": "datetime64[ns]",
+        "CloseDate": "datetime64[ns]",
+        "Days Remaining In Pipeline (bins)": "object"
+      },
+      "sample_rows": [
+        {
+          "Purchase Process": "Unknown",
+          "Decision Maker Identified": true,
+          "Status": "Lost",
+          "Sales Stage": "1-Qualify",
+          "Value": 4545,
+          "Weeks Open": 11,
+          "DaysToClose": 76,
+          "Discount": 0.095,
+          "Probability": 0.1,
+          "Rating": "Cold",
+          "Days Remaining In Pipeline": 0,
+          "Probability (raw)": 0.134,
+          "AccountSeq": 1016,
+          "OpportunitySeq": 14079,
+          "ProductSeq": 8,
+          "SystemUserSeq": 4,
+          "CampaignSeq": null,
+          "Blank": null,
+          "DateDiff-Days": -84,
+          "Opportunity Created On": "2021-08-17T00:00:00",
+          "CloseDate": "2021-11-01T00:00:00",
+          "Days Remaining In Pipeline (bins)": 0
+        },
+        {
+          "Purchase Process": "Committee",
+          "Decision Maker Identified": true,
+          "Status": "Lost",
+          "Sales Stage": "1-Qualify",
+          "Value": 4501,
+          "Weeks Open": 12,
+          "DaysToClose": 83,
+          "Discount": 0.095,
+          "Probability": 0.1,
+          "Rating": "Cold",
+          "Days Remaining In Pipeline": 0,
+          "Probability (raw)": 0.206,
+          "AccountSeq": 1182,
+          "OpportunitySeq": 14116,
+          "ProductSeq": 8,
+          "SystemUserSeq": 4,
+          "CampaignSeq": null,
+          "Blank": null,
+          "DateDiff-Days": -85,
+          "Opportunity Created On": "2021-08-16T00:00:00",
+          "CloseDate": "2021-11-07T00:00:00",
+          "Days Remaining In Pipeline (bins)": 0
+        },
+        {
+          "Purchase Process": "Unknown",
+          "Decision Maker Identified": true,
+          "Status": "Lost",
+          "Sales Stage": "1-Qualify",
+          "Value": 4586,
+          "Weeks Open": 10,
+          "DaysToClose": 70,
+          "Discount": 0.095,
+          "Probability": 0.1,
+          "Rating": "Cold",
+          "Days Remaining In Pipeline": 0,
+          "Probability (raw)": 0.065,
+          "AccountSeq": 1171,
+          "OpportunitySeq": 14257,
+          "ProductSeq": 8,
+          "SystemUserSeq": 20,
+          "CampaignSeq": null,
+          "Blank": null,
+          "DateDiff-Days": -88,
+          "Opportunity Created On": "2021-08-13T00:00:00",
+          "CloseDate": "2021-10-22T00:00:00",
+          "Days Remaining In Pipeline (bins)": 0
+        },
+        {
+          "Purchase Process": "Individual",
+          "Decision Maker Identified": true,
+          "Status": "Lost",
+          "Sales Stage": "1-Qualify",
+          "Value": 4282,
+          "Weeks Open": 9,
+          "DaysToClose": 63,
+          "Discount": 0.095,
+          "Probability": 0.1,
+          "Rating": "Cold",
+          "Days Remaining In Pipeline": 0,
+          "Probability (raw)": 0.115,
+          "AccountSeq": 1149,
+          "OpportunitySeq": 14686,
+          "ProductSeq": 8,
+          "SystemUserSeq": 6,
+          "CampaignSeq": null,
+          "Blank": null,
+          "DateDiff-Days": -96,
+          "Opportunity Created On": "2021-08-05T00:00:00",
+          "CloseDate": "2021-10-07T00:00:00",
+          "Days Remaining In Pipeline (bins)": 0
+        },
+        {
+          "Purchase Process": "Unknown",
+          "Decision Maker Identified": true,
+          "Status": "Lost",
+          "Sales Stage": "1-Qualify",
+          "Value": 5787,
+          "Weeks Open": 12,
+          "DaysToClose": 82,
+          "Discount": 0.095,
+          "Probability": 0.1,
+          "Rating": "Cold",
+          "Days Remaining In Pipeline": 0,
+          "Probability (raw)": 0.165,
+          "AccountSeq": 1095,
+          "OpportunitySeq": 14786,
+          "ProductSeq": 8,
+          "SystemUserSeq": 6,
+          "CampaignSeq": null,
+          "Blank": null,
+          "DateDiff-Days": -97,
+          "Opportunity Created On": "2021-08-04T00:00:00",
+          "CloseDate": "2021-10-25T00:00:00",
+          "Days Remaining In Pipeline (bins)": 0
+        }
+      ],
+      "distinct_values": {
+        "Purchase Process": [
+          "Committee",
+          "Individual",
+          "Unknown"
+        ],
+        "Status": [
+          "Lost",
+          "Open",
+          "Won"
+        ],
+        "Sales Stage": [
+          "1-Qualify",
+          "2-Develop",
+          "3-Propose",
+          "4-Close"
+        ],
+        "Rating": [
+          "Cold",
+          "Hot",
+          "Warm"
+        ]
+      }
+    },
+    {
+      "name": "Opportunity Forecast Adjustment",
+      "row_count": 11,
+      "columns": {
+        "Blank": "object"
+      },
+      "sample_rows": [],
+      "distinct_values": {}
+    },
+    {
+      "name": "Owners",
+      "row_count": 20,
+      "columns": {
+        "Owner": "string",
+        "Manager": "string",
+        "SystemUserSeq": "Int64",
+        "systemuserid": "string"
+      },
+      "sample_rows": [
+        {
+          "Owner": "Alicia Thomber",
+          "Manager": "Amelie Garner",
+          "SystemUserSeq": 1,
+          "systemuserid": "a4575859-ef1e-eb11-a814-000d3a9c7ff2"
+        },
+        {
+          "Owner": "Alan Steiner",
+          "Manager": "Amelie Garner",
+          "SystemUserSeq": 2,
+          "systemuserid": "5ae6bbcc-eb1e-eb11-a814-000d3a9c7ff2"
+        },
+        {
+          "Owner": "Anne Weiler",
+          "Manager": "Amelie Garner",
+          "SystemUserSeq": 3,
+          "systemuserid": "e4e99a85-e31e-eb11-a814-000d3a9c7ff2"
+        },
+        {
+          "Owner": "David So",
+          "Manager": "Amelie Garner",
+          "SystemUserSeq": 4,
+          "systemuserid": "f2026cde-f31e-eb11-a814-000d3a9c7ff2"
+        },
+        {
+          "Owner": "Greg Winston",
+          "Manager": "Amelie Garner",
+          "SystemUserSeq": 5,
+          "systemuserid": "4307c90a-f51e-eb11-a814-000d3a9c7ff2"
+        }
+      ],
+      "distinct_values": {
+        "Owner": [
+          "Alan Steiner",
+          "Alicia Thomber",
+          "Angel Brown",
+          "Anne Weiler",
+          "Archie Boyle",
+          "Dan Jump",
+          "David So",
+          "Eric Gruber",
+          "Greg Winston",
+          "Hollie Rees",
+          "Jeff Hay",
+          "Jennifer Wilkins",
+          "Jordan Williams",
+          "Julian Isla",
+          "Mia Steele",
+          "Molly Clark",
+          "Renee Lo",
+          "Riley Johnson",
+          "Sanjay Shah",
+          "Spencer Low"
+        ],
+        "Manager": [
+          "Amelie Garner",
+          "Ethan Brooks",
+          "Peyton Davis"
+        ],
+        "systemuserid": [
+          "113999f9-dd1e-eb11-a814-000d3a9c7ff2",
+          "1c6090f3-8f1c-eb11-a813-000d3a9c7ffa",
+          "1d4174a3-e31e-eb11-a814-000d3a9c7ff2",
+          "22c58905-de1e-eb11-a814-000d3a9c7ff2",
+          "22dde512-f81e-eb11-a814-000d3a9c7ff2",
+          "322492b1-e41e-eb11-a814-000d3a9c7ff2",
+          "36b0eba1-e51e-eb11-a814-000d3a9c7ff2",
+          "3f35dcad-e51e-eb11-a814-000d3a9c7ff2",
+          "41b682bd-e41e-eb11-a814-000d3a9c7ff2",
+          "42ded114-ed1e-eb11-a814-000d3a9c7ff2",
+          "4307c90a-f51e-eb11-a814-000d3a9c7ff2",
+          "5ae6bbcc-eb1e-eb11-a814-000d3a9c7ff2",
+          "6687c12b-f11e-eb11-a814-000d3a9c7ff2",
+          "8601e902-ed1e-eb11-a814-000d3a9c7ff2",
+          "9c3f73c9-e41e-eb11-a814-000d3a9c7ff2",
+          "a4575859-ef1e-eb11-a814-000d3a9c7ff2",
+          "e4e99a85-e31e-eb11-a814-000d3a9c7ff2",
+          "ec7e43ee-f11e-eb11-a814-000d3a9c7ff2",
+          "f2026cde-f31e-eb11-a814-000d3a9c7ff2",
+          "fcc9d114-ed1e-eb11-a814-000d3a9c7ff2"
+        ]
+      }
+    },
+    {
+      "name": "Products",
+      "row_count": 9,
+      "columns": {
+        "Product": "string",
+        "ProductSeq": "Int64",
+        "Product Category": "string"
+      },
+      "sample_rows": [
+        {
+          "Product": "E-reader Standard 6\" 8 GB",
+          "ProductSeq": 1,
+          "Product Category": "Devices"
+        },
+        {
+          "Product": "E-reader Diamond 7\" 8 GB",
+          "ProductSeq": 2,
+          "Product Category": "Devices"
+        },
+        {
+          "Product": "E-reader Diamond 7\" 16 GB",
+          "ProductSeq": 3,
+          "Product Category": "Devices"
+        },
+        {
+          "Product": "E-reader Platinum 8\" 32 GB",
+          "ProductSeq": 4,
+          "Product Category": "Devices"
+        },
+        {
+          "Product": "E-reader Platinum 8\" 64 GB",
+          "ProductSeq": 5,
+          "Product Category": "Devices"
+        }
+      ],
+      "distinct_values": {
+        "Product": [
+          "1 Year Warranty",
+          "Black cover 6\"",
+          "Black cover 7\"",
+          "E-reader Diamond 7\" 16 GB",
+          "E-reader Diamond 7\" 8 GB",
+          "E-reader Platinum 8\" 32 GB",
+          "E-reader Platinum 8\" 64 GB",
+          "E-reader Standard 6\" 8 GB",
+          "E-reader pen"
+        ],
+        "Product Category": [
+          "Accessories",
+          "Devices",
+          "Warranties"
+        ]
+      }
+    },
+    {
+      "name": "Territories",
+      "row_count": 51,
+      "columns": {
+        "Region": "string",
+        "Territory": "string",
+        "Country": "string",
+        "TerritorySeq": "string",
+        "State Or Province": "string"
+      },
+      "sample_rows": [
+        {
+          "Region": "North America",
+          "Territory": "US-WEST",
+          "Country": "United States",
+          "TerritorySeq": "1",
+          "State Or Province": "CA"
+        },
+        {
+          "Region": "North America",
+          "Territory": "US-SOUTH",
+          "Country": "United States",
+          "TerritorySeq": "2",
+          "State Or Province": "TX"
+        },
+        {
+          "Region": "North America",
+          "Territory": "US-SOUTH",
+          "Country": "United States",
+          "TerritorySeq": "3",
+          "State Or Province": "FL"
+        },
+        {
+          "Region": "North America",
+          "Territory": "US-NORTHEAST",
+          "Country": "United States",
+          "TerritorySeq": "4",
+          "State Or Province": "NY"
+        },
+        {
+          "Region": "North America",
+          "Territory": "US-NORTHEAST",
+          "Country": "United States",
+          "TerritorySeq": "5",
+          "State Or Province": "PA"
+        }
+      ],
+      "distinct_values": {
+        "Region": [
+          "North America"
+        ],
+        "Territory": [
+          "US-MIDWEST",
+          "US-NORTHEAST",
+          "US-SOUTH",
+          "US-WEST"
+        ],
+        "Country": [
+          "United States"
+        ],
+        "TerritorySeq": [
+          "1",
+          "10",
+          "11",
+          "12",
+          "13",
+          "14",
+          "15",
+          "16",
+          "17",
+          "18",
+          "19",
+          "2",
+          "20",
+          "21",
+          "22",
+          "23",
+          "24",
+          "25",
+          "26",
+          "27"
+        ],
+        "State Or Province": [
+          "AK",
+          "AL",
+          "AR",
+          "AZ",
+          "CA",
+          "CO",
+          "CT",
+          "DC",
+          "DE",
+          "FL",
+          "GA",
+          "HI",
+          "IA",
+          "ID",
+          "IL",
+          "IN",
+          "KS",
+          "KY",
+          "LA",
+          "MA"
+        ]
+      }
+    }
+  ],
+  "measures_glossary": {
+    "Opportunities.Revenue Won": "\n CALCULATE(\n     SUMX(Opportunities, Opportunities[Value]),\n     FILTER(Opportunities, Opportunities[Status] = \"Won\")\n )",
+    "Opportunities.Revenue In Pipeline": "\nVAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities, Opportunities[Value] ),\n        FILTER (\n            Opportunities,\n            Opportunities[Status] = \"Open\"\n            && VALUE(LEFT(Opportunities[Sales Stage],1)) >=2\n        )\n    )\nRETURN\n    Revenue + ( Revenue * ( 'Opportunity Forecast Adjustment'[Forecast Adjustment Value] / 100 ) )\n",
+    "Opportunities.Forecast %": "(([Revenue Won]+[Revenue In Pipeline]))/ [Rev Goal]",
+    "Opportunities.Forecast": "([Revenue Won]+[Revenue In Pipeline])",
+    "Opportunities.Opportunity Count In Pipeline": "\n    CALCULATE (\n        COUNT( Opportunities[Value] ),\n        FILTER (\n            Opportunities,\n            Opportunities[Status] = \"Open\"\n              --  && Opportunities[PipelineStep] IN { \"3-Pipeline\", \"4-Mandate\", \"5-Close\" }\n        )\n    )\n",
+    "Opportunities.Opportunity Count": "\nCOUNTAX(Opportunities,TRUE())",
+    "Opportunities.Count of Won": "\nCOUNTAX(\n    FILTER(\n        KEEPFILTERS(Opportunities),Opportunities[Status] = \"Won\"\n        ),\n    Opportunities[OpportunitySeq]\n    ) ",
+    "Opportunities.Count of Lost": "\nCOUNTAX(\n    FILTER(\n        KEEPFILTERS(Opportunities),Opportunities[Status] = \"Lost\"\n        ),\n    Opportunities[OpportunitySeq]\n    ) ",
+    "Opportunities.Close %": "[Count of Won]/([Count of Won]+[Count of Lost])",
+    "Opportunities.Revenue Open": "\nVAR Revenue =\n    CALCULATE (\n        SUMX ( Opportunities, Opportunities[Value] ),\n        FILTER (\n            Opportunities,\n            Opportunities[Status] = \"Open\"\n        )\n    )\nRETURN\n    Revenue + ( Revenue * ( 'Opportunity Forecast Adjustment'[Forecast Adjustment Value] / 100 ) )",
+    "Owners.Rev Goal": "\nVAR RevenueInPipeline =\n    CALCULATE (\n        SUMX ( Opportunities, Opportunities[Value] ),\n        FILTER (\n            Opportunities,\n            Opportunities[Status] = \"Open\"\n            && VALUE(LEFT(Opportunities[Sales Stage],1)) >=2\n        )\n    )\nVAR BaseGoal =  \nMROUND(([Revenue Won]+ (RevenueInPipeline*.60)),1000000)    \nRETURN\nIF(BaseGoal > 0, BaseGoal, MROUND(([Revenue Won]+ (RevenueInPipeline*.60)),100000))",
+    "Opportunity Forecast Adjustment.Forecast Adjustment Value": "SELECTEDVALUE('Opportunity Forecast Adjustment'[Forecast Adjustment], 0)",
+    "Opportunities.Revenue Won Average Deal Size": "AVERAGEX(Opportunities,[Revenue Won])",
+    "Opportunities.Forecast by Win/Loss Ratio": "[Revenue Open] * [Close %]",
+    "Opportunity Forecast Adjustment.Fcst adj slicer alt text": "CONCATENATE(\"Use the slicer to adjust the forecast, current value is \", 'Opportunity Forecast Adjustment'[Forecast Adjustment Value])"
+  },
+  "generated_at": "2026-05-13T01:24:25.065913"
+}
