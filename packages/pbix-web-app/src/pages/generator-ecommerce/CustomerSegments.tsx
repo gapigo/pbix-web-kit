@@ -182,7 +182,7 @@ export default function CustomerSegments({ engine, store }: Props) {
           <ResponsiveContainer width="100%" height={CHART_HEIGHT.large}>
             <BarChart data={salesBySeg.data ?? []} layout="vertical" margin={{ left: 120, right: 20, top: 4, bottom: 4 }}>
               <CartesianGrid {...gridStyle} />
-              <XAxis type="number" tick={currencyTick} {...axisStyle} />
+              <XAxis type="number" tickFormatter={currencyTick} {...axisStyle} />
               <YAxis type="category" dataKey="Segment" width={110} {...axisStyle} />
               <Tooltip content={<CustomTooltip formatter={fmtCurrency} />} />
               <Bar dataKey="val" fill={colors.chart[0]} radius={[0, 4, 4, 0]} maxBarSize={28} />
@@ -198,7 +198,7 @@ export default function CustomerSegments({ engine, store }: Props) {
           <ResponsiveContainer width="100%" height={CHART_HEIGHT.large}>
             <BarChart data={marginBySeg.data ?? []} layout="vertical" margin={{ left: 120, right: 20, top: 4, bottom: 4 }}>
               <CartesianGrid {...gridStyle} />
-              <XAxis type="number" tick={pctTick} {...axisStyle} domain={[0, 1]} />
+              <XAxis type="number" tickFormatter={pctTick} {...axisStyle} domain={[0, 1]} />
               <YAxis type="category" dataKey="Segment" width={110} {...axisStyle} />
               <Tooltip content={<CustomTooltip formatter={(v: number) => fmtPct(v)} />} />
               <Bar dataKey="val" fill={colors.chart[2]} radius={[0, 4, 4, 0]} maxBarSize={28} />

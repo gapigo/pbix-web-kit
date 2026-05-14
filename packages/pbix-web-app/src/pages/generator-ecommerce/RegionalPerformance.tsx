@@ -163,7 +163,7 @@ export default function RegionalPerformance({ engine, store }: Props) {
           <ResponsiveContainer width="100%" height={CHART_HEIGHT.large}>
             <BarChart data={salesByRegion.data ?? []} layout="vertical" margin={{ left: 80, right: 20, top: 4, bottom: 4 }}>
               <CartesianGrid {...gridStyle} />
-              <XAxis type="number" tick={currencyTick} {...axisStyle} />
+              <XAxis type="number" tickFormatter={currencyTick} {...axisStyle} />
               <YAxis type="category" dataKey="Region" width={70} {...axisStyle} />
               <Tooltip content={<CustomTooltip formatter={fmtCurrency} />} />
               <Bar dataKey="val" fill={colors.chart[0]} radius={[0, 4, 4, 0]} maxBarSize={24} />
@@ -179,7 +179,7 @@ export default function RegionalPerformance({ engine, store }: Props) {
           <ResponsiveContainer width="100%" height={CHART_HEIGHT.large}>
             <BarChart data={marginByRegion.data ?? []} layout="vertical" margin={{ left: 80, right: 20, top: 4, bottom: 4 }}>
               <CartesianGrid {...gridStyle} />
-              <XAxis type="number" tick={pctTick} {...axisStyle} domain={[0, 1]} />
+              <XAxis type="number" tickFormatter={pctTick} {...axisStyle} domain={[0, 1]} />
               <YAxis type="category" dataKey="Region" width={70} {...axisStyle} />
               <Tooltip content={<CustomTooltip formatter={(v: number) => fmtPct(v)} />} />
               <Bar dataKey="val" fill={colors.chart[2]} radius={[0, 4, 4, 0]} maxBarSize={24} />

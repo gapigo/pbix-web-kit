@@ -191,7 +191,7 @@ export default function ShippingAnalysis({ engine, store }: Props) {
           <ResponsiveContainer width="100%" height={CHART_HEIGHT.large}>
             <BarChart data={ordersByShip.data ?? []} layout="vertical" margin={{ left: 120, right: 20, top: 4, bottom: 4 }}>
               <CartesianGrid {...gridStyle} />
-              <XAxis type="number" tick={numTick} {...axisStyle} />
+              <XAxis type="number" tickFormatter={numTick} {...axisStyle} />
               <YAxis type="category" dataKey="Ship_Mode" width={110} {...axisStyle} />
               <Tooltip content={<CustomTooltip formatter={fmtNum} />} />
               <Bar dataKey="val" fill={colors.chart[0]} radius={[0, 4, 4, 0]} maxBarSize={28} />
@@ -208,7 +208,7 @@ export default function ShippingAnalysis({ engine, store }: Props) {
             <LineChart data={lineChartData} margin={{ left: 8, right: 16 }}>
               <CartesianGrid {...gridStyle} />
               <XAxis dataKey="month" {...axisStyle} />
-              <YAxis tick={numTick} {...axisStyle} />
+              <YAxis tickFormatter={numTick} {...axisStyle} />
               <Tooltip content={<CustomTooltip formatter={fmtNum} />} />
               <Legend wrapperStyle={{ fontSize: 11 }} />
               {shipModeList.map((mode, i) => (

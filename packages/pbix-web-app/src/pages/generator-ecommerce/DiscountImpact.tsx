@@ -161,7 +161,7 @@ export default function DiscountImpact({ engine, store }: Props) {
           <ResponsiveContainer width="100%" height={CHART_HEIGHT.large}>
             <BarChart data={avgDiscByCat.data ?? []} layout="vertical" margin={{ left: 100, right: 20, top: 4, bottom: 4 }}>
               <CartesianGrid {...gridStyle} />
-              <XAxis type="number" tick={pctTick} {...axisStyle} domain={[0, 1]} />
+              <XAxis type="number" tickFormatter={pctTick} {...axisStyle} domain={[0, 1]} />
               <YAxis type="category" dataKey="Category" width={90} {...axisStyle} />
               <Tooltip content={<CustomTooltip formatter={(v: number) => fmtPct(v)} />} />
               <Bar dataKey="val" fill={colors.warning} radius={[0, 4, 4, 0]} maxBarSize={24} />
@@ -177,8 +177,8 @@ export default function DiscountImpact({ engine, store }: Props) {
           <ResponsiveContainer width="100%" height={CHART_HEIGHT.scatter}>
             <ScatterChart margin={{ left: 20, right: 20, top: 8, bottom: 8 }}>
               <CartesianGrid {...gridStyle} />
-              <XAxis type="number" dataKey="disc" name="Avg Discount" tick={pctTick} {...axisStyle} domain={[0, 1]} />
-              <YAxis type="number" dataKey="margin" name="Profit Margin" tick={pctTick} {...axisStyle} domain={[0, 1]} />
+              <XAxis type="number" dataKey="disc" name="Avg Discount" tickFormatter={pctTick} {...axisStyle} domain={[0, 1]} label={{ value: 'Avg Discount', position: 'bottom' }} />
+              <YAxis type="number" dataKey="margin" name="Profit Margin" tickFormatter={pctTick} {...axisStyle} domain={[0, 1]} label={{ value: 'Profit Margin', angle: -90, position: 'left' }} />
               <Tooltip
                 content={<CustomTooltip formatter={(v: number) => fmtPct(v)} />}
                 cursor={{ strokeDasharray: "3 3" }}

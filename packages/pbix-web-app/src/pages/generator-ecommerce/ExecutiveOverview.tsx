@@ -171,7 +171,7 @@ export default function ExecutiveOverview({ engine, store }: Props) {
           <ResponsiveContainer width="100%" height={CHART_HEIGHT.large}>
             <BarChart data={salesByCat.data ?? []} layout="vertical" margin={{ left: 100, right: 20, top: 4, bottom: 4 }}>
               <CartesianGrid {...gridStyle} />
-              <XAxis type="number" tick={currencyTick} {...axisStyle} />
+              <XAxis type="number" tickFormatter={currencyTick} {...axisStyle} />
               <YAxis type="category" dataKey="Category" width={90} {...axisStyle} />
               <Tooltip content={<CustomTooltip formatter={fmtCurrency} />} />
               <Bar dataKey="val" fill={colors.chart[0]} radius={[0, 4, 4, 0]} maxBarSize={20} />
@@ -188,7 +188,7 @@ export default function ExecutiveOverview({ engine, store }: Props) {
             <LineChart data={trendChartData} margin={{ left: 8, right: 16 }}>
               <CartesianGrid {...gridStyle} />
               <XAxis dataKey="month" {...axisStyle} />
-              <YAxis tick={currencyTick} {...axisStyle} />
+              <YAxis tickFormatter={currencyTick} {...axisStyle} />
               <Tooltip content={<CustomTooltip formatter={fmtCurrency} />} />
               <Line type="monotone" dataKey="val" stroke={colors.brand} strokeWidth={2} dot={false} />
             </LineChart>
@@ -203,7 +203,7 @@ export default function ExecutiveOverview({ engine, store }: Props) {
           <ResponsiveContainer width="100%" height={CHART_HEIGHT.large}>
             <BarChart data={salesByRegion.data ?? []} layout="vertical" margin={{ left: 80, right: 20, top: 4, bottom: 4 }}>
               <CartesianGrid {...gridStyle} />
-              <XAxis type="number" tick={currencyTick} {...axisStyle} />
+              <XAxis type="number" tickFormatter={currencyTick} {...axisStyle} />
               <YAxis type="category" dataKey="Region" width={70} {...axisStyle} />
               <Tooltip content={<CustomTooltip formatter={fmtCurrency} />} />
               <Bar dataKey="val" fill={colors.chart[2]} radius={[0, 4, 4, 0]} maxBarSize={20} />

@@ -170,7 +170,7 @@ export default function ProductAnalysis({ engine, store }: Props) {
           <ResponsiveContainer width="100%" height={CHART_HEIGHT.large}>
             <BarChart data={salesBySub.data ?? []} layout="vertical" margin={{ left: 120, right: 20, top: 4, bottom: 4 }}>
               <CartesianGrid {...gridStyle} />
-              <XAxis type="number" tick={currencyTick} {...axisStyle} />
+              <XAxis type="number" tickFormatter={currencyTick} {...axisStyle} />
               <YAxis type="category" dataKey="Sub_Category" width={110} {...axisStyle} />
               <Tooltip content={<CustomTooltip formatter={fmtCurrency} />} />
               <Bar dataKey="val" fill={colors.chart[0]} radius={[0, 4, 4, 0]} maxBarSize={20} />
@@ -186,7 +186,7 @@ export default function ProductAnalysis({ engine, store }: Props) {
           <ResponsiveContainer width="100%" height={CHART_HEIGHT.large}>
             <BarChart data={profitBySub.data ?? []} layout="vertical" margin={{ left: 120, right: 20, top: 4, bottom: 4 }}>
               <CartesianGrid {...gridStyle} />
-              <XAxis type="number" tick={currencyTick} {...axisStyle} />
+              <XAxis type="number" tickFormatter={currencyTick} {...axisStyle} />
               <YAxis type="category" dataKey="Sub_Category" width={110} {...axisStyle} />
               <Tooltip content={<CustomTooltip formatter={fmtCurrency} />} />
               <Bar dataKey="val" fill={colors.chart[1]} radius={[0, 4, 4, 0]} maxBarSize={20} />
@@ -202,8 +202,8 @@ export default function ProductAnalysis({ engine, store }: Props) {
           <ResponsiveContainer width="100%" height={CHART_HEIGHT.scatter}>
             <ScatterChart margin={{ left: 20, right: 20, top: 8, bottom: 8 }}>
               <CartesianGrid {...gridStyle} />
-              <XAxis type="number" dataKey="sales" name="Sales" tick={currencyTick} {...axisStyle} />
-              <YAxis type="number" dataKey="profit" name="Profit" tick={currencyTick} {...axisStyle} />
+              <XAxis type="number" dataKey="sales" name="Sales" tickFormatter={currencyTick} {...axisStyle} label={{ value: 'Sales', position: 'bottom' }} />
+              <YAxis type="number" dataKey="profit" name="Profit" tickFormatter={currencyTick} {...axisStyle} label={{ value: 'Profit', angle: -90, position: 'left' }} />
               <Tooltip
                 content={<CustomTooltip formatter={(v: number) => fmtCurrency(v)} />}
                 cursor={{ strokeDasharray: "3 3" }}
